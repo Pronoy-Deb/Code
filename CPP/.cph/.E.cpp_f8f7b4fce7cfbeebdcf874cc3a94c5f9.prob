@@ -1,0 +1,1 @@
+{"name":"Local: E","url":"f:\\CP\\Essentials\\CPP\\E.cpp","tests":[{"id":1697193546848,"input":"2\n4\n1 0 1 0\n7\n1 1 2 3 3 4 7\n","output":"Case 1: 6\nCase 2: 19\n"},{"id":1697193794897,"input":"1\n10\n1 1 1 1 2 3 4 2 2 2","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"f:\\CP\\Essentials\\CPP\\E.cpp","group":"local","local":true}

@@ -1,0 +1,1 @@
+{"name":"Local: Is_Hamiltonian_Path","url":"/home/pronoy/New/CP/Essentials/CPP/Algorithm/Is_Hamiltonian_Path.cpp","tests":[{"id":1675780485398,"input":"5 7\n1 2\n1 3\n1 4\n2 3\n2 5\n3 4\n3 5","output":"YES"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/pronoy/New/CP/Essentials/CPP/Algorithm/Is_Hamiltonian_Path.cpp","group":"local","local":true}

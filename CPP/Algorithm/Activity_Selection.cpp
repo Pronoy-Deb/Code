@@ -1,0 +1,25 @@
+// Complexity: O(n*log(n))
+
+pair<long long, long long> ar[N];
+auto cmp(const pair<long long, long long> &a, const pair<long long, long long> &b) {
+    return (a.second < b.second);
+}
+auto as() {
+    sort(ar, ar + N, cmp);
+    long long ans = 0, cur = 0;
+    for (int i = 0; i < n; ++i) {
+        if (ar[i].first  >= cur) {
+            cur = ar[i].second; ++ans;
+        }
+    }
+    return ans;
+}
+
+// Operation:
+    cin >> n;
+    for (int i = 0; i < n; ++i) {
+        cin >> ar[i].first >> ar[i].second;
+    }
+    cout << as();
+
+// Problem: https://cses.fi/problemset/task/1629

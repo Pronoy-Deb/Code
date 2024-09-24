@@ -1,0 +1,39 @@
+{
+    "tabnine.experimentalAutoImports": true,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1,
+    "editor.fontSize": 17,
+    "workbench.sideBar.location": "right",
+    "editor.minimap.enabled": false,
+    "breadcrumbs.enabled": false,
+    "editor.renderWhitespace": "none",
+    "editor.renderControlCharacters": false,
+    "cph.general.defaultLanguage": "cpp",
+    "cph.general.defaultLanguageTemplateFileLocation": "/media/pronoy/New Volume/CP/Essentials/CPP/Template.cpp",
+    "cph.general.timeOut": 6000,
+    "cph.language.cpp.SubmissionCompiler": "GNU G++20 11.2.0 (64 bit, winlibs)",
+    "editor.insertSpaces": true,
+    "files.insertFinalNewline": false,
+    "editor.wordWrap": "on",
+    "workbench.colorTheme": "Default High Contrast",
+    "tabnine.debounceMilliseconds": 1,
+    "editor.inlineSuggest.suppressSuggestions": true,
+    "editor.mouseWheelZoom": true,
+    "aws.suppressPrompts": {
+        "codeWhispererNewWelcomeMessage": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": "explicit"
+    },
+    "cph.general.menuChoices": "cpp python java c rust",
+    "terminal.integrated.tabs.enabled": false,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+    "editor.formatOnType": true,
+    "window.menuBarVisibility": "toggle",
+    "workbench.activityBar.location": "hidden",
+    "window.zoomLevel": 1,
+}

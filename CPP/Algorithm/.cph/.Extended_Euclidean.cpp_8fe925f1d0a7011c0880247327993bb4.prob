@@ -1,0 +1,1 @@
+{"name":"Local: Extended_Euclidean","url":"/home/pronoy/New/CP/Essentials/CPP/Algorithm/Extended_Euclidean.cpp","tests":[{"id":1675783864075,"input":"","output":"GCD(35, 15) = 5"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/pronoy/New/CP/Essentials/CPP/Algorithm/Extended_Euclidean.cpp","group":"local","local":true}

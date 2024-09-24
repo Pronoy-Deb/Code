@@ -1,0 +1,4 @@
+1. To clean up apps: sudo apt autoremove
+2. To clean up cashes: sudo apt autoclean
+3. To fix a disk: sudo ntfsfix /dev/sdb3
+4. 

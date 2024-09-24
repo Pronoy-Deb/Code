@@ -1,0 +1,1 @@
+{"name":"Local: FCFS","url":"/media/pronoy/New Volume/CP/Essentials/FCFS.cpp","tests":[{"id":1706297043869,"input":"4\n0 1 2 3\n5 3 8 6","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/New Volume/CP/Essentials/FCFS.cpp","group":"local","local":true}
