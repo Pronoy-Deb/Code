@@ -2,18 +2,18 @@
 // Complexity: Constructing the tree: O(n), Update & Query: O(log(n))
 
 long long tre[N << 1], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
+long long merge(long long x, long long y) { return x + y; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]);
 }
 void up(int in, long long val) {
-    for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = com(tre[in], tre[in ^ 1]);
+    for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = merge(tre[in], tre[in ^ 1]);
 }
 long long get(int l, int r) {
     long long res = 0;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
+        if (l & 1) res = merge(res, tre[l++]); if (r & 1) res = merge(res, tre[--r]);
     }
     return res;
 }
@@ -28,10 +28,10 @@ long long get(int l, int r) {
 // WITH lazy Propagation: O(n)
 
 long long tre[N << 1], lz[N], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
+long long merge(long long x, long long y) { return x + y; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]);
 }
 void apply(int in, long long val, int k) {
     tre[in] += val * k; if (in < n) lz[in] += val;
@@ -50,7 +50,7 @@ void rebuild(int l, int r) {
     int k = 2;
     for (l += n, r += n - 1; l > 1; k <<= 1) {
         l >>= 1, r >>= 1;
-        for (int i = r; i >= l; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
+        for (int i = r; i >= l; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
     }
 }
 void add(int l, int r, long long val) {
@@ -63,7 +63,7 @@ void add(int l, int r, long long val) {
 long long get(int l, int r) {
     push(l, l + 1); push(r, ++r); long long res = 0;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
+        if (l & 1) res = merge(res, tre[l++]); if (r & 1) res = merge(res, tre[--r]);
     }
     return res;
 }
@@ -71,40 +71,31 @@ long long get(int l, int r) {
 // OR,
 
 long long tre[N << 2], lz[N << 2], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
-void make(int s = 0, int e = n - 1, int i = 0) {
-    if (s >= e) {
-        if (s == e) tre[i] = ar[s]; return;
-    }
-    int m = (s + e) >> 1, lc = (i << 1) + 1, rc = lc + 1;
-    make(s, m, lc); make(m + 1, e, rc);
-    tre[i] = com(tre[lc], tre[rc]);
+long long merge(long long x, long long y) { return x + y; }
+void make(int nd = 1, int s = 0, int e = n - 1) {
+    if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    make(lc, s, m); make(rc, m + 1, e); tre[nd] = merge(tre[lc], tre[rc]);
 }
-void propagate(int s, int e, int i) {
-    if (lz[i]) {
-        tre[i] += (e - s + 1) * lz[i];
-        if (s != e) {
-            lz[(i << 1) + 1] += lz[i]; lz[(i << 1) + 2] += lz[i];
-        }
-        lz[i] = 0;
+void propagate(int nd, int s, int e) {
+    if (lz[nd]) {
+        tre[nd] += (e - s + 1) * lz[nd];
+        if (s != e) { lz[nd << 1] += lz[nd]; lz[nd << 1 | 1] += lz[nd]; }
+        lz[nd] = 0;
     }
 }
-void add(int l, int r, long long val, int s = 0, int e = n - 1, int i = 0) {
-    propagate(s, e, i);
-    if (s > e || s > r || e < l) return;
-    int m = (s + e) >> 1, lc = (i << 1) + 1, rc = lc + 1;
-    if (s >= l && e <= r) {
-        lz[i] += val; propagate(s, e, i); return;
-    }
-    add(l, r, val, s, m, lc); add(l, r, val, m + 1, e, rc);
-    tre[i] = com(tre[lc], tre[rc]);
+void add(int l, int r, long long val, int nd = 1, int s = 0, int e = n - 1) {
+    propagate(nd, s, e); if (s > e || s > r || e < l) return;
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    if (s >= l && e <= r) { lz[nd] += val; propagate(nd, s, e); return; }
+    add(l, r, val, lc, s, m); add(l, r, val, rc, m + 1, e);
+    tre[nd] = merge(tre[lc], tre[rc]);
 }
-long long get(int l, int r, int s = 0, int e = n - 1, int i = 0) {
-    propagate(s, e, i);
-    if (s > e || s > r || e < l) return 0;
-    if (s >= l && e <= r) return tre[i];
-    int m = (s + e) >> 1, lc = (i << 1) + 1, rc = lc + 1;
-    return com(get(l, r, s, m, lc), get(l, r, m + 1, e, rc));
+long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
+    propagate(nd, s, e); if (s > e || s > r || e < l) return 0;
+    if (s >= l && e <= r) return tre[nd];
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    return merge(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
 }
 
 // Operation:
@@ -200,8 +191,7 @@ int T = 0;
 int make(int s, int e) {
     int cur = ++T; if (s == e) return cur;
     int m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
-    lc = make(s, m); rc = make(m + 1, e);
-    return cur;
+    lc = make(s, m); rc = make(m + 1, e); return cur;
 }
 int push(int pre, int s, int e, int x = 0) {
     int cur = ++T; tre[cur] = tre[pre]; tre[cur].lz ^= x;
@@ -216,8 +206,7 @@ int push(int pre, int s, int e, int x = 0) {
             tre[lc].lz ^= 1, tre[rc].lz ^= 1;
         }
     }
-    tre[cur].lz = 0;
-    return cur;
+    tre[cur].lz = 0; return cur;
 }
 int up(int pre, int s, int e, int i, int j) {
     int cur = push(pre, s, e);
@@ -227,27 +216,20 @@ int up(int pre, int s, int e, int i, int j) {
     }
     int m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
     lc = up(lc, s, m, i, j); rc = up(rc, m + 1, e, i, j);
-    tre[cur].val = tre[lc].val + tre[rc].val;
-    return cur;
+    tre[cur].val = tre[lc].val + tre[rc].val; return cur;
 }
 int cmp(int cur, int oth, int s, int e) {
     cur = push(cur, s, e); oth = push(oth, s, e);
     if (tre[cur].val == tre[oth].val) return 0;
     if (s == e) {
-        int x = tre[cur].p, y = tre[oth].p;
-        if (x == y) return 0;
-        else if (x > y) return 1;
-        else return 2;
+        int x = tre[cur].p, y = tre[oth].p; return (x == y ? 0 : x > y ? 1 : 2);
     }
     int m = s + e >> 1, lc = tre[cur].l, rc = tre[cur].r, p = cmp(lc, tre[oth].l, s, m);
-    if (p) return p;
-    return cmp(rc, tre[oth].r, m + 1, e);
+    if (p) return p; return cmp(rc, tre[oth].r, m + 1, e);
 }
 void print(int cur, int s, int e) {
     cur = push(cur, s, e);
-    if (s == e) {
-        cout << tre[cur].p; return;
-    }
+    if (s == e) { cout << tre[cur].p; return; }
     int m = s + e >> 1, lc = tre[cur].l, rc = tre[cur].r;
     print(lc, s, m); print(rc, m + 1, e);
 }
@@ -265,29 +247,9 @@ int root[N];
     print(root[ans], 1, n);
 
 // Using Class:
-/* There are six things you need to worry about
-    * The data type of the values on the nodes: DT
-    * The data type of the updates on the nodes: LT
-        Lazy data will be the same as an up
-        Lazy data is the up that has ALREADY BEEN
-        PROCESSED on this node, and WILL BE PUSHED down
-        to the childred later, value is always updated.
-    * How does the value and lazy data of a node change
-        when a new up comes : apply()
-        Merging of updates take place here
-    * How to merge the results of two nodes while answering
-        queries : merge()
-    * What is the identity of apply() : None
-        This is equivalent to "No up", should represent an
-        up which changes nothing
-    * What is the identity of merge() : I
-        This is the equivalent to answering queries in an empty
-        range, a value that will never change the result of an
-        answer */
 
 template <typename VT>
-struct SegmentTree
-{
+struct SegmentTree {
     using DT = typename VT::DT;
     using LT = typename VT::LT;
     long long L, R;
@@ -514,19 +476,12 @@ public:
 
 // Segment Tree 2D Dynamic:
 
-#include <bits/stdc++.h>
-using namespace std;
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
-
-const int N = 3e5 + 9;
-
-struct node
-{
+struct node {
     node *l, *r;
     int pos, key, mn, mx;
     long long val, g;
-    node(int position, long long value)
-    {
+    node(int position, long long value) {
         l = r = nullptr;
         mn = mx = pos = position;
         key = rnd();
@@ -748,397 +703,119 @@ int32_t main()
 // https://oj.uz/problem/view/IOI13_game
 
 // Segment Tree Beats:
-
-struct SGTBeats
-{
-    const ll inf = 1e18;
-    int n, n0;
-    ll max_v[4 * N], smax_v[4 * N], max_c[4 * N];
-    ll min_v[4 * N], smin_v[4 * N], min_c[4 * N];
-    ll sum[4 * N];
-    ll len[4 * N], ladd[4 * N], lval[4 * N];
-
-    void update_node_max(int k, ll x)
-    {
-        sum[k] += (x - max_v[k]) * max_c[k];
-
-        if (max_v[k] == min_v[k])
-        {
-            max_v[k] = min_v[k] = x;
-        }
-        else if (max_v[k] == smin_v[k])
-        {
-            max_v[k] = smin_v[k] = x;
-        }
-        else
-        {
-            max_v[k] = x;
-        }
-
-        if (lval[k] != inf && x < lval[k])
-        {
-            lval[k] = x;
-        }
-    }
-    void update_node_min(int k, ll x)
-    {
-        sum[k] += (x - min_v[k]) * min_c[k];
-
-        if (max_v[k] == min_v[k])
-        {
-            max_v[k] = min_v[k] = x;
-        }
-        else if (smax_v[k] == min_v[k])
-        {
-            min_v[k] = smax_v[k] = x;
-        }
-        else
-        {
-            min_v[k] = x;
-        }
-
-        if (lval[k] != inf && lval[k] < x)
-        {
-            lval[k] = x;
-        }
-    }
-    void push(int k)
-    {
-        if (n0 - 1 <= k)
-            return;
-        if (lval[k] != inf)
-        {
-            updateall(2 * k + 1, lval[k]);
-            updateall(2 * k + 2, lval[k]);
-            lval[k] = inf;
-            return;
-        }
-        if (ladd[k] != 0)
-        {
-            addall(2 * k + 1, ladd[k]);
-            addall(2 * k + 2, ladd[k]);
-            ladd[k] = 0;
-        }
-        if (max_v[k] < max_v[2 * k + 1])
-        {
-            update_node_max(2 * k + 1, max_v[k]);
-        }
-        if (min_v[2 * k + 1] < min_v[k])
-        {
-            update_node_min(2 * k + 1, min_v[k]);
-        }
-
-        if (max_v[k] < max_v[2 * k + 2])
-        {
-            update_node_max(2 * k + 2, max_v[k]);
-        }
-        if (min_v[2 * k + 2] < min_v[k])
-        {
-            update_node_min(2 * k + 2, min_v[k]);
-        }
-    }
-    void update(int k)
-    {
-        sum[k] = sum[2 * k + 1] + sum[2 * k + 2];
-
-        if (max_v[2 * k + 1] < max_v[2 * k + 2])
-        {
-            max_v[k] = max_v[2 * k + 2];
-            max_c[k] = max_c[2 * k + 2];
-            smax_v[k] = max(max_v[2 * k + 1], smax_v[2 * k + 2]);
-        }
-        else if (max_v[2 * k + 1] > max_v[2 * k + 2])
-        {
-            max_v[k] = max_v[2 * k + 1];
-            max_c[k] = max_c[2 * k + 1];
-            smax_v[k] = max(smax_v[2 * k + 1], max_v[2 * k + 2]);
-        }
-        else
-        {
-            max_v[k] = max_v[2 * k + 1];
-            max_c[k] = max_c[2 * k + 1] + max_c[2 * k + 2];
-            smax_v[k] = max(smax_v[2 * k + 1], smax_v[2 * k + 2]);
-        }
-
-        if (min_v[2 * k + 1] < min_v[2 * k + 2])
-        {
-            min_v[k] = min_v[2 * k + 1];
-            min_c[k] = min_c[2 * k + 1];
-            smin_v[k] = min(smin_v[2 * k + 1], min_v[2 * k + 2]);
-        }
-        else if (min_v[2 * k + 1] > min_v[2 * k + 2])
-        {
-            min_v[k] = min_v[2 * k + 2];
-            min_c[k] = min_c[2 * k + 2];
-            smin_v[k] = min(min_v[2 * k + 1], smin_v[2 * k + 2]);
-        }
-        else
-        {
-            min_v[k] = min_v[2 * k + 1];
-            min_c[k] = min_c[2 * k + 1] + min_c[2 * k + 2];
-            smin_v[k] = min(smin_v[2 * k + 1], smin_v[2 * k + 2]);
-        }
-    }
-    void _update_min(ll x, int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a || max_v[k] <= x)
-        {
-            return;
-        }
-        if (a <= l && r <= b && smax_v[k] < x)
-        {
-            update_node_max(k, x);
-            return;
-        }
-        push(k);
-        _update_min(x, a, b, 2 * k + 1, l, (l + r) / 2);
-        _update_min(x, a, b, 2 * k + 2, (l + r) / 2, r);
-        update(k);
-    }
-    void _update_max(ll x, int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a || x <= min_v[k])
-        {
-            return;
-        }
-        if (a <= l && r <= b && x < smin_v[k])
-        {
-            update_node_min(k, x);
-            return;
-        }
-        push(k);
-        _update_max(x, a, b, 2 * k + 1, l, (l + r) / 2);
-        _update_max(x, a, b, 2 * k + 2, (l + r) / 2, r);
-        update(k);
-    }
-    void addall(int k, ll x)
-    {
-        max_v[k] += x;
-        if (smax_v[k] != -inf)
-            smax_v[k] += x;
-        min_v[k] += x;
-        if (smin_v[k] != inf)
-            smin_v[k] += x;
-
-        sum[k] += len[k] * x;
-        if (lval[k] != inf)
-        {
-            lval[k] += x;
-        }
-        else
-        {
-            ladd[k] += x;
-        }
-    }
-    void updateall(int k, ll x)
-    {
-        max_v[k] = x;
-        smax_v[k] = -inf;
-        min_v[k] = x;
-        smin_v[k] = inf;
-        max_c[k] = min_c[k] = len[k];
-
-        sum[k] = x * len[k];
-        lval[k] = x;
-        ladd[k] = 0;
-    }
-    void _add_val(ll x, int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a)
-        {
-            return;
-        }
-        if (a <= l && r <= b)
-        {
-            addall(k, x);
-            return;
-        }
-        push(k);
-        _add_val(x, a, b, 2 * k + 1, l, (l + r) / 2);
-        _add_val(x, a, b, 2 * k + 2, (l + r) / 2, r);
-        update(k);
-    }
-    void _update_val(ll x, int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a)
-        {
-            return;
-        }
-        if (a <= l && r <= b)
-        {
-            updateall(k, x);
-            return;
-        }
-        push(k);
-        _update_val(x, a, b, 2 * k + 1, l, (l + r) / 2);
-        _update_val(x, a, b, 2 * k + 2, (l + r) / 2, r);
-        update(k);
-    }
-
-    ll _query_max(int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a)
-        {
-            return -inf;
-        }
-        if (a <= l && r <= b)
-        {
-            return max_v[k];
-        }
-        push(k);
-        ll lv = _query_max(a, b, 2 * k + 1, l, (l + r) / 2);
-        ll rv = _query_max(a, b, 2 * k + 2, (l + r) / 2, r);
-        return max(lv, rv);
-    }
-
-    ll _query_min(int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a)
-        {
-            return inf;
-        }
-        if (a <= l && r <= b)
-        {
-            return min_v[k];
-        }
-        push(k);
-        ll lv = _query_min(a, b, 2 * k + 1, l, (l + r) / 2);
-        ll rv = _query_min(a, b, 2 * k + 2, (l + r) / 2, r);
-        return min(lv, rv);
-    }
-
-    ll _query_get(int a, int b, int k, int l, int r)
-    {
-        if (b <= l || r <= a)
-        {
-            return 0;
-        }
-        if (a <= l && r <= b)
-        {
-            return sum[k];
-        }
-        push(k);
-        ll lv = _query_get(a, b, 2 * k + 1, l, (l + r) / 2);
-        ll rv = _query_get(a, b, 2 * k + 2, (l + r) / 2, r);
-        return lv + rv;
-    }
-
-    SGTBeats(int n, ll *a) : n(n)
-    {
-        n0 = 1;
-        while (n0 < n)
-            n0 <<= 1;
-        for (int i = 0; i < 2 * n0; ++i)
-            ladd[i] = 0, lval[i] = inf;
-        len[0] = n0;
-        for (int i = 0; i < n0 - 1; ++i)
-            len[2 * i + 1] = len[2 * i + 2] = (len[i] >> 1);
-
-        for (int i = 0; i < n; ++i)
-        {
-            max_v[n0 - 1 + i] = min_v[n0 - 1 + i] = sum[n0 - 1 + i] = (a != nullptr ? ar[i] : 0);
-            smax_v[n0 - 1 + i] = -inf;
-            smin_v[n0 - 1 + i] = inf;
-            max_c[n0 - 1 + i] = min_c[n0 - 1 + i] = 1;
-        }
-        for (int i = n; i < n0; ++i)
-        {
-            max_v[n0 - 1 + i] = smax_v[n0 - 1 + i] = -inf;
-            min_v[n0 - 1 + i] = smin_v[n0 - 1 + i] = inf;
-            max_c[n0 - 1 + i] = min_c[n0 - 1 + i] = 0;
-        }
-        for (int i = n0 - 2; i >= 0; i--)
-        {
-            update(i);
-        }
-    }
-
-    // all queries are performed on [l, r) segment (right exclusive)
-    // 0 indexed
-
-    // range minimize query
-    void update_min(int a, int b, ll x)
-    {
-        _update_min(x, a, b, 0, 0, n0);
-    }
-    // range maximize query
-    void update_max(int a, int b, ll x)
-    {
-        _update_max(x, a, b, 0, 0, n0);
-    }
-    // range add query
-    void add_val(int a, int b, ll x)
-    {
-        _add_val(x, a, b, 0, 0, n0);
-    }
-    // range update query
-    void update_val(int a, int b, ll x)
-    {
-        _update_val(x, a, b, 0, 0, n0);
-    }
-    // range minimum query
-    ll query_max(int a, int b)
-    {
-        return _query_max(a, b, 0, 0, n0);
-    }
-    // range maximum query
-    ll query_min(int a, int b)
-    {
-        return _query_min(a, b, 0, 0, n0);
-    }
-    // range sum query
-    ll query_get(int a, int b)
-    {
-        return _query_get(a, b, 0, 0, n0);
-    }
-};
-
-ll ar[N];
-int32_t main()
-{
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int n, q;
-    cin >> n >> q;
-    for (int i = 0; i < n; ++i)
-    {
-        cin >> ar[i];
-    }
-    SGTBeats t(n, a);
-    while (q--)
-    {
-        int ty, l, r;
-        cin >> ty >> l >> r;
-        ll x;
-        if (ty < 3)
-            cin >> x;
-        if (ty == 0)
-        {
-            t.update_min(l, r, x);
-        }
-        else if (ty == 1)
-        {
-            t.update_max(l, r, x);
-        }
-        else if (ty == 2)
-        {
-            t.add_val(l, r, x);
-        }
-        else
-        {
-            cout << t.query_get(l, r) << '\n';
-        }
-    }
-    return 0;
-}
 // https://judge.yosupo.jp/problem/range_chmin_chmax_add_range_sum
+// https://codeforces.com/problemset/problem/438/D
+
+long long ar[N], n;
+struct Node {
+    long long sum, mx1, mx2, mxc, mn1, mn2, mnc, lz;
+} tre[N << 2];
+void merge(int nd) {
+    int lc = nd << 1, rc = lc | 1;
+    tre[nd].sum = tre[lc].sum + tre[rc].sum;
+    if (tre[lc].mx1 == tre[rc].mx1) {
+    	tre[nd].mx1 = tre[lc].mx1;
+    	tre[nd].mx2 = max(tre[lc].mx2, tre[rc].mx2);
+    	tre[nd].mxc = tre[lc].mxc + tre[rc].mxc;
+    }
+    else {
+    	if (tre[lc].mx1 > tre[rc].mx1) {
+    		tre[nd].mx1 = tre[lc].mx1;
+    		tre[nd].mx2 = max(tre[lc].mx2, tre[rc].mx1);
+    		tre[nd].mxc = tre[lc].mxc;
+    	}
+        else {
+    		tre[nd].mx1 = tre[rc].mx1;
+    		tre[nd].mx2 = max(tre[lc].mx1, tre[rc].mx2);
+    		tre[nd].mxc = tre[rc].mxc;
+    	}
+    }
+    if (tre[lc].mn1 == tre[rc].mn1) {
+    	tre[nd].mn1 = tre[lc].mn1;
+    	tre[nd].mn2 = min(tre[lc].mn2, tre[rc].mn2);
+    	tre[nd].mnc = tre[lc].mnc + tre[rc].mnc;
+    }
+    else {
+    	if (tre[lc].mn1 < tre[rc].mn1) {
+    		tre[nd].mn1 = tre[lc].mn1;
+    		tre[nd].mn2 = min(tre[lc].mn2, tre[rc].mn1);
+    		tre[nd].mnc = tre[lc].mnc;
+    	}
+        else {
+    		tre[nd].mn1 = tre[rc].mn1;
+    		tre[nd].mn2 = min(tre[lc].mn1, tre[rc].mn2);
+    		tre[nd].mnc = tre[rc].mnc;
+    	}
+    }
+}
+void make(int nd = 1, int s = 0, int e = n - 1) {
+    tre[nd].lz = 0;
+    if (s == e) {
+    	tre[nd].sum = tre[nd].mx1 = tre[nd].mn1 = ar[s];
+    	tre[nd].mxc = tre[nd].mnc = 1;
+    	tre[nd].mx2 = LLONG_MIN; tre[nd].mn2 = LLONG_MAX; return;
+    }
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    make(lc, s, m); make(rc, m + 1, e); merge(nd);
+}
+void push_add(int nd, int s, int e, long long v) {
+    if (v == 0) return;
+    tre[nd].sum += (e - s + 1) * v; tre[nd].mx1 += v;
+    if (tre[nd].mx2 != LLONG_MIN) tre[nd].mx2 += v; tre[nd].mn1 += v;
+    if (tre[nd].mn2 != LLONG_MAX) tre[nd].mn2 += v; tre[nd].lz += v;
+}
+void push_max(int nd, long long v, bool l) {
+    if (v >= tre[nd].mx1) return;
+    tre[nd].sum -= tre[nd].mx1 * tre[nd].mxc; tre[nd].mx1 = v;
+    tre[nd].sum += tre[nd].mx1 * tre[nd].mxc;
+    if (l) tre[nd].mn1 = tre[nd].mx1;
+    else {
+    	if (v <= tre[nd].mn1) tre[nd].mn1 = v;
+        else if (v < tre[nd].mn2) tre[nd].mn2 = v;
+    }
+}
+void push_min(int nd, long long v, bool l) {
+    if (v <= tre[nd].mn1) return;
+    tre[nd].sum -= tre[nd].mn1 * tre[nd].mnc; tre[nd].mn1 = v;
+    tre[nd].sum += tre[nd].mn1 * tre[nd].mnc;
+    if (l) tre[nd].mx1 = tre[nd].mn1;
+    else {
+    	if (v >= tre[nd].mx1) tre[nd].mx1 = v;
+        else if (v > tre[nd].mx2) tre[nd].mx2 = v;
+    }
+}
+void pushdown(int nd, int s, int e) {
+    if (s == e) return; int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    push_add(lc, s, m, tre[nd].lz); push_add(rc, m + 1, e, tre[nd].lz); tre[nd].lz = 0;
+    push_max(lc, tre[nd].mx1, s == m); push_max(rc, tre[nd].mx1, m + 1 == e);
+    push_min(lc, tre[nd].mn1, s == m); push_min(rc, tre[nd].mn1, m + 1 == e);
+}
+void stmn(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+    if (r < s || e < l || v >= tre[nd].mx1) return;
+    if (l <= s && e <= r && v > tre[nd].mx2) { push_max(nd, v, s == e); return; }
+    pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    stmn(l, r, v, lc, s, m); stmn(l, r, v, rc, m + 1, e); merge(nd);
+}
+void stmx(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+    if (r < s || e < l || v <= tre[nd].mn1) return;
+    if (l <= s && e <= r && v < tre[nd].mn2) { push_min(nd, v, s == e); return; }
+    pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); merge(nd);
+}
+void add(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+    if (r < s || e < l) return;
+    if (l <= s && e <= r) { push_add(nd, s, e, v); return; }
+    pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    add(l, r, v, lc, s, m); add(l, r, v, rc, m + 1, e); merge(nd);
+}
+long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
+    if (r < s || e < l) return 0; if (l <= s && e <= r) return tre[nd].sum;
+    pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    return get(l, r, lc, s, m) + get(l, r, rc, m + 1, e);
+}
 
 // Segment Tree Merging:
 
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 1e5 + 9;
 // works for multiple values too
 struct STM
 {
@@ -1310,12 +987,12 @@ int main()
 }
 // https://codeforces.com/blog/entry/49446
 // http://www.lydsy.com:808/JudgeOnline/problem.php?id=4552
+
 /*
 The problem is maintaing a permutation of 1~n,
 supporting range sorting (increasing or decreasing),
 query the value of **one** position **after all sortings**.
 */
-
 
 // Segment Tree with Arithmetic Progression:
 

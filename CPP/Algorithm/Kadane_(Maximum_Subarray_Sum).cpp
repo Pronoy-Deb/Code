@@ -5,8 +5,7 @@ long long ar[N], n;
 long long kad() {
 	long long mx = ar[0], res = 0;
 	for (int i = 0; i < n; ++i) {
-		res += ar[i]; mx = max(mx, res);
-		res = max(res, 0);
+		res += ar[i]; mx = max(mx, res); res = max(res, 0ll);
 	}
 	return mx;
 }

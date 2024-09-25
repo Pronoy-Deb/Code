@@ -1,4 +1,8 @@
-// {
+{
+    "files.associations": {
+        "iostream": "cpp"
+    }
+} // {
 //     "tabnine.experimentalAutoImports": true,
 //     "files.autoSave": "afterDelay",
 //     "files.autoSaveDelay": 1,

@@ -3,19 +3,19 @@
 // For Dynamic Array:
 
 long long tre[N << 1], ar[N], n;
-long long com(long long x, long long y) { return min(x, y); }
+long long merge(long long x, long long y) { return min(x, y); }
 void make() {
     for (int i = 0; i < n; ++i) tre[n + i] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]);
 }
 void up(int in, long long val) {
     in += n; tre[in] = val;
-    for (int i = in; i > 1; i >>= 1) tre[i >> 1] = com(tre[i], tre[i ^ 1]);
+    for (int i = in; i > 1; i >>= 1) tre[i >> 1] = merge(tre[i], tre[i ^ 1]);
 }
 long long get(int l, int r) {
     long long res = LLONG_MAX;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
+        if (l & 1) res = merge(res, tre[l++]); if (r & 1) res = merge(res, tre[--r]);
     }
     return res;
 }
@@ -23,7 +23,7 @@ long long get(int l, int r) {
 // With Range Compression:
 // const long long N = 4 * 2e5 + 5;
 long long l[N], r[N], n;
-long long com() {
+long long merge() {
     set<long long> st;
 	for (int i = 0; i < n; ++i) {
         st.insert(l[i]); st.insert(l[i] + 1);
@@ -40,7 +40,7 @@ long long com() {
 // Operation:
     cin >> n; k = n;
     for (i = 0; i < n; ++i) { cin >> l[i] >> r[i]; }
-    n = com();
+    n = merge();
     for (i = 0; i < k; ++i) {
         ar[l[i]]++; ar[r[i] + 1]--;
     }
@@ -94,10 +94,10 @@ auto get(int l, int r) {
 // WITH lazy Propagation: O(n)
 
 long long tre[N << 1], lz[N], ar[N], n;
-long long com(long long x, long long y) { return min(x, y); }
+long long merge(long long x, long long y) { return min(x, y); }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]);
 }
 void apply(int in, long long val) { tre[in] += val; if (in < n) lz[in] += val; }
 void push(int l, int r) {
@@ -113,7 +113,7 @@ void push(int l, int r) {
 void rebuild(int l, int r) {
     for (l += n, r += n - 1; l > 1;) {
         l >>= 1, r >>= 1;
-        for (int i = r; i >= l; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]) + lz[i];
+        for (int i = r; i >= l; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]) + lz[i];
     }
 }
 void add(int l, int r, long long val) {
@@ -126,7 +126,7 @@ void add(int l, int r, long long val) {
 long long get(int l, int r) {
     push(l, l + 1); push(r, ++r); long long res = LLONG_MAX;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
+        if (l & 1) res = merge(res, tre[l++]); if (r & 1) res = merge(res, tre[--r]);
     }
     return res;
 }
@@ -134,14 +134,14 @@ long long get(int l, int r) {
 // OR,
 
 long long tre[N << 2], lz[N << 2], ar[N], n;
-long long com(long long x, long long y) { return min(x, y); }
+long long merge(long long x, long long y) { return min(x, y); }
 void make(int s = 0, int e = n - 1, int i = 0) {
 	if (s >= e) {
         if (s == e) tre[i] = ar[s]; return;
 	}
 	int m = (s + e) >> 1, lc = (i << 1) + 1, rc = lc + 1;
 	make(s, m, lc); make(m + 1, e, rc);
-	tre[i] = com(tre[lc], tre[rc]);
+	tre[i] = merge(tre[lc], tre[rc]);
 }
 void propagate(int s, int e, int i) {
 	if (lz[i]) {
@@ -164,7 +164,7 @@ void add(int l, int r, long long val, int s = 0, int e = n - 1, int i = 0) {
 		return;
 	}
 	add(l, r, val, s, m, lc); add(l, r, val, m + 1, e, rc);
-	tre[i] = com(tre[lc], tre[rc]);
+	tre[i] = merge(tre[lc], tre[rc]);
 }
 long long get(int l, int r, int s = 0, int e = n - 1, int i = 0) {
 	if (l < 0 || r > n - 1 || l > r) return LLONG_MAX;
@@ -172,7 +172,7 @@ long long get(int l, int r, int s = 0, int e = n - 1, int i = 0) {
 	if (s > e || s > r || e < l) return LLONG_MAX;
 	if (s >= l && e <= r) return tre[i];
 	int m = (s + e) >> 1, lc = (i << 1) + 1, rc = lc + 1;
-	return com(get(l, r, s, m, lc), get(l, r, m + 1, e, rc));
+	return merge(get(l, r, s, m, lc), get(l, r, m + 1, e, rc));
 }
 
 // Sparse Table Approach (For Static Array):
@@ -211,18 +211,18 @@ void cal() {
 }
 struct rmq {
     vector<long long> v[25];
-    long long com(long log x, long long y) { return min(x, y); }
+    long long merge(long log x, long long y) { return min(x, y); }
     rmq(const vector<long long> &a) {
         int n = a.size(); v[0] = a;
         for (int k = 0; (1ll << (k + 1)) <= n; ++k) {
             v[k + 1].resize(n);
             for (int i = 0; i - 1 + (1ll << (k + 1)) < n; ++i)
-                v[k + 1][i] = com(v[k][i], v[k][i + (1ll << k)]);
+                v[k + 1][i] = merge(v[k][i], v[k][i + (1ll << k)]);
         }
     }
     long long get(int i, int j) {
         int k = lg[j - i + 1];
-        return com(v[k][i], v[k][j + 1 - (1ll << k)]);
+        return merge(v[k][i], v[k][j + 1 - (1ll << k)]);
     }
 };
 
