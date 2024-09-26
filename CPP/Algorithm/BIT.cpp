@@ -3,11 +3,11 @@
 
 long long bit[N], n;
 void up(int in, long long val) {
-    for (in++; in < n; in += in & -in) bit[in] += val;
+    for (++in; in < n; in += in & -in) bit[in] += val;
 }
 long long get(int in) {
     long long tot = 0;
-    for (in++; in > 0; in -= in & -in) tot += bit[in];
+    for (++in; in > 0; in -= in & -in) tot += bit[in];
     return tot;
 }
 long long get(int l, int r) { return get(r) - get(l - 1); }
@@ -39,13 +39,10 @@ T get(int l, int r) { return get(r) - get(l - 1); }
 // OR,
 
 // struct BIT {
-long long M[N], A[N];
-// BIT() {
-//     memset(M, 0, sizeof M); memset(A, 0, sizeof A);
-// }
+long long M[N], ar[N];
 void upd(int i, long long mul, long long add) {
     while (i < N) {
-        M[i] += mul; A[i] += add; i |= (i + 1);
+        M[i] += mul; ar[i] += add; i |= (i + 1);
     }
 }
 void up(int l, int r, long long val) {
@@ -54,12 +51,11 @@ void up(int l, int r, long long val) {
 long long get(int i) {
     long long mul = 0, add = 0, st = i;
     while (i >= 0) {
-        mul += M[i]; add += A[i]; i = (i & (i + 1)) - 1;
+        mul += M[i]; add += ar[i]; i = (i & (i + 1)) - 1;
     }
     return (mul * st + add);
 }
 long long get(int l, int r) { return get(r) - get(l - 1); }
-// } t;
 
 // 2-D BIT:
 
@@ -83,7 +79,7 @@ long long get(int x1, int y1, int x2, int y2) {
 // OR,
 
 struct BIT2D {
-long long M[N][N][2], A[N][N][2];
+long long M[N][N][2], ar[N][N][2];
 BIT2D() {
     memset(M, 0, sizeof M); memset(A, 0, sizeof A);
 }
