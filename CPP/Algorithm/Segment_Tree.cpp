@@ -2,36 +2,29 @@
 // Complexity: Constructing the tree: O(n), Update & Query: O(log(n))
 
 long long tre[N << 1], ar[N], n;
-long long merge(long long x, long long y) { return x + y; }
+long long com(long long x, long long y) { return x + y; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
 }
 void up(int in, long long val) {
-    for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = merge(tre[in], tre[in ^ 1]);
+    for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = com(tre[in], tre[in ^ 1]);
 }
 long long get(int l, int r) {
     long long res = 0;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = merge(res, tre[l++]); if (r & 1) res = merge(res, tre[--r]);
+        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
     }
     return res;
 }
 
-// Operation:
-    cin >> n;
-    for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    make();
-    up(index, value);
-    get(starting_index, ending_index);
-
 // WITH lazy Propagation: O(n)
 
 long long tre[N << 1], lz[N], ar[N], n;
-long long merge(long long x, long long y) { return x + y; }
+long long com(long long x, long long y) { return x + y; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
 }
 void apply(int in, long long val, int k) {
     tre[in] += val * k; if (in < n) lz[in] += val;
@@ -50,7 +43,7 @@ void rebuild(int l, int r) {
     int k = 2;
     for (l += n, r += n - 1; l > 1; k <<= 1) {
         l >>= 1, r >>= 1;
-        for (int i = r; i >= l; --i) tre[i] = merge(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
+        for (int i = r; i >= l; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
     }
 }
 void add(int l, int r, long long val) {
@@ -63,7 +56,7 @@ void add(int l, int r, long long val) {
 long long get(int l, int r) {
     push(l, l + 1); push(r, ++r); long long res = 0;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = merge(res, tre[l++]); if (r & 1) res = merge(res, tre[--r]);
+        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
     }
     return res;
 }
@@ -71,11 +64,11 @@ long long get(int l, int r) {
 // OR,
 
 long long tre[N << 2], lz[N << 2], ar[N], n;
-long long merge(long long x, long long y) { return x + y; }
+long long com(long long x, long long y) { return x + y; }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    make(lc, s, m); make(rc, m + 1, e); tre[nd] = merge(tre[lc], tre[rc]);
+    make(lc, s, m); make(rc, m + 1, e); tre[nd] = com(tre[lc], tre[rc]);
 }
 void propagate(int nd, int s, int e) {
     if (lz[nd]) {
@@ -89,21 +82,15 @@ void add(int l, int r, long long val, int nd = 1, int s = 0, int e = n - 1) {
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     if (s >= l && e <= r) { lz[nd] += val; propagate(nd, s, e); return; }
     add(l, r, val, lc, s, m); add(l, r, val, rc, m + 1, e);
-    tre[nd] = merge(tre[lc], tre[rc]);
+    tre[nd] = com(tre[lc], tre[rc]);
 }
 long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     propagate(nd, s, e); if (s > e || s > r || e < l) return 0;
     if (s >= l && e <= r) return tre[nd];
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    return merge(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
+    return com(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
 }
-
-// Operation:
-    cin >> n;
-    for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    make();
-    add(starting_index, ending_index, value_to_add);
-    get(starting_index, ending_index);
+void reset() { for (int i = 0; i < (n << 2) + 5; ++i) tre[i] = lz[i] = 0; }
 
 // Persistent Segment Tree:
 // Problem: https://www.spoj.com/problems/MKTHNUM/
@@ -121,16 +108,10 @@ int make(int s = 1, int e = n) {
 }
 int up(int pre, int i, int v, int s = 1, int e = n) {
     int cur = ++ptr; tre[cur] = tre[pre];
-    if (s == e) {
-        tre[cur].val += v; return cur;
-    }
+    if (s == e) { tre[cur].val += v; return cur; }
     long long m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
-    if (i <= m) {
-        rc = tre[pre].r; lc = up(tre[pre].l, i, v, s, m);
-    }
-    else {
-        lc = tre[pre].l; rc = up(tre[pre].r, i, v, m + 1, e);
-    }
+    if (i <= m) { rc = tre[pre].r; lc = up(tre[pre].l, i, v, s, m); }
+    else { lc = tre[pre].l; rc = up(tre[pre].r, i, v, m + 1, e); }
     tre[cur].val = tre[lc].val + tre[rc].val;
     return cur;
 }
@@ -211,9 +192,7 @@ int push(int pre, int s, int e, int x = 0) {
 int up(int pre, int s, int e, int i, int j) {
     int cur = push(pre, s, e);
     if (s > j || e < i) return cur;
-    if (i <= s && e <= j) {
-        cur = push(cur, s, e, 1); return cur;
-    }
+    if (i <= s && e <= j) { cur = push(cur, s, e, 1); return cur; }
     int m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
     lc = up(lc, s, m, i, j); rc = up(rc, m + 1, e, i, j);
     tre[cur].val = tre[lc].val + tre[rc].val; return cur;
@@ -245,111 +224,6 @@ int root[N];
         if (cmp(root[ans], root[i], 1, n) == 2) ans = i;
     }
     print(root[ans], 1, n);
-
-// Using Class:
-
-template <typename VT>
-struct SegmentTree {
-    using DT = typename VT::DT;
-    using LT = typename VT::LT;
-    long long L, R;
-    vector<VT> tr;
-    SegmentTree(long long n) : L(0), R(n - 1), tr(n << 2) {}
-    SegmentTree(long long l, long long r) : L(l), R(r), tr((r - l + 1) << 2) {}
-    void propagate(long long l, long long r, long long u)
-    {
-        if (l == r)
-            return;
-        VT ::apply(tr[u << 1], tr[u].lz, l, (l + r) >> 1);
-        VT ::apply(tr[u << 1 | 1], tr[u].lz, (l + r + 2) >> 1, r);
-        tr[u].lz = VT ::None;
-    }
-    void make(long long l, long long r, vector<DT> &v, long long u = 1)
-    {
-        if (l == r)
-        {
-            tr[u].val = v[l];
-            return;
-        }
-        long long m = (l + r) >> 1, lft = u << 1, ryt = u << 1 | 1;
-        make(l, m, v, lft);
-        make(m + 1, r, v, ryt);
-        tr[u].val = VT ::merge(tr[lft].val, tr[ryt].val, l, r);
-    }
-    void up(long long ql, long long qr, LT up, long long l, long long r, long long u = 1)
-    {
-        if (ql > qr)
-            return;
-        if (ql == l and qr == r)
-        {
-            VT ::apply(tr[u], up, l, r);
-            return;
-        }
-        propagate(l, r, u);
-        long long m = (l + r) >> 1, lft = u << 1, ryt = u << 1 | 1;
-        up(ql, min(m, qr), up, l, m, lft);
-        up(max(ql, m + 1), qr, up, m + 1, r, ryt);
-        tr[u].val = VT ::merge(tr[lft].val, tr[ryt].val, l, r);
-    }
-    DT get(long long ql, long long qr, long long l, long long r, long long u = 1)
-    {
-        if (ql > qr)
-            return VT::I;
-        if (l == ql and r == qr)
-            return tr[u].val;
-        propagate(l, r, u);
-        long long m = (l + r) >> 1, lft = u << 1, ryt = u << 1 | 1;
-        DT ansl = get(ql, min(m, qr), l, m, lft);
-        DT ansr = get(max(ql, m + 1), qr, m + 1, r, ryt);
-        return tr[u].merge(ansl, ansr, l, r);
-    }
-    void make(vector<DT> &v) { make(L, R, v); }
-    void up(long long ql, long long qr, LT U) { up(ql, qr, U, L, R); }
-    DT get(long long ql, long long qr) { return get(ql, qr, L, R); }
-};
-
-struct Node
-{
-    using DT = long long;
-    using LT = long long;
-    DT val;
-    LT lz;
-    static constexpr DT I = 0, LT None = 0;
-    Node(DT _val = I, LT _lz = None) : val(_val), lz(_lz) {}
-    static void apply(Node &u, const LT &up, long long l, long long r)
-    {
-        if (up == None)
-            return;
-        u.val += (r - l + 1) * up;
-        if (u.lz == None)
-            u.lz = up;
-        else
-            u.lz += up;
-    }
-    static DT merge(const DT &a, const DT &b, long long l, long long r)
-    {
-        return a + b;
-    }
-};
-
-// Operation:
-cin >> n >> q;
-SegmentTree<Node> tre(n);
-while (q--)
-{
-    int tp, l, r;
-    cin >> tp >> l >> r;
-    if (tp)
-    {
-        cout << tre.get(l, r) << '\n';
-    }
-    else
-    {
-        long long val;
-        cin >> val;
-        tre.up(l, r, val);
-    }
-}
 
 // 2D Segment Tree:
 
@@ -527,17 +401,17 @@ struct treap
         }
         t->pull();
     }
-    node *merge(node *l, node *r)
+    node *com(node *l, node *r)
     {
         if (!l || !r)
             return l ? l : r;
         if (l->key < r->key)
         {
-            l->r = merge(l->r, r);
+            l->r = com(l->r, r);
             l->pull();
             return l;
         }
-        r->l = merge(l, r->l);
+        r->l = com(l, r->l);
         r->pull();
         return r;
     }
@@ -577,7 +451,7 @@ struct treap
         {
             node *l, *r;
             split(root, pos, l, r);
-            root = merge(merge(l, new node(pos, val)), r);
+            root = com(com(l, new node(pos, val)), r);
         }
     }
     long long get(node *t, int st, int en)
@@ -710,7 +584,7 @@ long long ar[N], n;
 struct Node {
     long long sum, mx1, mx2, mxc, mn1, mn2, mnc, lz;
 } tre[N << 2];
-void merge(int nd) {
+void com(int nd) {
     int lc = nd << 1, rc = lc | 1;
     tre[nd].sum = tre[lc].sum + tre[rc].sum;
     if (tre[lc].mx1 == tre[rc].mx1) {
@@ -756,7 +630,7 @@ void make(int nd = 1, int s = 0, int e = n - 1) {
     	tre[nd].mx2 = LLONG_MIN; tre[nd].mn2 = LLONG_MAX; return;
     }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    make(lc, s, m); make(rc, m + 1, e); merge(nd);
+    make(lc, s, m); make(rc, m + 1, e); com(nd);
 }
 void push_add(int nd, int s, int e, long long v) {
     if (v == 0) return;
@@ -794,19 +668,19 @@ void stmn(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l || v >= tre[nd].mx1) return;
     if (l <= s && e <= r && v > tre[nd].mx2) { push_max(nd, v, s == e); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    stmn(l, r, v, lc, s, m); stmn(l, r, v, rc, m + 1, e); merge(nd);
+    stmn(l, r, v, lc, s, m); stmn(l, r, v, rc, m + 1, e); com(nd);
 }
 void stmx(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l || v <= tre[nd].mn1) return;
     if (l <= s && e <= r && v < tre[nd].mn2) { push_min(nd, v, s == e); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); merge(nd);
+    stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); com(nd);
 }
 void add(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return;
     if (l <= s && e <= r) { push_add(nd, s, e, v); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    add(l, r, v, lc, s, m); add(l, r, v, rc, m + 1, e); merge(nd);
+    add(l, r, v, lc, s, m); add(l, r, v, rc, m + 1, e); com(nd);
 }
 long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return 0; if (l <= s && e <= r) return tre[nd].sum;
@@ -861,12 +735,12 @@ struct STM
         return cur;
     }
     // merge segment tree a and b
-    int merge(int a, int b)
+    int com(int a, int b)
     {
         if (!a || !b)
             return a ^ b;
-        tre[a].l = merge(tre[a].l, tre[b].l);
-        tre[a].r = merge(tre[a].r, tre[b].r);
+        tre[a].l = com(tre[a].l, tre[b].l);
+        tre[a].r = com(tre[a].r, tre[b].r);
         tre[a].sz += tre[b].sz;
         save_memory(b);
         return a;
@@ -923,12 +797,12 @@ void split(int l, int r)
     ty[r + 1] = ty[l];
 }
 // merge adjacent substr a and b to a (ty[a] should be edited manually)
-void merge(int a, int b)
+void com(int a, int b)
 {
     if (a == b)
         return;
     cur.erase(b);
-    root[a] = t.merge(root[a], root[b]);
+    root[a] = t.com(root[a], root[b]);
     rb[a] = rb[b];
 }
 // query for ar[k] on substr (l, ...)
@@ -975,7 +849,7 @@ int main()
                 break;
         }
         for (int i = 0; i < v.size(); ++i)
-            merge(nw, v[i]);
+            com(nw, v[i]);
         ty[nw] = type;
     }
     int i;

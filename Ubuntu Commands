@@ -1,4 +1,15 @@
 1. To clean up apps: sudo apt autoremove
 2. To clean up cashes: sudo apt autoclean
 3. To fix a disk: sudo ntfsfix /dev/sdb3
-4. 
+4.
+
+# To install GCC/G++:
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update
+sudo apt install gcc-14 g++-14 -y
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 14 --slave /usr/bin/g++ g++ /usr/bin/g++-14
+sudo update-alternatives --config gcc
+gcc --version
+

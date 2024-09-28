@@ -9,47 +9,42 @@ using namespace std;
 #define ck(...)
 #endif
 const ll M = 1e9 + 7, N = 2e5 + 5;
-template <class T>
-struct BIT { // 1-indexed
-int n; vector<T> t;
-BIT() {}
-BIT(int _n) {
-    n = _n; t.assign(n + 5, 0);
+
+long long pro[N], sum[N];
+void up(int i, long long mul, long long add) {
+    while (i < N) {
+        pro[i] += mul; sum[i] += add; i |= (i + 1);
+    }
 }
-void up(int i, T val) {
-    if (i <= 0) return;
-    for (++i; i < n; i += (i & -i)) t[i] += val;
+void add(int l, int r, long long val) {
+    up(l, val, -val * (l - 1)); up(r, -val, val * r);
 }
-void up(int l, int r, T val) {
-    up(l, val); up(r + 1, -val);
+long long get(int i) {
+    long long mul = 0, add = 0, st = i;
+    while (i >= 0) {
+        mul += pro[i]; add += sum[i]; i = (i & (i + 1)) - 1;
+    }
+    return (mul * st + add);
 }
-T get(int i) {
-    T ans = 0;
-    for (++i; i > 0; i -= i & -i) ans += t[i];
-    return ans;
-}
-T get(int l, int r) { return get(r) - get(l - 1); }
-};
+long long get(int l, int r) { return get(r) - get(--l); }
+
+
 void test(int tc) {
     ll a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, m = 0, n = 0, q = 0;
     cin >> n >> q;
-    vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    BIT<ll> bit(n);
-    for (i = 1; i <= n; ++i) {
-        bit.up(i, ar[i - 1]);
+    vector<ll> ar(n);
+    for (i = 0; i < n; ++i) {
+        cin >> ar[i]; add(i, i, ar[i]);
     }
-    while (q--) {
-        ll ty; cin >> ty;
-        if (ty == 1) {
-            cin >> a >> b >> c;
-            bit.up(a, b, c);
+    while(q--) {
+        cin >> c;
+        if(c & 1) {
+            cin >> a >> b >> k; add(a - 1, b - 1, k);
         }
         else {
-            cin >> a;
-            cout << bit.get(a) << '\n';
+            cin >> a; cout << get(a - 1, a - 1) << '\n';
         }
     }
-    // cout << '\n';
 }
 
 signed main() {
