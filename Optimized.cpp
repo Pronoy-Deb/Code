@@ -3,7 +3,6 @@ using namespace std;
 #define ll long long
 #define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
-#define pc cout << "Case " << tc << ": "
 #ifdef LOCAL
 #include "def.h"
 #else

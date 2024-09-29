@@ -2,8 +2,8 @@
 using namespace std;
 #include "def.h"
 #define ll long long
+#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n';
-#define pc cout << "Case " << tc << ": ";
 const ll M = 1e9 + 7, N = 2e5 + 5;
 
 long long ran(long long L, long long R) {
