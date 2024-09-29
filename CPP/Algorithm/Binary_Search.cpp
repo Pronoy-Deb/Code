@@ -2,44 +2,56 @@
 // Returns: (0 / 1) whether the element is present or not
 // -> Works only on monotonic (sorted) arrays
 // Built-in: binary_search(v.begin(), v.end(), n);
+// Element Finding:
 
-bool bs(auto &v, auto val)
-{
-	long long lo = 0, hi = v.size() - 1;
-	while (lo < hi)
-	{
-		long long mid = (hi + lo + 1) >> 1;
-		if (v[mid] < val)
-			lo = mid + 1;
-		else
-			hi = mid;
-	}
-	return (v[lo] == val);
-}
-
-// OR,
-
-bool bs(auto &v, auto val)
-{
-	long long lo = 0, hi = v.size() - 1;
-	while (lo <= hi)
-	{
-		long long mid = (hi + lo) >> 1;
-		if (v[mid] == val)
-			return true;
-		if (v[mid] < val)
-			lo = mid + 1;
-		else
-			hi = mid - 1;
+bool bs(auto &v, long long val) {
+	int lo = 0, hi = v.size() - 1;
+	while (lo < hi) {
+		int mid = (hi + lo) >> 1;
+		if (v[mid] == val) return true;
+		if (v[mid] < val) lo = mid + 1;
+		else hi = mid - 1;
 	}
 	return false;
 }
 
+// Lower Bound:
+
+int lb(auto &v, long long val) {
+    int lo = 0, hi = v.size() - 1;
+    while (hi - lo > 1) {
+        int mid = (lo + hi) >> 1;
+        if (v[mid] < val) lo = mid + 1;
+        else hi = mid;
+    }
+	return (v[lo] >= val ? lo : v[hi] >= val ? hi : -1);
+}
+
+// Upper Bound:
+
+int ub(auto &v, long long val) {
+    int lo = 0, hi = v.size() - 1;
+    while (hi - lo > 1) {
+        int mid = (hi + lo) >> 1;
+        if (v[mid] <= n) lo = mid + 1;
+        else hi = mid;
+    }
+	return (v[lo] > n ? lo : v[hi] > n ? hi : -1);
+}
+
+// Square Root:
+
+long double rt(auto n) {
+    long double lo = 1, hi = n;
+    while (hi - lo > 1e-6) {
+        long double mid = (lo + hi) / 2;
+        if (mid * mid < n) lo = mid;
+        else hi = mid;
+    }
+    return lo;
+}
+
 // Fraction Binary Search:
-
-#include <bits/stdc++.h>
-using namespace std;
-
 /**
 Given a function f and n, finds the smallest fraction p / q in [0, 1] or [0,n]
 such that f(p / q) is true, and p, q <= n.

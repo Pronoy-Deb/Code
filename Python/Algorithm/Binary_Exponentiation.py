@@ -1,6 +1,4 @@
 # Complexity: O(log(pow))
-# Note: To calculate modular multiplicative inverse: 1/n = bex(n, M-2)
-
 # Iterative Approach:
 
 def bex(base, pow):

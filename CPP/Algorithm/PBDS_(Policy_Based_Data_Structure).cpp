@@ -27,7 +27,8 @@ Declaration: omap<int, int> mp;
 
 // Operation:
     for (int i = 1; i <= 10; ++i) {
-        long long a; cin >> a; st.insert(a);
+        long
+            long a; cin >> a; st.insert(a);
     }
 
     // Deleting 2 from the set if it exists
@@ -39,7 +40,7 @@ Declaration: omap<int, int> mp;
     OR, st.erase(st.find_by_order(st.order_of_key(2)));
 
     // Finding the second element in the set (random access using index)
-    cout << *(st.find_by_order(1));
+    cout << *st.find_by_order(1);
 
     // Number of elements strictly less than k = 4
     cout << st.order_of_key(4);

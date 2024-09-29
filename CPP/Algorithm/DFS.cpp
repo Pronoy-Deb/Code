@@ -1,59 +1,25 @@
 // Complexity: O(V + E)
-// eg = Number of edges, vr = Number of vertices
+https://cses.fi/problemset/task/1666
 
-vector<long long> gp[N]; bool vis[N];
-void dfs(long long par) {
-    vis[par] = true;
-    for (auto &cld : gp[par]) {
-        if (vis[cld]) continue;
-        dfs(cld);
-    }
+vector<int> gp[N]; bool vis[N];
+void dfs(int par = 1) {
+	vis[par] = true;
+	for (auto &cld : gp[par]) {
+		if (!vis[cld]) dfs(cld);
+	}
 }
 
 // Operation:
-    long long vr, eg; cin >> vr >> eg;
-    for (i = 0; i < eg; ++i) {
-        long long v1, v2; cin >> v1 >> v2;
-        gp[v1].push_back(v2); gp[v2].push_back(v1);
-    }
-    dfs(1);
-
-// OR,
-
-#include<bits/stdc++.h>
-using namespace std;
-
-const int N = 1e5 + 9;
-vector<int> g[N];
-bool vis[N];
-void dfs(int u) {
-  vis[u] = true;
-  for (auto v: g[u]) {
-    if (!vis[v]) {
-      dfs(v);
-    }
-  }
-}
-int32_t main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  int n, m; cin >> n >> m;
-  while (m--) {
-    int u, v; cin >> u >> v;
-    g[u].push_back(v);
-    g[v].push_back(u);
-  }
-  vector<int> components;
-  for (int u = 1; u <= n; u++) {
-    if (!vis[u]) {
-      components.push_back(u);
-      dfs(u);
-    }
-  }
-  cout << (int)components.size() - 1 << '\n';
-  for (int i = 0; i + 1 < (int)components.size(); i++) {
-    cout << components[i] << ' ' << components[i + 1] << '\n';
-  }
-  return 0;
-}
-// https://cses.fi/problemset/task/1666
+	int vr, eg; cin >> vr >> eg;
+	for (i = 0; i < eg; ++i) {
+		int v1, v2; cin >> v1 >> v2;
+		gp[v1].push_back(v2); gp[v2].push_back(v1);
+	}
+	vector<int> com;
+	for (i = 1; i <= vr; ++i) {
+		if (!vis[i]) {
+			com.push_back(i); dfs(i);
+		}
+	}
+    n = com.size(); cout << n - 1 << '\n';
+	for (i = 0; i < n - 1; ++i) cout << com[i] << ' ' << com[i + 1] << '\n';

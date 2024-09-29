@@ -1,5 +1,5 @@
-// Note: Binary Indexed Tree (BIT) is also known as Fenwick Tree. (0-based indexing)
-// https://cses.fi/problemset/task/1651
+// Note: Binary Indexed Tree (BIT) is also known as Fenwick Tree and it is based on prefix sum concept. (0-based indexing)
+https://cses.fi/problemset/task/1651
 
 long long bit[N], n;
 void add(int in, long long val) {
@@ -14,7 +14,7 @@ long long get(int in) {
 long long get(int l, int r) { return get(r) - get(--l); }
 void reset() { for (int i = 0; i <= n; ++i) bit[i] = 0; }
 
-// OR,
+// OR, Range Update & Range Query:
 
 long long pro[N], bit[N]; set<int> ind;
 void up(int i, long long mul, long long add) {
@@ -36,7 +36,23 @@ long long get(int i) {
 long long get(int l, int r) { return get(r) - get(--l); }
 void reset() { for (auto &i : ind) pro[i] = bit[i] = 0; ind.clear(); }
 
-// 2-D BIT:
+// lower_bound of Prefix Sum:
+https://codeforces.com/contest/1354/problem/D
+
+long long bit[N];
+
+int lb(long long val) {
+    int pos = 0;
+	for (int i = log2(N); i >= 0; --i) {
+        int ex = 1 << i;
+        if (pos + ex < N && bit[pos + ex] < val) {
+			val -= bit[pos + ex]; pos += ex;
+		}
+	}
+	return pos + 1;
+}
+
+// 2-D BIT: (1-based indexing)
 
 long long bit[N][N]; set<pair<int, int>> ind;
 void add(int x, int y, long long val) {
