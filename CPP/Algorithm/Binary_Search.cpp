@@ -39,7 +39,7 @@ int ub(auto &v, long long val) {
 	return (v[lo] > n ? lo : v[hi] > n ? hi : -1);
 }
 
-// Square Root:
+// Square Root using binary search:
 
 long double rt(auto n) {
     long double lo = 1, hi = n;
@@ -49,6 +49,14 @@ long double rt(auto n) {
         else hi = mid;
     }
     return lo;
+}
+
+// OR,
+
+long long rt(long long x) {
+	long long p = sqrtl(x);
+	while (p * p < x) ++p; while (p * p > x) --p;
+	return p;
 }
 
 // Fraction Binary Search:

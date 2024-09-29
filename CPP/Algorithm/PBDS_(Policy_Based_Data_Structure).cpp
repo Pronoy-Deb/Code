@@ -8,27 +8,31 @@ Note: 1) Use less_equal<> instead of less<> to use it like a multiset
 #include<ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 
-template<class T> using oset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<class T> using ost = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-Declaration: oset<long long> st;
+Declaration: ost<long long> st;
 
 // OR,
 
-typedef tree<long long, null_type, less<>, rb_tree_tag, tree_order_statistics_node_update> oset;
+typedef tree<long long, null_type, less<>, rb_tree_tag, tree_order_statistics_node_update> ost;
 
-Declaration: oset st;
+Declaration: ost st;
 
 // For using as map:
 
 template<class key, class value, class cmp = less<key>>
-using omap = tree<key, value, cmp, rb_tree_tag, tree_order_statistics_node_update>;
+using omp = tree<key, value, cmp, rb_tree_tag, tree_order_statistics_node_update>;
 
-Declaration: omap<int, int> mp;
+Declaration: omp<int, int> mp;
+
+// For using as minheap:
+
+using minheap = priority_queue<long long, vector<long long>, greater<long long>>;
+typedef tree<int, null_type, greater_equal<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
 // Operation:
     for (int i = 1; i <= 10; ++i) {
-        long
-            long a; cin >> a; st.insert(a);
+        long long a; cin >> a; st.insert(a);
     }
 
     // Deleting 2 from the set if it exists

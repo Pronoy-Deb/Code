@@ -13,9 +13,18 @@ const ll M = 1e9 + 7, N = 2e5 + 5;
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
     cin >> n;
-    vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    
-    cout << '\n';
+    c = n;
+    // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    while(1) {
+        a = sqrtl(c + 0.5);
+        b = sqrtl(c + a + 0.5);
+        if(a == b) {
+            cout << n + a << '\n';
+            return;
+        }
+        c += b;
+    }
+    // cout << '\n';
 }
 
 signed main() {

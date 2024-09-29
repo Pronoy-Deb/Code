@@ -1,0 +1,1 @@
+{"name":"Local: Miller_Rabin","url":"/media/pronoy/Backup/CP/Essentials/CPP/Algorithm/Miller_Rabin.cpp","tests":[{"id":1727635328238,"input":"2\n17\n1000000007","output":"Yes\nYes"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Essentials/CPP/Algorithm/Miller_Rabin.cpp","group":"local","local":true}
