@@ -7,9 +7,6 @@
  *
 ***/
 
-#include <bits/stdc++.h>
-
-using namespace std;
 
 /// Magic constants, optimized to answer prime counting queries for n=10^12 but can be tweaked
 
