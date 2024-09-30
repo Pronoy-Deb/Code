@@ -1,18 +1,16 @@
-// Xor from 1 to n:
-// Complexity: O(1)
+// Xor from 1 to n: O(1)
 
 long long xor(long long n) {
     int rem = n % 4;
     return !rem ? n : (rem == 1) ? 1 : (rem == 2) ? n + 1 : 0;
 }
 
-// Static Range XOR Query:
-// Complexity: O(n * logn)
+// Static Range XOR Query: O(n * logn)
 // Note: 1-based indexing
-// https://cses.fi/problemset/task/1650
+https://cses.fi/problemset/task/1650
 
 long long pxr[N], ar[N];
-void cal() {
+void pre() {
 	for (int i = 1; i < N; ++i) pxr[i] = pxr[i - 1] ^ ar[i - 1];
 }
 long long xr(int l, int r) { return pxr[r] ^ pxr[l - 1]; }
@@ -35,8 +33,44 @@ long long xr(int l, int r) { return pxr[r] ^ pxr[l - 1]; }
         cout << c << '\n';
     }
 
+// Maximum XOR Subarray: O(n)
+https://cses.fi/problemset/task/1655
+
+const int L = 30;
+long long trie[N * L][2], c = 0;
+void up(long long x) {
+    long long nd = 0;
+    for (int i = L; i >= 0; --i) {
+        long long y = x >> i & 1;
+        if (!trie[nd][y]) trie[nd][y] = ++c;
+        nd = trie[nd][y];
+    }
+}
+long long get(long long x) {
+    long long ans = 0, nd = 0;
+    for (int i = L; i >= 0; --i) {
+        long long y = x >> i & 1;
+        if (trie[nd][y ^ 1]) {
+            nd = trie[nd][y ^ 1]; ans += (1 << i);
+        }
+        else nd = trie[nd][y];
+    }
+    return ans;
+}
+void reset(int n) { for (int i = 0; i <= n; ++i) trie[i][0] = trie[i][1] = 0; }
+
+// Operation:
+    cin >> n;
+    long long xr = 0, mx = 0; up(xr);
+    for (i = 0; i < n; ++i) {
+        long long x; cin >> x; xr ^= x; up(xr);
+        mx = max(get(xr), mx);
+    }
+    cout << mx;
+
 // XOR Segment Tree:
-// relevant problem: https://codeforces.com/contest/1654/problem/F
+https://codeforces.com/contest/1654/problem/F
+
 long long a[N];
 struct XORSegmentTree {
     // the length of the array should be 2^LOG for some LOG
@@ -96,19 +130,19 @@ struct XORSegmentTree {
     }
     }
 }t;
-mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+mt19937_64 ran(chrono::high_resolution_clock::now().time_since_epoch().count());
 int32_t main() {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   int k = 17, n = (1 << k);
   for (int i = 0; i < n; i++) {
-    a[i] = rnd() % 1000000000;
+    a[i] = ran() % 1000000000;
   }
   t.build(1, 0, n - 1);
   int q = 1000;
   while (q--) {
-    int l = rnd() % n, r = rnd() % (n - l) + l, x = rnd() % (1 << k);
-    int z = rnd() % n, add = rnd() % 100;
+    int l = ran() % n, r = ran() % (n - l) + l, x = ran() % (1 << k);
+    int z = ran() % n, add = ran() % 100;
     t.upd(1, 0, n - 1, z, add);
     a[z] += add;
     long long sum = 0;

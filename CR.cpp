@@ -1,8 +1,3 @@
-// C++ code to implement the sparse tab
-
-#include <bits/stdc++.h>
-using namespace std;
-
 const int N = 5e2 + 5, L = 10;
 long long tab[N][N][L][L], ar[N][N], n, m;
 void make() {
@@ -35,20 +30,4 @@ void make() {
 long long get(int x1, int y1, int x2, int y2) {
 	int k = log2(x2 - x1 + 1), l = log2(y2 - y1 + 1);
 	return max({tab[x1][y1][k][l], tab[x2 - (1 << k) + 1][y1][k][l], tab[x1][y2 - (1 << l) + 1][k][l], tab[x2 - (1 << k) + 1][y2 - (1 << l) + 1][k][l]});
-}
-
-int main() {
-    cin >> n >> m;
-    for(int i=0;i<n;++i) {
-        for (int j = 0; j < m; ++j)
-            cin >> ar[i][j];
-    }
-    make();
-    int q; cin >>q;
-    while(q--) {
-        int x1, y1, x2, y2;
-        cin >> x1 >> y1 >> x2 >> y2;
-        cout << get(x1, y1, x2, y2) << endl;
-    }
-    return 0;
 }

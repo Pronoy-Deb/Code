@@ -1,4 +1,4 @@
-Note:
+// Note: Uses about (n / 64) memory than boolean array and can calculate upto 1e8 in 1 second
 
 Default constructor initializes with all bits 0:
     bitset<32> bset1;

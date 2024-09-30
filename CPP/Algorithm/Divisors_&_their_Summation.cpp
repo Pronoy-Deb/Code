@@ -1,89 +1,97 @@
-// Note: Number of divisors of a number is equal to the product of (a + 1) where a is the power of each prime factor of that number.
-// Naive Approach:
+// Note: Number of divisors of a number is equal to the product of (a + 1) where a is the power of each pri factor of that number.
 // Complexity: O(sqrt(n))
 
-auto div(long long n)
-{
+auto div(long long n) {
     vector<long long> v;
-    for (long long i = 1; i * i <= n; ++i)
-    {
-        if (!(n % i))
-        {
-            v.push_back(i);
-            long long tmp = n / i;
-            if (i != tmp)
-                v.push_back(tmp);
+    for (long long i = 1; i * i <= n; ++i) {
+        if (!(n % i)) {
+            v.push_back(i); long long tmp = n / i;
+            if (i != tmp) v.push_back(tmp);
         }
     }
     return v;
 }
 
-// For number of divisors: // O(N * log(log(n)))
+// For number of divisors: // O(cbrt(n))
+// N = 1e6  + 5 for n = 1e18
 
-bool sv[N];
-vector<long long> pri;
-void pre()
-{
-    pri.push_back(2);
-    for (long long i = 3; i < N; i += 2)
-    {
-        if (!sv[i])
-        {
-            pri.push_back(i);
-            for (long long j = i * i; j < N; j += (i << 1))
-                sv[j] = 1;
+long long pri[N], spf[N]; bool sv[N];
+void pre() {
+    pri[0] = spf[2] = 2;
+    for (int i = 4; i < N; i += 2) { sv[i] = true; spf[i] = 2; }
+    for (long long i = 3, c = 0; i < N; i += 2) {
+        if (!sv[i]) {
+            pri[++c] = spf[i] = i;
+            for (long long j = i * i; j < N; j += (i << 1)) {
+                sv[j] = true; if (!spf[j]) spf[j] = i;
+            }
         }
     }
 }
-long long div(long long n)
-{
-    long long dv = 1, k = 0;
-    for (long long i = 0; pri[i] * pri[i] <= n; ++i, k = 0)
-    {
-        while (++k and !(n % pri[i]) and n > 1)
-            n /= pri[i];
-        dv *= k;
+long long modmul(long long x, long long y, long long m) {
+    long long res = __int128(x) * y % m; return res;
+    // long long res = x * y - (long long)((long double)x * y / m + 0.5) * m;
+    // return res < 0 ? res + m : res;
+}
+long long bex(long long x, long long n, long long m) {
+    long long res = 1 % m;
+    while (n) {
+        if (n & 1) res = modmul(res, x, m);
+        x = modmul(x, x, m); n >>= 1;
     }
-    return (n != 1 ? (dv << 1) : dv);
+    return res;
+}
+bool ip(long long n) {
+	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
+    if (n < N) return spf[n] == n;
+    long long s = 0, r = n - 1; while (~r & 1) { r >>= 1; ++s; }
+    for (int i = 0; pri[i] < n && pri[i] < 32; ++i) {
+        long long c = bex(pri[i], r, n);
+        for (int j = 0; j < s; ++j) {
+            long long d = modmul(c, c, n);
+            if (d == 1 && c != 1 && c != (n - 1)) return false;
+            c = d;
+        }
+        if (c != 1) return false;
+    }
+    return true;
+}
+long long sr(long long x) {
+	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
+    while (p * p > x) --p; return p;
+}
+long long div(long long n) {
+    long long dv = 1, c = 0;
+    for (int i = 0; pri[i] * pri[i] * pri[i] <= n; ++i, c = 0) {
+        while (++c and !(n % pri[i]) and n > 1) n /= pri[i]; dv *= c;
+    }
+    return (ip(n) ? (dv << 1) : ip(sr(n)) ? dv * 3 : n != 1 ? (dv << 2) : dv);
 }
 
 // For summation of divisors:
 
-long long dsum(long long n)
-{
+long long dsum(long long n) {
     long long res = 1;
-    for (long long i = 2; i * i <= n; ++i)
-    {
+    for (long long i = 2; i * i <= n; ++i) {
         long long csum = 1, cterm = 1;
-        while (!(n % i))
-        {
-            n /= i;
-            cterm *= i;
-            csum += cterm;
+        while (!(n % i)) {
+            n /= i; cterm *= i; csum += cterm;
         }
         res *= csum;
     }
-    if (n > 1)
-        res *= (1 + n);
-    return res;
+    if (n > 1) res *= (1 + n); return res;
 }
 
 // With Divisors:
 
-auto div(long long n)
-{
+auto div(long long n) {
     pair<vector<long long>, long long> pr;
-    for (long long i = 1; i * i <= n; ++i)
-    {
-        if (!(n % i))
-        {
-            (pr.first).push_back(i);
-            pr.second += i;
+    for (long long i = 1; i * i <= n; ++i) {
+        if (!(n % i)) {
+            (pr.first).push_back(i); pr.second += i;
             long long tmp = n / i;
-            if (i != tmp)
-            {
-                (pr.first).push_back(tmp);
-                pr.second += tmp;
+            if (i != tmp) {
+                (pr.first).push_back(tmp); pr.second += tmp;
             }
         }
     }
@@ -94,17 +102,13 @@ auto div(long long n)
 // Complexity: O(n * log(n))
 
 vector<long long> dv[N];
-void div()
-{
+void div() {
     dv[1].push_back(1);
-    for (long long i = 2; i < N; ++i)
-    {
+    for (long long i = 2; i < N; ++i) {
         dv[i].push_back(1);
-        for (long long j = i * i; j < N; j += i)
-        {
-            dv[j].push_back(i);
-            if (tmp != j)
-                dv[j].push_back(j / i);
+        for (long long j = i * i; j < N; j += i) {
+            dv[j].push_back(i); long long tmp = j / i;
+            if (tmp != j) dv[j].push_back(tmp);
         }
         dv[i].push_back(i);
     }
@@ -112,28 +116,18 @@ void div()
 
 // For summation of divisors:
 
-vector<long long> dv[N];
-long long sdv[N];
-auto div()
-{
-    dv[1].push_back(1);
-    sdv[1] = 1;
-    for (long long i = 2; i < N; ++i)
-    {
+vector<long long> dv[N]; long long sdv[N];
+auto div() {
+    dv[1].push_back(1); sdv[1] = 1;
+    for (long long i = 2; i < N; ++i) {
         dv[i].push_back(1);
-        for (long long j = i * i; j < N; j += i)
-        {
-            dv[j].push_back(i);
-            sdv[j] += i;
-            long long tmp = j / i;
-            if (i != tmp)
-            {
-                dv[j].push_back(tmp);
-                sdv[j] += tmp;
+        for (long long j = i * i; j < N; j += i) {
+            dv[j].push_back(i); sdv[j] += i; long long tmp = j / i;
+            if (i != tmp) {
+                dv[j].push_back(tmp); sdv[j] += tmp;
             }
         }
-        dv[i].push_back(i);
-        sdv[i] += (i + 1);
+        dv[i].push_back(i); sdv[i] += (i + 1);
     }
 }
 
@@ -211,7 +205,7 @@ namespace pcf
 {
 // initialize once by calling init()
 #define MAXN 10000010      // initial sieve limit
-#define MAX_PRIMES 1000010 // max size of the prime array for sieve
+#define MAX_PRIMES 1000010 // max size of the pri array for sieve
 #define PHI_N 100000
 #define PHI_K 100
 

@@ -53,10 +53,9 @@ long double rt(auto n) {
 
 // OR,
 
-long long rt(long long x) {
-	long long p = sqrtl(x);
-	while (p * p < x) ++p; while (p * p > x) --p;
-	return p;
+long long sr(long long x) {
+	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
+	while (p * p > x) --p; return p;
 }
 
 // Fraction Binary Search:

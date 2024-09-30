@@ -1,38 +1,15 @@
-// Complexity: O(k * log(n))
-// Fermat Method of Primality Test:
-
-mt19937_64 ran(chrono::high_resolution_clock::now().time_since_epoch().count());
-long long bex(long long a, long long n, long long p) {
-	long long res = 1; a %= p;
-	while (n) {
-		if (n & 1) res = (res * a) % p;
-		n >>= 1; a = (a * a) % p;
-	}
-	return res;
-}
-bool pri(long long n, int k = 10) {
-    if (n == 2 || n == 3) return true;
-	if (n < 2 || (~n & 1) || !(n % 3)) return false;
-    while (k--) {
-        long long a = 2 + ran() % (n - 4);
-        if (gcd(n, a) != 1 || bex(a, n - 1, n) != 1) return false;
-	}
-	return true;
-}
-
 // Miller-Rabin Method of Primality Test:
 
-int primes[N], spf[N];
+long long pri[N], spf[N];
 void pre() {
     for (int i = 2, c = 0; i < N; ++i) {
-        if (!spf[i]) primes[c++] = spf[i] = i;
-        for (int j = 0, k; (k = i * primes[j]) < N; ++j) {
-            spf[k] = primes[j];
+        if (!spf[i]) pri[c++] = spf[i] = i;
+        for (int j = 0, k; (k = i * pri[j]) < N; ++j) {
+            spf[k] = pri[j];
             if (spf[i] == spf[k]) break;
         }
     }
 }
-
 long long modmul(long long x, long long y, long long m) {
     long long res = __int128(x) * y % m; return res;
     // long long res = x * y - (long long)((long double)x * y / m + 0.5) * m;
@@ -46,13 +23,13 @@ long long bex(long long x, long long n, long long m) {
     }
     return res;
 }
-bool pri(long long n) {
-    if (n <= 2 || (n & 1 ^ 1)) return (n == 2);
+bool ip(long long n) {
+	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
     if (n < N) return spf[n] == n;
     long long s = 0, r = n - 1;
     while (~r & 1) { r >>= 1; ++s; }
-    for (int i = 0; primes[i] < n && primes[i] < 32; ++i) {
-        long long c = bex(primes[i], r, n);
+    for (int i = 0; pri[i] < n && pri[i] < 32; ++i) {
+        long long c = bex(pri[i], r, n);
         for (int j = 0; j < s; ++j) {
             long long d = modmul(c, c, n);
             if (d == 1 && c != 1 && c != (n - 1)) return false;
@@ -61,6 +38,27 @@ bool pri(long long n) {
         if (c != 1) return false;
     }
     return true;
+}
+
+// Complexity: O(k * log^2(n))
+// Fermat Method of Primality Test:
+
+mt19937_64 ran(chrono::high_resolution_clock::now().time_since_epoch().count());
+long long bex(long long a, long long n, long long p) {
+	long long res = 1; a %= p;
+	while (n) {
+		if (n & 1) res = (res * a) % p;
+		n >>= 1; a = (a * a) % p;
+	}
+	return res;
+}
+bool ip(long long n, int k = 10) {
+	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
+    while (k--) {
+        long long a = 2 + ran() % (n - 4);
+        if (gcd(n, a) != 1 || bex(a, n - 1, n) != 1) return false;
+	}
+	return true;
 }
 
 // Solovay-Strassen method of Primality Test:
@@ -75,31 +73,26 @@ long long bex(long long a, long long n, long long p) {
 	return res;
 }
 long long jaco(long long a, long long n) {
-	if (!a) return 0;
-	long long ans = 1;
+	if (!a) return 0; long long ans = 1;
 	if (a < 0) {
 		a = -a; if (n % 4 == 3) ans = -ans;
 	}
 	if (a == 1) return ans;
 	while (a) {
 		if (a < 0) {
-			a = -a;
-			if (n % 4 == 3) ans = -ans;
+			a = -a; if (n % 4 == 3) ans = -ans;
 		}
 		while (~a & 1) {
-			a >>= 1;
-			if (n % 8 == 3 || n % 8 == 5) ans = -ans;
+			a >>= 1; if (n % 8 == 3 || n % 8 == 5) ans = -ans;
 		}
 		swap(a, n);
 		if (a % 4 == 3 && n % 4 == 3) ans = -ans;
 		a %= n; if (a > (n >> 1)) a = a - n;
 	}
-	if (n == 1) return ans;
-	return 0;
+	return (n == 1 ? ans : 0);
 }
-bool pri(long long p, int k = 50) {
-	if (p < 2) return false;
-	if (p != 2 && (~p & 1)) return false;
+bool ip(long long p, int k = 50) {
+	if (p < 2 || (~p & 1) || !(p % 3)) return (p == 2 || p == 3);
 	while (k--) {
 		long long a = ran() % (p - 1) + 1, jb = (p + jaco(a, p)) % p, m = bex(a, (p - 1) >> 1, p);
 		if (!jb || m != jb) return false;
@@ -109,9 +102,8 @@ bool pri(long long p, int k = 50) {
 
 // Complexity: O(sqrt(n))
 
-bool pri(long long n) {
-	if (n == 2 || n == 3) return true;
-	if (n < 2 || !(n % 2) || !(n % 3)) return false;
+bool ip(long long n) {
+	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
 	for (long long i = 5; i * i <= n; i += 6) {
 		if (!(n % i) || !(n % (i + 2))) return false;
 	}
@@ -120,101 +112,107 @@ bool pri(long long n) {
 
 // OR,
 
-bool pri(long long n) {
-    if (n == 2) return true;
-    if (n < 2 or ~n & 1) return false;
+bool ip(long long n) {
+	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
     for (long long i = 3; i * i <= n; i += 2) {
         if (!(n % i)) return false;
     }
     return true;
 }
 
-// Prime Factorization:
-// General Approach:
-// Complexity: O(sqrt(n))
-// To store all the prime factors:
+// Number of Primes from [1 - n] using Meissel-Lehmer Algorithm: O(n ^ (2 / 3))
 
-auto pfac(auto n)
-{
-    vector<long long> v;
-    while (~n & 1)
-    {
-        v.push_back(2);
-        n >>= 1;
+const long long N = 2e7 + 10, MXP = 7, MXN = 50, MXM = 2 * 3 * 7 * 5 * 11 * 13 * 17;
+constexpr auto fdv = [](const long long& a, const int& b) ->long long { return double(a) / b + 1e-9; };
+vector<int> pri; bitset<N> ip; int pro[MXP], pi[N], dp[MXN][MXM];
+
+void pre() {
+    long long i, j; assert(MXN >= MXP);
+    ip[2] = true; for (i = 3; i < N; i += 2) ip[i] = true;
+    for (i = 3; i * i < N; i += 2) {
+        for (j = i * i; ip[i] && j < N; j += (i << 1)) ip[j] = false;
     }
-    for (long long i = 3; i * i <= n; i += 2)
-    {
-        while (!(n % i))
-        {
-            v.push_back(i);
-            n /= i;
+    for (i = 1; i < N; ++i) {
+        pi[i] = pi[i - 1] + ip[i]; if (ip[i]) pri.push_back(i);
+    }
+    for (pro[0] = pri[0], i = 1; i < MXP; ++i) pro[i] = pro[i - 1] * pri[i];
+    for (i = 0; i < MXM; ++i) dp[0][i] = i;
+    for (i = 1; i < MXN; ++i) {
+        for (j = 1; j < MXM; ++j)
+            dp[i][j] = dp[i - 1][j] - dp[i - 1][fdv(j, pri[i - 1])];
+    }
+}
+uint64_t phi(long long m, int n) {
+    if (!n) return m; if (n < MXN && m < MXM) return dp[n][m];
+    if (n < MXP) return dp[n][m % pro[n - 1]] + fdv(m, pro[n - 1]) * dp[n][pro[n - 1]];
+    long long p = pri[n - 1]; if (m < N && p * p >= m) return pi[m] - n + 1;
+    if (p * p * p < m || m >= N) return phi(m, n - 1) - phi(fdv(m, p), n - 1);
+    int lim = pi[(int)sqrtl(0.5 + m)];
+    uint64_t res = pi[m] - ((lim + n - 2) * (lim - n + 1) >> 1);
+    for (int i = n; i < lim; ++i) res += pi[fdv(m, pri[i])];
+    return res;
+}
+uint64_t ip(long long n) {
+    if (n < N) return pi[n]; int s = sqrtl(0.5 + n), c = cbrtl(0.5 + n);
+    uint64_t res = phi(n, pi[c]) + pi[c] - 1;
+    for (int i = pi[c]; i < pi[s]; ++i) res -= ip(fdv(n, pri[i])) - i;
+    return res;
+}
+
+// Prime Factorization:
+// To store all the prime factors: O(sqrt(n))
+
+auto pfac(long long n) {
+    vector<long long> v;
+    while (~n & 1) {
+        v.push_back(2); n >>= 1;
+    }
+    for (long long i = 3; i * i <= n; i += 2) {
+        while (!(n % i)) {
+            v.push_back(i); n /= i;
         }
     }
-    if (n > 2)
-        v.push_back(n);
-    return v;
+    if (n > 2) v.push_back(n); return v;
 }
 
 // To store the count of prime factors:
 
-auto pfac(auto n)
-{
+auto pfac(long long n) {
     map<long long, long long> mp;
-    while (~n & 1)
-    {
-        ++mp[2];
-        n >>= 1;
+    while (~n & 1) {
+        ++mp[2]; n >>= 1;
     }
-    for (long long i = 3; i * i <= n; i += 2)
-    {
-        while (!(n % i))
-        {
-            ++mp[i];
-            n /= i;
+    for (long long i = 3; i * i <= n; i += 2) {
+        while (!(n % i)) {
+            ++mp[i]; n /= i;
         }
     }
-    if (n > 2)
-        ++mp[n];
-    return mp;
+    if (n > 2) ++mp[n]; return mp;
 }
 
-// Sieve Approach:
-// Complexity: O(n * (log(log(n))) + log(n))
+// Sieve Approach: O(n * (log(log(n))) + log(n))
 
-long long lp[N];
-bool sv[N];
-void pre()
-{
-    lp[2] = 2;
-    for (int i = 4; i < N; i += 2)
-    {
-        sv[i] = true;
-        lp[i] = 2;
+long long spf[N]; bool sv[N];
+void pre() {
+    spf[2] = 2;
+    for (int i = 4; i < N; i += 2) {
+        sv[i] = true; spf[i] = 2;
     }
-    for (long long i = 3; i < N; i += 2)
-    {
-        if (!sv[i])
-        {
-            lp[i] = i;
-            for (long long j = i * i; j < N; j += (i << 1))
-            {
-                sv[j] = true;
-                if (!lp[j])
-                    lp[j] = i;
+    for (long long i = 3; i < N; i += 2) {
+        if (!sv[i]) {
+            spf[i] = i;
+            for (long long j = i * i; j < N; j += (i << 1)) {
+                sv[j] = true; if (!spf[j]) spf[j] = i;
             }
         }
     }
 }
-auto pfac(auto n)
-{
+auto pfac(long long n) {
     vector<long long> v;
-    while (n > 1)
-    {
-        long long p = lp[n];
-        while (!(n % p))
-        {
-            n /= p;
-            v.push_back(p);
+    while (n > 1) {
+        long long p = spf[n];
+        while (!(n % p)) {
+            n /= p; v.push_back(p);
         }
     }
     return v;
@@ -223,226 +221,132 @@ auto pfac(auto n)
 // To store the count of prime numbers:
 // Complexity: O(N * (log(log(N))) + log(n))
 
-long long lp[N];
-bool sv[N];
-auto pre()
-{
-    lp[2] = 2;
-    for (int i = 4; i < N; i += 2)
-    {
-        sv[i] = true;
-        lp[i] = 2;
+long long spf[N]; bool sv[N];
+auto pre() {
+    spf[2] = 2;
+    for (int i = 4; i < N; i += 2) {
+        sv[i] = true; spf[i] = 2;
     }
-    for (long long i = 3; i < N; i += 2)
-    {
-        if (!sv[i])
-        {
-            lp[i] = i;
-            for (long long j = i * i; j < N; j += (i << 1))
-            {
-                sv[j] = true;
-                if (!lp[j])
-                    lp[j] = i;
+    for (long long i = 3; i < N; i += 2) {
+        if (!sv[i]) {
+            spf[i] = i;
+            for (long long j = i * i; j < N; j += (i << 1)) {
+                sv[j] = true; if (!spf[j]) spf[j] = i;
             }
         }
     }
 }
-auto pfac(auto n)
-{
+auto pfac(long long n) {
     map<long long, long long> mp;
-    while (n > 1)
-    {
-        long long p = lp[n];
-        while (!(n % p))
-        {
-            n /= p;
-            ++mp[p];
+    while (n > 1) {
+        long long p = spf[n];
+        while (!(n % p)) {
+            n /= p; ++mp[p];
         }
     }
     return mp;
 }
 
 // Prime Factorization Fastest:
+https://judge.yosupo.jp/problem/factorize
 
-#include <bits/stdc++.h>
-
-using namespace std;
-
-struct Mint
-{
-    uint64_t n;
-    static uint64_t mod, inv, r2;
+struct Mint {
+    uint64_t n; static uint64_t mod, inv, r2;
     Mint() : n(0) {}
     Mint(const uint64_t &x) : n(init(x)) {}
     static uint64_t init(const uint64_t &w) { return reduce(__uint128_t(w) * r2); }
-    static void set_mod(const uint64_t &m)
-    {
-        mod = inv = m;
-        for (int i = 0; i < 5; i++)
-            inv *= 2 - inv * m;
+    static void set_mod(const uint64_t &m) {
+        mod = inv = m; for (int i = 0; i < 5; ++i) inv *= 2 - inv * m;
         r2 = -__uint128_t(m) % m;
     }
-    static uint64_t reduce(const __uint128_t &x)
-    {
+    static uint64_t reduce(const __uint128_t &x) {
         uint64_t y = uint64_t(x >> 64) - uint64_t((__uint128_t(uint64_t(x) * inv) * mod) >> 64);
         return int64_t(y) < 0 ? y + mod : y;
     }
-    Mint &operator+=(const Mint &x)
-    {
-        n += x.n - mod;
-        if (int64_t(n) < 0)
-            n += mod;
-        return *this;
+    Mint &operator+=(const Mint &x) {
+        n += x.n - mod; if (int64_t(n) < 0) n += mod; return *this;
     }
     Mint &operator+(const Mint &x) const { return Mint(*this) += x; }
-    Mint &operator*=(const Mint &x)
-    {
-        n = reduce(__uint128_t(n) * x.n);
-        return *this;
+    Mint &operator*=(const Mint &x) {
+        n = reduce(__uint128_t(n) * x.n); return *this;
     }
     Mint &operator*(const Mint &x) const { return Mint(*this) *= x; }
     uint64_t val() const { return reduce(n); }
 };
-
 uint64_t Mint::mod, Mint::inv, Mint::r2;
-
-bool suspect(const uint64_t &a, const uint64_t &s, uint64_t d, const uint64_t &n)
-{
-    if (Mint::mod != n)
-        Mint::set_mod(n);
+bool suspect(const uint64_t &a, const uint64_t &s, uint64_t d, const uint64_t &n) {
+    if (Mint::mod != n) Mint::set_mod(n);
     Mint x(1), xx(a), one(x), minusone(n - 1);
-    while (d > 0)
-    {
-        if (d & 1)
-            x *= xx;
-        xx *= xx;
-        d >>= 1;
+    while (d > 0) {
+        if (d & 1) x *= xx; xx *= xx; d >>= 1;
     }
-    if (x.n == one.n)
-        return true;
-    for (unsigned int r = 0; r < s; r++)
-    {
-        if (x.n == minusone.n)
-            return true;
-        x *= x;
+    if (x.n == one.n) return true;
+    for (unsigned int r = 0; r < s; ++r) {
+        if (x.n == minusone.n) return true; x *= x;
     }
     return false;
 }
-
-bool is_prime(const uint64_t &n)
-{
-    if (n <= 1 || (n > 2 && (~n & 1)))
-        return false;
-    uint64_t d = n - 1, s = 0;
-    while (~d & 1)
-        s++, d >>= 1;
+bool ip(const uint64_t &n) {
+    if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
+    uint64_t d = n - 1, s = 0; while (~d & 1) ++s, d >>= 1;
     static const uint64_t a_big[] = {2, 325, 9375, 28178, 450775, 9780504, 1795265022};
-    static const uint64_t a_smol[] = {2, 7, 61};
-    if (n <= 4759123141LL)
-    {
-        for (auto &&p : a_smol)
-        {
-            if (p >= n)
-                break;
-            if (!suspect(p, s, d, n))
-                return false;
+    static const uint64_t a_small[] = {2, 7, 61};
+    if (n <= 4759123141LL) {
+        for (auto &&p : a_small) {
+            if (p >= n) break; if (!suspect(p, s, d, n)) return false;
         }
     }
-    else
-    {
-        for (auto &&p : a_big)
-        {
-            if (p >= n)
-                break;
-            if (!suspect(p, s, d, n))
-                return false;
+    else {
+        for (auto &&p : a_big) {
+            if (p >= n) break; if (!suspect(p, s, d, n)) return false;
         }
     }
     return true;
 }
-
-uint64_t rho_pollard(const uint64_t &n)
-{
-    if (~n & 1)
-        return 2u;
-    static random_device rng;
+uint64_t rho_pollard(const uint64_t &n) {
+    if (~n & 1) return 2u; static random_device rng;
     uniform_int_distribution<uint64_t> rr(1, n - 1);
-    if (Mint::mod != n)
-        Mint::set_mod(n);
-    for (;;)
-    {
+    if (Mint::mod != n) Mint::set_mod(n);
+    for (;;) {
         uint64_t c_ = rr(rng), g = 1, r = 1, m = 500;
         Mint y(rr(rng)), xx(0), c(c_), ys(0), q(1);
-        while (g == 1)
-        {
-            xx.n = y.n;
-            for (unsigned int i = 1; i <= r; i++)
-                y *= y, y += c;
-            uint64_t k = 0;
-            g = 1;
-            while (k < r && g == 1)
-            {
-                for (unsigned int i = 1; i <= (m > (r - k) ? (r - k) : m); i++)
-                {
-                    ys.n = y.n;
-                    y *= y;
-                    y += c;
-                    uint64_t xxx = xx.val(), yyy = y.val();
+        while (g == 1) {
+            xx.n = y.n; for (unsigned int i = 1; i <= r; ++i) y *= y, y += c;
+            uint64_t k = 0; g = 1;
+            while (k < r && g == 1) {
+                for (unsigned int i = 1; i <= (m > (r - k) ? (r - k) : m); ++i) {
+                    ys.n = y.n; y *= y; y += c; uint64_t xxx = xx.val(), yyy = y.val();
                     q *= Mint(xxx > yyy ? xxx - yyy : yyy - xxx);
                 }
-                g = __gcd<uint64_t>(q.val(), n);
-                k += m;
+                g = __gcd<uint64_t>(q.val(), n); k += m;
             }
-            r *= 2;
+            r <<= 1;
         }
-        if (g == n)
-            g = 1;
-        while (g == 1)
-        {
-            ys *= ys;
-            ys += c;
-            uint64_t xxx = xx.val(), yyy = ys.val();
+        if (g == n) g = 1;
+        while (g == 1) {
+            ys *= ys; ys += c; uint64_t xxx = xx.val(), yyy = ys.val();
             g = __gcd<uint64_t>(xxx > yyy ? xxx - yyy : yyy - xxx, n);
         }
-        if (g != n && is_prime(g))
-            return g;
+        if (g != n && ip(g)) return g;
     }
     assert(69 == 420);
 }
-
 template <typename T>
-vector<T> factor(T n)
-{
-    if (n < 2)
-        return {};
-    if (is_prime(n))
-        return {n};
+vector<T> factor(T n) {
+    if (n < 2) return {};
+    if (ip(n)) return {n};
     T d = rho_pollard(static_cast<uint64_t>(n));
     vector<T> l = factor(d), r = factor(n / d);
     l.insert(l.end(), r.begin(), r.end());
     return l;
 }
 
-// credit: olaf
-int main()
-{
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        uint64_t n;
-        cin >> n;
-        vector<uint64_t> fac = factor(n);
-        sort(fac.begin(), fac.end());
-        cout << fac.size() << ' ';
-        for (auto &&f : fac)
-        {
-            cout << f << ' ';
-        }
-        cout << '\n';
-    }
-}
-// https://judge.yosupo.jp/problem/factorize
+// Operation:
+    uint64_t n; cin >> n;
+    vector<uint64_t> fac = factor(n);
+    sort(fac.begin(), fac.end());
+    cout << fac.size() << ' ';
+    for (auto &&f : fac) cout << f << ' ';
 
 // Prime Basis:
 
@@ -657,9 +561,9 @@ namespace pcf
 #define PHI_N 100000
 #define PHI_K 100
 
-    int len = 0; // total number of primes generated by sieve
-    int primes[MAX_PRIMES];
-    int pref[MAXN];       // pref[i] --> number of primes <= i
+    int len = 0; // total number of pri generated by sieve
+    int pri[MAX_PRIMES];
+    int pref[MAXN];       // pref[i] --> number of pri <= i
     int dp[PHI_N][PHI_K]; // precal of yo(n,k)
     bitset<MAXN> f;
     void sieve(int n)
@@ -678,7 +582,7 @@ namespace pcf
         for (int i = 1; i <= n; i++)
         {
             if (!f[i])
-                primes[len++] = i;
+                pri[len++] = i;
             pref[i] = len;
         }
     }
@@ -692,23 +596,23 @@ namespace pcf
         {
             for (int n = 0; n < PHI_N; n++)
             {
-                dp[n][k] = dp[n][k - 1] - dp[n / primes[k - 1]][k - 1];
+                dp[n][k] = dp[n][k - 1] - dp[n / pri[k - 1]][k - 1];
             }
         }
     }
     // returns the number of integers less or equal n which are
-    // not divisible by any of the first k primes
+    // not divisible by any of the first k pri
     // recurrence --> yo(n, k) = yo(n, k-1) - yo(n / p_k , k-1)
-    // for sum of primes yo(n, k) = yo(n, k-1) - p_k * yo(n / p_k , k-1)
+    // for sum of pri yo(n, k) = yo(n, k-1) - p_k * yo(n / p_k , k-1)
     long long yo(long long n, int k)
     {
         if (n < PHI_N && k < PHI_K)
             return dp[n][k];
         if (k == 1)
             return ((++n) >> 1);
-        if (primes[k - 1] >= n)
+        if (pri[k - 1] >= n)
             return 1;
-        return yo(n, k - 1) - yo(n / primes[k - 1], k - 1);
+        return yo(n, k - 1) - yo(n / pri[k - 1], k - 1);
     }
     // complexity: n^(2/3).(log n^(1/3))
     long long Legendre(long long n)
@@ -716,7 +620,7 @@ namespace pcf
         if (n < MAXN)
             return pref[n];
         int lim = sqrt(n) + 1;
-        int k = upper_bound(primes, primes + len, lim) - primes;
+        int k = upper_bound(pri, pri + len, lim) - pri;
         return yo(n, k) + (k - 1);
     }
     // runs under 0.2s for n = 1e12
@@ -730,7 +634,7 @@ namespace pcf
         res = yo(n, a) + ((1LL * (b + a - 2) * (b - a + 1)) >> 1);
         for (int i = a; i < b; i++)
         {
-            w = n / primes[i];
+            w = n / pri[i];
             int lim = Lehmer(sqrt(w));
             res -= Lehmer(w);
             if (i <= c)
@@ -738,7 +642,7 @@ namespace pcf
                 for (int j = i; j < lim; j++)
                 {
                     res += j;
-                    res -= Lehmer(w / primes[j]);
+                    res -= Lehmer(w / pri[j]);
                 }
             }
         }
@@ -765,17 +669,17 @@ using namespace std;
 const int N = 1e5 + 9, mod = 1e9 + 7;
 
 int spf[N];
-vector<int> primes;
+vector<int> pri;
 void linear_sieve()
 {
     for (int i = 2; i < N; i++)
     {
         if (spf[i] == 0)
-            spf[i] = i, primes.push_back(i);
-        int sz = primes.size();
-        for (int j = 0; j < sz && i * primes[j] < N && primes[j] <= spf[i]; j++)
+            spf[i] = i, pri.push_back(i);
+        int sz = pri.size();
+        for (int j = 0; j < sz && i * pri[j] < N && pri[j] <= spf[i]; j++)
         {
-            spf[i * primes[j]] = primes[j];
+            spf[i * pri[j]] = pri[j];
         }
     }
 }

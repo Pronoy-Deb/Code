@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "g++",
+			"args": [
+				"-std=c++23", // Set the C++ standard to C++23
+				"-DLOCAL", // Define the LOCAL macro for debugging
+				"-g", // Enable debugging information
+				"${file}", // The current file to compile
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}" // Output the executable with the same name
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"detail": "Compile C++ with C++23 standard and LOCAL macro"
+		}
+	]
+}

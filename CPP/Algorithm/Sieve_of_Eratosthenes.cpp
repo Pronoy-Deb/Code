@@ -1,168 +1,50 @@
-// Index: 1-based, Note: if (!sv[n]) --> prime
 // Comlexity: O(n * (log(log(n))))
 
-bool sv[N];
-void pre()
-{
-	sv[0] = sv[1] = true;
-	for (int i = 4; i < N; i += 2)
-		sv[i] = true;
-	for (long long i = 3; i * i < N; i += 2)
-	{
-		if (!sv[i])
-		{
-			for (long long j = i * i; j < N; j += (i << 1))
-				sv[j] = 1;
-		}
-	}
+bitset<N> ip;
+void pre() {
+	ip[2] = true; for (int i = 3; i < N; i += 2) ip[i] = true;
+    for (long long i = 3; i * i < N; i += 2) {
+        for (long long j = i * i; ip[i] && j < N; j += (i << 1)) ip[j] = false;
+    }
 }
 
 // To store the primes:
 
-bool sv[N];
-vector<long long> pri;
-void pre()
-{
+bitset<N> ip; vector<long long> pri;
+void pre() {
 	pri.push_back(2);
-	for (long long i = 3; i < N; i += 2)
-	{
-		if (!sv[i])
-		{
+	for (long long i = 3; i < N; i += 2) {
+		if (!ip[i]) {
 			pri.push_back(i);
-			for (long long j = i * i; j < N; j += (i << 1))
-				sv[j] = 1;
+			for (long long j = i * i; j < N; j += (i << 1)) ip[j] = 1;
 		}
 	}
 }
 
 // Comlexity: O(n)
 
-bool sv[N];
-long long spf[N];
-vector<long long> pri;
-void pre()
-{
-	sv[0] = sv[1] = true;
-	for (int i = 2; i < N; ++i)
-	{
-		if (!sv[i])
-		{
-			pri.push_back(i);
-			spf[i] = i;
+bitset<N> ip; long long spf[N]; vector<long long> pri;
+void pre() {
+	ip[0] = ip[1] = true;
+	for (int i = 2; i < N; ++i) {
+		if (!ip[i]) {
+			pri.push_back(i); spf[i] = i;
 		}
 		int sz = pri.size();
-		for (int j = 0; j < sz && i * pri[j] < N && pri[j] <= spf[i]; ++j)
-		{
-			sv[i * pri[j]] = true;
-			spf[i * pri[j]] = pri[j];
+		for (int j = 0; j < sz && i * pri[j] < N && pri[j] <= spf[i]; ++j) {
+			ip[i * pri[j]] = true; spf[i * pri[j]] = pri[j];
 		}
 	}
 }
 
-// OR,
-
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 1e6 + 9;
-
-vector<int> primes;
-bool is_prime[N];
-// use bitset<N> is_prime; to have O(N/64) memory complexity
-// using bitset you can solve upto around N = 10^8 in 1s
-void sieve_v0()
-{
-	for (int i = 2; i < N; i++)
-	{
-		is_prime[i] = true;
-	}
-	for (int i = 2; i * i < N; i++)
-	{
-		if (is_prime[i])
-		{
-			for (int j = i * i; j < N; j += i)
-			{
-				is_prime[j] = false;
-			}
-		}
-	}
-	for (int i = 2; i < N; i++)
-	{
-		if (is_prime[i])
-		{
-			primes.push_back(i);
-		}
-	}
-}
-
-// sieve with smallest prime factors (spf)
-int spf[N];
-void sieve()
-{
-	for (int i = 2; i < N; i++)
-	{
-		spf[i] = i;
-	}
-	for (int i = 2; i * i < N; i++)
-	{
-		if (spf[i] == i)
-		{
-			for (int j = i * i; j < N; j += i)
-			{
-				spf[j] = min(spf[j], i);
-			}
-		}
-	}
-	for (int i = 2; i < N; i++)
-	{
-		if (spf[i] == i)
-		{
-			primes.push_back(i);
-		}
-	}
-}
-
-int32_t main()
-{
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	sieve_v0();
-	cout << primes.size() << '\n';
-	primes.clear();
-	sieve();
-	cout << primes.size() << '\n';
-	return 0;
-}
-
-// Alternate (Slower):
-
-bool sv[N];
-void pre()
-{
-	sv[0] = sv[1] = true;
-	for (int i = 2; i < N; ++i)
-	{
-		if (!sv[i])
-		{
-			for (int j = (i << 1); j < N; j += i)
-				sv[j] = true;
-		}
-	}
-}
-
-// Bitwise Sieve:
-// Note: if (sv(n)) --> pri
+// Bitwise Sieve: if (ip(n)) --> prime
 
 long long sv[(N >> 5) + 2];
-bool sv(auto n) { return !(sv[n >> 5] & (1 << (n & 31))); }
-void pre()
-{
-	for (int i = 4; i <= N; i += 2)
-		sv[i >> 5] = (sv[i >> 5] = sv[i >> 5] | (1 << (i & 31)));
-	for (long long i = 3; i * i <= N; i += 2)
-	{
-		if (sv(i))
-		{
+bool ip(auto n) { return !(sv[n >> 5] & (1 << (n & 31))); }
+void pre() {
+	for (int i = 4; i <= N; i += 2) sv[i >> 5] = (sv[i >> 5] = sv[i >> 5] | (1 << (i & 31)));
+	for (long long i = 3; i * i <= N; i += 2) {
+		if (ip(i)) {
 			for (long long j = i * i; j <= N; j += (i << 1))
 				sv[j >> 5] = (sv[j >> 5] = sv[j >> 5] | (1 << (j & 31)));
 		}
@@ -171,191 +53,85 @@ void pre()
 
 // Segmented Sieve:
 
-bool sv[N];
-vector<long long> pri;
-void pre()
-{
+bitset<N> ip; vector<long long> pri;
+void pre() {
 	pri.push_back(2);
-	for (long long i = 3; i < N; i += 2)
-	{
-		if (!sv[i])
-		{
+	for (long long i = 3; i < N; i += 2) {
+		if (!ip[i]) {
 			pri.push_back(i);
-			for (long long j = i * i; j < N; j += (i << 1))
-				sv[j] = 1;
+			for (long long j = i * i; j < N; j += (i << 1)) ip[j] = 1;
 		}
 	}
 }
-bool pri[N];
-void seg(auto l, auto r)
-{
-	for (int i = 0; i < r - l + 1; ++i)
-		pri[i] = true;
-	if (l == 1)
-		pri[0] = false;
-	for (int i = 0; pri[i] * pri[i] <= r; ++i)
-	{
+bitset<N> sv;
+auto seg(int l, int r) {
+	for (int i = 0; i < r - l + 1; ++i) sv[i] = true;
+	if (l == 1) sv[0] = false;
+	for (int i = 0; pri[i] * pri[i] <= r; ++i) {
 		long long cur = pri[i], base = (l / cur) * cur;
-		if (base < l)
-			base += cur;
-		for (long long j = base; j <= r; j += cur)
-			pri[j - l] = 0;
-		if (base == cur)
-			pri[base - l] = true;
+		if (base < l) base += cur;
+		for (long long j = base; j <= r; j += cur) sv[j - l] = false;
+		if (base == cur) sv[base - l] = true;
 	}
-	for (int i = 0; i < r - l + 1; ++i)
-	{
-		if (pri[i])
-			cout << (i + l) << '\n';
+	vector<int> v;
+	for (int i = 0; i < r - l + 1; ++i) {
+		if (sv[i]) v.push_back(i + l);
 	}
-}
-
-// Operation:
-pre();
-cin >> q;
-while (q--)
-{
-	int l, r;
-	cin >> l >> r;
-	seg(l, r);
+	return v;
 }
 
 // Linear Sieve for Multiplicative Functions:
-
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 1e7 + 9;
-
 // f is multiplicative with f(p^k) = k
+
 int spf[N], f[N], cnt[N]; // cnt[i] = power of spf[i] in i
-vector<int> primes;
-void sieve()
-{
+vector<int> pri;
+void siv() {
 	f[1] = 1;
-	for (int i = 2; i < N; i++)
-	{
-		if (spf[i] == 0)
-		{ // i is prime
-			spf[i] = i, primes.push_back(i);
-			f[i] = 1;
-			cnt[i] = 1;
+	for (int i = 2; i < N; ++i) {
+		if (!spf[i]) {
+			spf[i] = i, pri.push_back(i); f[i] = 1; cnt[i] = 1;
 		}
-		int sz = primes.size();
-		for (int j = 0; j < sz && i * primes[j] < N && primes[j] <= spf[i]; j++)
-		{
-			int p = i * primes[j];
-			spf[p] = primes[j];
-			if (primes[j] == spf[i])
-			{										 // primes[j] divides i
-				f[p] = f[i] / cnt[i] * (cnt[i] + 1); // f(i * primes[j]) = f(i / (primes[j]^cnt[i])) * f(primes[j]^(cnt[i] + 1))
-				cnt[p] = cnt[i] + 1;
+		int sz = pri.size();
+		for (int j = 0; j < sz && i * pri[j] < N && pri[j] <= spf[i]; ++j) {
+			int p = i * pri[j]; spf[p] = pri[j];
+			if (pri[j] == spf[i]) {
+				f[p] = f[i] / cnt[i] * (cnt[i] + 1); cnt[p] = cnt[i] + 1;
 			}
-			else
-			{ // primes[j] does not divide i
-				f[p] = f[i] * f[primes[j]];
-				cnt[p] = 1;
-			}
+			else { f[p] = f[i] * f[pri[j]]; cnt[p] = 1; }
 		}
 	}
 }
 
-int32_t main()
-{
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	sieve();
-	for (int i = 1; i <= 10; i++)
-	{
-		cout << f[i] << '\n';
-	}
-	return 0;
-}
 // https://codeforces.com/blog/entry/54090
 
 // Min 25 Sieve:
 
-#include <bits/stdc++.h>
-using namespace std;
-
 const int N = 2e5 + 9, D = 3; // N >= 2 * sqrt(n)
-const int mod = 1e9 + 7;
-using ll = long long;
-
 template <const int32_t MOD>
-struct modint
-{
-	int32_t value;
-	modint() = default;
-	modint(int32_t value_) : value(value_) {}
-	inline modint<MOD> operator+(modint<MOD> other) const
-	{
-		int32_t c = this->value + other.value;
-		return modint<MOD>(c >= MOD ? c - MOD : c);
-	}
-	inline modint<MOD> operator-(modint<MOD> other) const
-	{
-		int32_t c = this->value - other.value;
-		return modint<MOD>(c < 0 ? c + MOD : c);
-	}
-	inline modint<MOD> operator*(modint<MOD> other) const
-	{
-		int32_t c = (int64_t)this->value * other.value % MOD;
-		return modint<MOD>(c < 0 ? c + MOD : c);
-	}
-	inline modint<MOD> &operator+=(modint<MOD> other)
-	{
-		this->value += other.value;
-		if (this->value >= MOD)
-			this->value -= MOD;
-		return *this;
-	}
-	inline modint<MOD> &operator-=(modint<MOD> other)
-	{
-		this->value -= other.value;
-		if (this->value < 0)
-			this->value += MOD;
-		return *this;
-	}
-	inline modint<MOD> &operator*=(modint<MOD> other)
-	{
-		this->value = (int64_t)this->value * other.value % MOD;
-		if (this->value < 0)
-			this->value += MOD;
-		return *this;
-	}
-	inline modint<MOD> operator-() const { return modint<MOD>(this->value ? MOD - this->value : 0); }
-	modint<MOD> pow(uint64_t k) const
-	{
-		modint<MOD> x = *this, y = 1;
-		for (; k; k >>= 1)
-		{
-			if (k & 1)
-				y *= x;
-			x *= x;
-		}
-		return y;
-	}
-	modint<MOD> inv() const { return pow(MOD - 2); } // MOD must be a prime
-	inline modint<MOD> operator/(modint<MOD> other) const { return *this * other.inv(); }
-	inline modint<MOD> operator/=(modint<MOD> other) { return *this *= other.inv(); }
-	inline bool operator==(modint<MOD> other) const { return value == other.value; }
-	inline bool operator!=(modint<MOD> other) const { return value != other.value; }
-	inline bool operator<(modint<MOD> other) const { return value < other.value; }
-	inline bool operator>(modint<MOD> other) const { return value > other.value; }
+struct modint {
+    int32_t val; modint() = default;
+    modint(int32_t value) : val(value) {} // make sure value is less than M
+    inline modint<MOD> operator+(modint<MOD> other) const { int32_t c = this->val + other.val; return modint<MOD>(c >= MOD ? c - MOD : c); }
+    inline modint<MOD> operator-(modint<MOD> other) const { int32_t c = this->val - other.val; return modint<MOD>(c < 0 ? c + MOD : c); }
+    inline modint<MOD> operator*(modint<MOD> other) const { int32_t c = (int64_t)this->val * other.val % MOD; return modint<MOD>(c < 0 ? c + MOD : c); }
+    inline modint<MOD> &operator+=(modint<MOD> other) { this->val += other.val; if (this->val >= MOD) this->val -= MOD; return *this; }
+    inline modint<MOD> &operator-=(modint<MOD> other) { this->val -= other.val; if (this->val < 0) this->val += MOD; return *this; }
+    inline modint<MOD> &operator*=(modint<MOD> other) { this->val = (int64_t)this->val * other.val % MOD; if (this->val < 0) this->val += MOD; return *this; }
+    inline modint<MOD> operator-() const { return modint<MOD>(this->val ? MOD - this->val : 0); }
+    modint<MOD> pow(uint64_t k) const { modint<MOD> x = *this, y = 1; for (; k; k >>= 1) { if (k & 1) y *= x; x *= x; } return y; }
+    modint<MOD> inv() const { return pow(MOD - 2); } // M must be a prime
+    inline modint<MOD> operator/(modint<MOD> other) const { return *this * other.inv(); }
+    inline modint<MOD> operator/=(modint<MOD> other) { return *this *= other.inv(); }
+    inline bool operator==(modint<MOD> other) const { return val == other.val; }
+    inline bool operator!=(modint<MOD> other) const { return val != other.val; }
+    inline bool operator<(modint<MOD> other) const { return val < other.val; }
+    inline bool operator>(modint<MOD> other) const { return val > other.val; }
 };
-template <int32_t MOD>
-modint<MOD> operator*(int64_t value, modint<MOD> n) { return modint<MOD>(value) * n; }
-template <int32_t MOD>
-modint<MOD> operator*(int32_t value, modint<MOD> n) { return modint<MOD>(value % MOD) * n; }
-template <int32_t MOD>
-istream &operator>>(istream &in, modint<MOD> &n) { return in >> n.value; }
-template <int32_t MOD>
-ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.value; }
-
-using mint = modint<mod>;
-
-using T = mint;
+template <int32_t MOD> modint<MOD> operator*(int64_t val, modint<MOD> n) { return modint<MOD>(val) * n; }
+template <int32_t MOD> modint<MOD> operator*(int32_t val, modint<MOD> n) { return modint<MOD>(val % MOD) * n; }
+template <int32_t MOD> istream &operator>>(istream &in, modint<MOD> &n) { return in >> n.val; }
+template <int32_t MOD> ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.val; }
+using mint = modint<M>;
 
 /**
 Let f(x) be a multiplicative function and
@@ -367,30 +143,23 @@ Takes ~1s for n = 10^10 (deg = 3) in CF
 unfold the loops over poly to make the code faster
 Tutorial: https://www.luogu.com.cn/problem/solution/P5325
 **/
-int primes[N], p, deg;
-T pref[D][N];
-T poly[D]; // polynomial representation of f(p)
-void sieve(int n)
-{
-	vector<bool> f(n + 1, false);
-	p = 0;
-	for (int i = 2; i <= n; i++)
-	{
-		if (!f[i])
-		{
-			primes[++p] = i;
-			T cur = 1;
-			// pref[k][p] = sum of primes[i]^k s.t. i <= p
-			for (int k = 0; k < deg; k++)
-			{
+int pri[N], p, deg;
+mint pref[D][N], poly[D]; // polynomial representation of f(p)
+void siv(int n) {
+	vector<bool> f(n + 1, false); p = 0;
+	for (int i = 2; i <= n; ++i) {
+		if (!f[i]) {
+			pri[++p] = i; mint cur = 1;
+			// pref[k][p] = sum of pri[i]^k s.t. i <= p
+			for (int k = 0; k < deg; ++k) {
 				pref[k][p] = pref[k][p - 1] + cur;
 				cur *= i;
 			}
 		}
-		for (int j = 1; j <= p and primes[j] * i <= n; j++)
+		for (int j = 1; j <= p and pri[j] * i <= n; ++j)
 		{
-			f[i * primes[j]] = 1;
-			if (i % primes[j] == 0)
+			f[i * pri[j]] = 1;
+			if (i % pri[j] == 0)
 				break;
 		}
 	}
@@ -403,43 +172,42 @@ int get_id(ll x)
 	return x <= r ? id1[x] : id2[n / x];
 }
 int tot;
-T g[D][N];
+mint g[D][N];
 ll a[N];
 
 // f(p^k) in O(1)
-inline T eval(int p, int k, ll pw)
+inline mint eval(int p, int k, ll pw)
 { // pw = p^k, pw <= n
-	T ans = pw % mod;
+	mint ans = pw % mod;
 	return ans * (ans - 1);
 }
 
 // no memorization needed!
-// sum of f(i) s.t. spf[i] > primes[j]
-T yo(ll x, int j)
+// sum of f(i) s.t. spf[i] > pri[j]
+mint yo(ll x, int j)
 {
-	if (primes[j] >= x)
+	if (pri[j] >= x)
 		return 0;
 	int id = get_id(x);
-	T ans = 0;
-	// initialization: ans = g(x) - g(primes[j])
-	for (int k = 0; k < deg; k++)
+	mint ans = 0;
+	// initialization: ans = g(x) - g(pri[j])
+	for (int k = 0; k < deg; ++k)
 	{
 		ans += poly[k] * g[k][id];
-		;
 	}
-	for (int k = 0; k < deg; k++)
+	for (int k = 0; k < deg; ++k)
 	{
 		ans -= poly[k] * pref[k][j];
 	}
-	for (int i = j + 1; i <= p and primes[i] <= x / primes[i]; i++)
+	for (int i = j + 1; i <= p and pri[i] <= x / pri[i]; ++i)
 	{
-		ll pw = primes[i];
+		ll pw = pri[i];
 		for (int e = 1; pw <= x; e++)
 		{
-			ans += eval(primes[i], e, pw) * (yo(x / pw, i) + (e != 1));
-			if (!(pw <= x / primes[i]))
+			ans += eval(pri[i], e, pw) * (yo(x / pw, i) + (e != 1));
+			if (!(pw <= x / pri[i]))
 				break;
-			pw *= primes[i];
+			pw *= pri[i];
 		}
 	}
 	return ans;
@@ -451,11 +219,11 @@ T yo(ll x, int j)
 
 // sum of f(i) for 1 <= i <= n
 // pol is the polynomial representation of f(p)
-T solve(ll _n, vector<T> pol)
+mint solve(ll _n, vector<mint> pol)
 {
 	n = _n;
 	deg = pol.size();
-	for (int i = 0; i < deg; i++)
+	for (int i = 0; i < deg; ++i)
 	{
 		poly[i] = pol[i];
 	}
@@ -464,7 +232,7 @@ T solve(ll _n, vector<T> pol)
 		++r;
 	while (1LL * r * r > n)
 		--r;
-	sieve(r);
+	siv(r);
 	tot = 0;
 	ll i = 1;
 	while (i <= n)
@@ -474,8 +242,8 @@ T solve(ll _n, vector<T> pol)
 		a[++tot] = x;
 
 		// initialization g[k][tot] = sum of i^k for 2 <= i <= x
-		T z = x % mod; // remove this mod if not needed
-		for (int k = 0; k < deg; k++)
+		mint z = x % mod; // remove this mod if not needed
+		for (int k = 0; k < deg; ++k)
 		{
 			if (k == 0)
 			{
@@ -501,16 +269,16 @@ T solve(ll _n, vector<T> pol)
 
 	// an integer x belongs to the array a iff for some integer z, n / z = x
 	// g[k][i] = sum of prime^k for prime <= a[i]
-	for (int i = 1; i <= p; i++)
+	for (int i = 1; i <= p; ++i)
 	{
-		for (int j = 1; j <= tot && primes[i] <= a[j] / primes[i]; j++)
+		for (int j = 1; j <= tot && pri[i] <= a[j] / pri[i]; ++j)
 		{
-			int id = get_id(a[j] / primes[i]);
-			T cur = 1;
-			for (int k = 0; k < deg; k++)
+			int id = get_id(a[j] / pri[i]);
+			mint cur = 1;
+			for (int k = 0; k < deg; ++k)
 			{
 				g[k][j] -= cur * (g[k][id] - pref[k][i - 1]);
-				cur *= primes[i];
+				cur *= pri[i];
 			}
 		}
 	}
@@ -521,7 +289,7 @@ int32_t main()
 {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-	vector<T> p({0, -1, 1});
+	vector<mint> p({0, -1, 1});
 	ll n;
 	cin >> n;
 	cout << solve(n, p) << '\n';
@@ -532,22 +300,16 @@ int32_t main()
 
 // Powerful Number Sieve:
 
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 1e6 + 9;
-using ll = long long;
-
 /**
  * Tutorial: https://oi-wiki.org/math/number-theory/powerful-number/
  * - f() is multiplicative, need to find prefix sum of f
  * - Consider two functions g() and h() such that f = g [*] h (dirichlet convolution)
  * - So f(n) = sum_{d | n}{g(d) * h(n / d)}
  * - Condition: This g() is special
- *    => for all primes p, f(p) = g(p)
+ *    => for all pri p, f(p) = g(p)
  *    => prefix sum of g() is easy to calculate
  * - We have f(n) = sum_{d = 1 to n}{h(d) * g_prefix_sum(floor(n / d))}
- * - But h(p) is 0 from all primes (check the blog)
+ * - But h(p) is 0 from all pri (check the blog)
  * - So we can brute over all powerful numbers only and there are only O(sqrt(n)) powerful number upto n
  *
  * General approach:
@@ -583,17 +345,17 @@ ll power(ll x, ll n)
 
 // sieve upto sqrt(n)
 int spf[N];
-vector<int> primes;
-void sieve()
+vector<int> pri;
+void siv()
 {
-	for (int i = 2; i < N; i++)
+	for (int i = 2; i < N; ++i)
 	{
 		if (spf[i] == 0)
-			spf[i] = i, primes.push_back(i);
-		int sz = primes.size();
-		for (int j = 0; j < sz && i * primes[j] < N && primes[j] <= spf[i]; j++)
+			spf[i] = i, pri.push_back(i);
+		int sz = pri.size();
+		for (int j = 0; j < sz && i * pri[j] < N && pri[j] <= spf[i]; ++j)
 		{
-			spf[i * primes[j]] = primes[j];
+			spf[i * pri[j]] = pri[j];
 		}
 	}
 }
@@ -619,15 +381,15 @@ ll brute(int i, ll m, ll h)
 {
 	ll ans = mul(h, g_prefix_sum(n / m));
 	ll lim = n / m;
-	while (i < primes.size() and 1LL * primes[i] * primes[i] <= lim)
+	while (i < pri.size() and 1LL * pri[i] * pri[i] <= lim)
 	{
 		int k = 2;
-		ll pk = 1LL * primes[i] * primes[i];
+		ll pk = 1LL * pri[i] * pri[i];
 		while (pk <= lim)
 		{
-			ans = add(ans, brute(i + 1, m * pk, mul(h, get_h(primes[i], k, pk))));
+			ans = add(ans, brute(i + 1, m * pk, mul(h, get_h(pri[i], k, pk))));
 			++k;
-			pk *= primes[i];
+			pk *= pri[i];
 		}
 		++i;
 	}
@@ -647,11 +409,11 @@ int32_t main()
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 	inv[1] = 1;
-	for (int i = 2; i < 60; i++)
+	for (int i = 2; i < 60; ++i)
 	{
 		inv[i] = power(i, mod - 2);
 	}
-	sieve();
+	siv();
 
 	int t = 1;
 	cin >> t;
@@ -663,46 +425,74 @@ int32_t main()
 }
 // https://vjudge.net/problem/HDU-7186
 
-// Sieve Linear:
+// Generates all Primes from [1 - INT_MAX] in 1.5s CF Runtime:
+// Total 105097565 Primes are Stored in pri[] Array
 
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 1e5 + 9;
-
-int spf[N];
-vector<int> primes;
-void sieve()
-{
-	for (int i = 2; i < N; i++)
-	{
-		if (spf[i] == 0)
-			spf[i] = i, primes.push_back(i);
-		int sz = primes.size();
-		for (int j = 0; j < sz && i * primes[j] < N && primes[j] <= spf[i]; j++)
-		{
-			spf[i * primes[j]] = primes[j];
-		}
-	}
+const uint32_t bsz = 1048576;
+uint32_t s, cnt, sq[65536], sp[65536], pri[106000000];
+uint64_t wheel[15015], com[8192], mask[12][62][8192];
+inline void stbt(uint64_t* v, uint32_t bit) { v[bit >> 6] |= (1ULL << (bit & 63)); }
+inline uint32_t idx(uint32_t i, uint32_t j) {
+    if (sq[j] > i) return (sq[j] - i) >> 1; uint32_t x = sp[j] - i % sp[j];
+    if ((x & 1) ^ 1) x += sp[j]; return x >> 1;
+}
+void small_siv() {
+    for (uint32_t i = 2; i * i < 65536; ++i) {
+        for (uint32_t j = i * i; j < 65536 && !sp[i]; j += i) sp[j] = 1;
+    }
+    for (uint32_t i = 2; i < 65536; ++i) {
+        if (!sp[i]) sp[s] = i, sq[s++] = i * i;
+    }
+}
+void process_block(uint32_t i) {
+    uint32_t j, k, l, d, m, x, lim = i + bsz, in = i % 15015, chunk = 0;
+    in = (in + ((in * 105) & 127) * 15015) >> 7;
+    for (j = 0; (j << 7) < bsz; j += chunk, in = 0) {
+        chunk = min(15015 - in, (bsz >> 7) - j);
+        memcpy(com + j, wheel + in, sizeof(uint64_t) * chunk);
+    }
+    if (!i) com[0] = (com[0] | 1) & ~110; l = bsz >> 1, m = bsz >> 7;
+    for (j = 6; j < 18 && i; ++j) {
+        for (x = idx(i, j), k = 0, d = j - 6; k < m; ++k) com[k] |= mask[d][x][k];
+    }
+    for (j = (i == 0) ? 6 : 18; j < s && sq[j] < lim; ++j) {
+        for (x = idx(i, j); x < l; x += sp[j]) stbt(com, x);
+    }
+}
+void populate_primes(uint32_t i) {
+    for (uint32_t j = 0; (j << 7) < bsz; ++j) {
+        uint64_t x = ~com[j];
+        while (x) {
+            uint32_t p = i + (j << 7) + (__builtin_ctzll(x) << 1) + 1;
+            if (p <= INT_MAX) pri[cnt++] = p;
+            x ^= (-x & x);
+        }
+    }
+}
+void pre() {
+    small_siv(); uint32_t i, j, k;
+    for (i = 1; i <= 5; ++i) {
+        for (j = i + (i > 3); j < 960960; j += sp[i]) stbt(wheel, j);
+    }
+    for (i = 6; i <= 17; ++i) {
+        for (j = 0; j < sp[i]; ++j) {
+            for (k = j; k < (bsz >> 1); k += sp[i]) stbt(mask[i - 6][j], k);
+        }
+    }
+    pri[cnt++] = 2;
+    for (i = 0; i <= INT_MAX; i += bsz) {
+        process_block(i); populate_primes(i);
+    }
 }
 
-int32_t main()
-{
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	sieve();
-	cout << primes.back() << '\n';
-	return 0;
-}
-
-// Sieve upto 1e9:
+// OR, Sieve upto 1e9:
 
 #include <bits/stdc++.h>
 using namespace std;
 
 // credit: min_25
 // takes 0.5s for n = 1e9
-vector<int> sieve(const int N, const int Q = 17, const int L = 1 << 15)
+vector<int> siv(const int N, const int Q = 17, const int L = 1 << 15)
 {
 	static const int rs[] = {1, 7, 11, 13, 17, 19, 23, 29};
 	struct P
@@ -812,7 +602,7 @@ int32_t main()
 	cin.tie(0);
 	int n, a, b;
 	cin >> n >> a >> b;
-	auto primes = sieve(n);
+	auto primes = siv(n);
 	vector<int> ans;
 	for (int i = b; i < primes.size() && primes[i] <= n; i += a)
 		ans.push_back(primes[i]);
