@@ -1,4 +1,4 @@
-// Disjoint Sparse Table: O(nlogn) preprocessing, O(1) query
+// Disjoint Sparse Table: O(n*logn) preprocessing, O(1) query
 // https://www.codechef.com/problems/SEGPROD
 
 int mod;

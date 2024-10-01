@@ -1,0 +1,14 @@
+BasedOnStyle: Google
+IndentWidth: 4               # Set your indentation width
+ColumnLimit: 0               # Disable column limit (prevents line breaking)
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+BreakBeforeBraces: Attach     # Keep braces on the same line
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpacesInAngles: false
+BreakBeforeBinaryOperators: None  # Prevents breaking lines before binary operators
+PenaltyBreakBeforeFirstCallParameter: 10000  # Discourages line breaks for function parameters
+PenaltyBreakComment: 10000  # Discourages breaking lines for comments
+PenaltyBreakString: 10000   # Discourages breaking long strings

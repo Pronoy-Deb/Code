@@ -1,8 +1,14 @@
 // Complexity: O(log(n)), where n is the power.
 
-long double log(long long base, long long pow)
-{
+long double log(long long base, long long pow) {
     return log2(pow) / log2(base);
+}
+
+// Pre-calculated log2:
+
+int lg[N];
+void pre() {
+    lg[1] = 0; for (int i = 2; i < N; ++i) lg[i] = lg[i >> 1] + 1;
 }
 
 // Logarithmic Subarray Aggregator:

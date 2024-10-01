@@ -39,25 +39,6 @@ int ub(auto &v, long long val) {
 	return (v[lo] > n ? lo : v[hi] > n ? hi : -1);
 }
 
-// Square Root using binary search:
-
-long double rt(auto n) {
-    long double lo = 1, hi = n;
-    while (hi - lo > 1e-6) {
-        long double mid = (lo + hi) / 2;
-        if (mid * mid < n) lo = mid;
-        else hi = mid;
-    }
-    return lo;
-}
-
-// OR,
-
-long long sr(long long x) {
-	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
-	while (p * p > x) --p; return p;
-}
-
 // Fraction Binary Search:
 /**
 Given a function f and n, finds the smallest fraction p / q in [0, 1] or [0,n]

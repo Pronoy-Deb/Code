@@ -194,10 +194,9 @@ long long get(int l, int r, int s = 0, int e = n - 1, int i = 0) {
 
 // OR,
 
-long long lg[N];
-void cal() {
-    lg[1] = 0;
-    for (int i = 2; i < N; ++i) lg[i] = lg[i >> 1] + 1;
+int lg2[N];
+void pre() {
+    lg2[1] = 0; for (int i = 2; i < N; ++i) lg2[i] = lg2[i >> 1] + 1;
 }
 struct rmq {
     vector<long long> v[25];
@@ -211,48 +210,41 @@ struct rmq {
         }
     }
     long long get(int i, int j) {
-        int k = lg[j - i + 1];
+        int k = lg2[j - i + 1];
         return com(v[k][i], v[k][j + 1 - (1 << k)]);
     }
 };
 
 // Operation:
-    cal();
+    pre();
     vector<long long> v = {1, 2, 3, 4};
     rmq rmq(v);
     cout << rmq.get(1, 2);
 
-// 2-D Range Minimum Query Using Sparse Table:
+// 2-D Range Minimum Query (Static) Using Sparse Table:
 
-const int N = 5e2 + 5, L = 10;
-long long tab[N][N][L][L], ar[N][N], n, m;
+const int N = 5e2 + 5, L = 11;
+long long tab[L][N][L][N], lg2[N], ar[N][N], n, m;
 void make() {
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < m; ++j) tab[i][j][0][0] = ar[i][j];
-	}
-    int lgn = log2(n), lgm = log2(m);
-    for (int k = 1; k <= lgn; ++k) {
-		for (int i = 0; i + (1 << k) - 1 < n; ++i) {
-			for (int j = 0; j + (1 << k) - 1 < m; ++j)
-				tab[i][j][k][0] = min(tab[i][j][k - 1][0], tab[i + (1 << (k - 1))][j][k - 1][0]);
+	for (int j = 0; j < n; ++j) {
+		lg2[j] = (j > 1 ? lg2[j >> 1] + 1 : 0);
+		for (int l = 0; l < m; ++l) tab[0][j][0][l] = ar[j][l];
+		for (int k = 0; (1 << (k + 1)) <= m; ++k) {
+			for (int l = 0; l + (1 << (k + 1)) <= m; ++l)
+				tab[0][j][k + 1][l] = min(tab[0][j][k][l], tab[0][j][k][l + (1 << k)]);
 		}
 	}
-	for (int k = 1; k <= lgm; ++k) {
-		for (int i = 0; i < n; ++i) {
-			for (int j = 0; j + (1 << k) - 1 < m; ++j) {
-                tab[i][j][0][k] = min(tab[i][j][0][k - 1], tab[i][j + (1 << (k - 1))][0][k - 1]);
-			}
-		}
-	}
-	for (int k = 1; k <= lgn; ++k) {
-		for (int l = 1; l <= lgm; ++l) {
-			for (int i = 0; i + (1 << k) - 1 < n; ++i) {
-				for (int j = 0; j + (1 << l) - 1 < m; ++j)
-                    tab[i][j][k][l] = min({tab[i][j][k - 1][l - 1], tab[i + (1 << (k - 1))][j][k - 1][l - 1], tab[i][j + (1 << (l - 1))][k - 1][l - 1], tab[i + (1 << (k - 1))][j + (1 << (l - 1))][k - 1][l - 1]});
+	for (int i = n, j = (n > m ? n : m); i <= j; ++i) lg2[i] = lg2[i >> 1] + 1;
+	for (int i = 0; (1 << (i + 1)) <= n; ++i) {
+		for (int j = 0; j + (1 << (i + 1)) <= n; ++j) {
+			for (int k = 0; (1 << k) <= m; ++k) {
+				for (int l = 0; l + (1 << k) <= m; ++l)
+					tab[i + 1][j][k][l] = min(tab[i][j][k][l], tab[i][j + (1 << i)][k][l]);
 			}
 		}
 	}
 }
 long long get(int x1, int y1, int x2, int y2) {
-	int k = log2(x2 - x1 + 1), l = log2(y2 - y1 + 1);
-	return max({tab[x1][y1][k][l], tab[x2 - (1 << k) + 1][y1][k][l], tab[x1][y2 - (1 << l) + 1][k][l], tab[x2 - (1 << k) + 1][y2 - (1 << l) + 1][k][l]});
+	int x = lg2[x2 - x1 + 1], y = lg2[y2 - y1 + 1];
+	return min({tab[x][x1][y][y1], tab[x][x1][y][y2 - (1 << y) + 1], tab[x][x2 - (1 << x) + 1][y][y1], tab[x][x2 - (1 << x) + 1][y][y2 - (1 << y) + 1]});
+}

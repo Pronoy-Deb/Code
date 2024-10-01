@@ -11,6 +11,10 @@
         "regex": "cpp",
         "valarray": "cpp",
         "ostream": "cpp",
-        "numbers": "cpp"
+        "numbers": "cpp",
+        "chrono": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "cmath": "cpp"
     },
 }

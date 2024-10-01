@@ -1,3 +1,56 @@
+// Square Root using binary search:
+
+long double sr(long long n) {
+    long double lo = 1, hi = n;
+    while (hi - lo > 1e-6) {
+        long double mid = (lo + hi) / 2;
+        if (mid * mid < n) lo = mid;
+        else hi = mid;
+    }
+    return lo;
+}
+
+// OR,
+
+long long sr(long long x) {
+	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
+	while (p * p > x) --p; return p;
+}
+
+// Cube Root using binary search:
+
+long double cr(long long n) {
+    long double lo = 1, hi = n;
+    while (hi - lo > 1e-6) {
+        long double mid = (lo + hi) / 2;
+        if (mid * mid * mid < n) lo = mid;
+        else hi = mid;
+    }
+    return lo;
+}
+
+// OR,
+
+long long cr(long long x) {
+	long long p = cbrtl(0.5 + x); while (p * p * p < x) ++p;
+	while (p * p * p > x) --p; return p;
+}
+
+// N-th root of a number with 5 decimal accuracy
+// Complexity: O(n*log(num*(10^d))); for n-th root of number num with d decimal accuracy
+// Built-in: powl(num, 1.0/n)
+
+auto nr(long long num, int n) {
+    long double lo = 1, hi = num;
+    while (hi - lo > 1e-6) {
+        long double mid = (hi + lo) / 2, pro = 1;
+        for (int i = 0; i < n; ++i) pro *= mid;
+        if (pro < num) lo = mid;
+        else hi = mid;
+    }
+    return lo;
+}
+
 // Discrete Root:
 
 #include <bits/stdc++.h>
