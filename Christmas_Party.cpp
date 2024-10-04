@@ -8,24 +8,25 @@ using namespace std;
 #else
 #define ck(...)
 #endif
-const ll M = 1e9 + 7, N = 2e5 + 5;
-// long long xr(int l, int r) { return xr[r] ^ xr[l - 1]; }
+const ll M = 1e9 + 7, N = 1e6 + 5;
+long long dr[N];
+void pre() {
+    dr[0] = 1;  dr[1] = 0;
+    for (int i = 2; i < N; ++i) dr[i] = (i - 1) * (dr[i - 1] + dr[i - 2]) % M;
+}
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
     cin >> n;
-    long long xr[n+5], ar[n]; xr[0] = 0;
-    for (i = 0; i < n; ++i) { cin >> ar[i]; xr[i + 1] = xr[i] ^ ar[i]; }
-    for(i=1;i<n;++i) {
-        c += (xr[i] == (xr[n] ^ xr[i]));
-    }
-    cout << c;
+    // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    cout << dr[n];
     cout << '\n';
 }
 
 signed main() {
     cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
+    pre();
     int tc = 0, t = 1;
-    cin >> t;
+    // cin >> t;
     while (tc < t) test(++tc);
     return 0;
 }

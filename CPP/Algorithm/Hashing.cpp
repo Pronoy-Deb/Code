@@ -1,28 +1,20 @@
 // Complexity: O(|s|)
 // -> base = 29: Immediate prime number after 26
 // const long long M = 3037000493;
-
 // Palindrome checking using Hashing:
 
-long long fh[N], bh[N], pw[N], n;
-string s;
-long long mmi(auto base)
-{
+long long fh[N], bh[N], pw[N], n; string s;
+long long mmi(long long base) {
     long long ans = 1, pow = M - 2;
-    while (pow)
-    {
-        if (pow & 1)
-            ans = (ans * base) % M;
-        base = (base * base) % M;
-        pow >>= 1;
+    while (pow) {
+        if (pow & 1) ans = (ans * base) % M;
+        base = (base * base) % M; pow >>= 1;
     }
     return ans;
 }
-void pre(int p = 31)
-{
+void pre(int p = 31) {
     pw[0] = 1;
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         pw[i + 1] = (pw[i] * p) % M;
         fh[i + 1] = (fh[i] + (s[i] * pw[i]) % M) % M;
     }
@@ -30,56 +22,37 @@ void pre(int p = 31)
     for (int i = n - 2, j = 2; i >= 0 && j <= n; --i, ++j)
         bh[j] = (bh[j - 1] + (s[i] * pw[j - 1]) % M) % M;
 }
-
-bool pal(auto l, auto r)
-{
+bool pal(int l, int r) {
     long long L = ((fh[r + 1] - fh[l] + M) % M * mmi(pw[l])) % M;
     long long R = ((bh[n - l] - bh[n - r - 1] + M) % M * mmi(pw[n - r - 1])) % M;
     return (L == R);
 }
 
-// Operation:
-cin >> n >> s >> q;
-pre();
-while (q--)
-{
-    int l, r;
-    cin >> l >> r;
-    cout << boolalpha << pal(l, r) << '\n';
-}
-
 // Cumulative Forward Hashing:
 // const long long M = 1e15 + 37;
 
-long long hs[N], pw[N], n;
-string s;
-void pre(int p = 31)
-{
+long long hs[N], pw[N], n; string s;
+void pre(int p = 31) {
     pw[0] = 1;
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         pw[i + 1] = (pw[i] * p) % M;
-        fh[i + 1] = (fh[i] + (s[i] * pw[i]) % M) % M;
+        hs[i + 1] = (hs[i] + (s[i] * pw[i]) % M) % M;
     }
 }
 
 // OR,
 
-long long fhs(auto &s, int base = 31)
-{
+long long pre(auto &s, int base = 31) {
     long long sz = s.size(), tmp = s[0] - 96;
-    for (int i = 1; i < sz; ++i)
-        tmp = ((tmp * base) + (s[i] - 96)) % M;
+    for (int i = 1; i < sz; ++i) tmp = ((tmp * base) + (s[i] - 96)) % M;
     return tmp;
 }
 
 // Cumulative Backward Hashing:
 
-long long bhs(auto &s, int base = 31)
-{
+long long pre(auto &s, int base = 31) {
     long long tmp = s.back() - 96;
-    for (int i = s.size() - 2; i >= 0; --i)
-        tmp = ((tmp * base) + (s[i] - 96)) % M;
+    for (int i = s.size() - 2; i >= 0; --i) tmp = ((tmp * base) + (s[i] - 96)) % M;
     return tmp;
 }
 
@@ -90,43 +63,36 @@ for (i = 0; i < n; ++i)
 
 // String Double Hashing:
 
-long long hs[N], hs1[N], n;
-string s;
-void pre(int base = 31)
-{
+long long hs[N], hs1[N], n; string s;
+void pre(int base = 31) {
     long long p = 1;
-    for (int i = 0; i < n; ++i)
-    {
-        if (base == 29)
-            hs[i + 1] = (hs[i] + (s[i] - 95) * p) % M;
-        else
-            hs1[i + 1] = (hs1[i] + (s[i] - 95) * p) % M;
+    for (int i = 0; i < n; ++i) {
+        if (base == 29) hs[i + 1] = (hs[i] + (s[i] - 95) * p) % M;
+        else hs1[i + 1] = (hs1[i] + (s[i] - 95) * p) % M;
         p = (p * base) % M;
     }
 }
 
 // Operation:
-cin >> n >> s;
-fhs(29);
-fhs();
-set<pair<long long, long long>> st;
-for (i = length_skipped; i <= n; ++i)
-    st.emplace((hs[i - length_skipped] + ((((hs[n] - hs[i] + M))) * 853745547) % M) % M, (hs1[i - length_skipped] + ((((hs1[n] - hs1[i] + M))) * 746097820) % M) % M);
+    cin >> n >> s;
+    fhs(29);
+    fhs();
+    set<pair<long long, long long>> st;
+    for (i = length_skipped; i <= n; ++i)
+        st.emplace((hs[i - length_skipped] + ((((hs[n] - hs[i] + M))) * 853745547) % M) % M, (hs1[i - length_skipped] + ((((hs1[n] - hs1[i] + M))) * 746097820) % M) % M);
 
-    // Problems:
-    // https://codeforces.com/contest/1800/problem/D
-    // https://codeforces.com/contest/271/problem/D
-    // https://codeforces.com/problemset/problem/1943/B
+https://codeforces.com/contest/1800/problem/D
+https://codeforces.com/contest/271/problem/D
+https://codeforces.com/problemset/problem/1943/B
 
-    // String Hashing:
+// String Hashing:
 
 #include <bits/stdc++.h>
 using namespace std;
 
 const int N = 1e6 + 9;
 
-int power(long long n, long long k, const int mod)
-{
+int bex(long long n, long long k, const int mod) {
     int ans = 1 % mod;
     n %= mod;
     if (n < 0)
@@ -141,7 +107,7 @@ int power(long long n, long long k, const int mod)
     return ans;
 }
 
-const int MOD1 = 127657753, MOD2 = 987654319;
+const int M1 = 127657753, M2 = 987654319;
 const int p1 = 137, p2 = 277;
 int ip1, ip2;
 pair<int, int> pw[N], ipw[N];
@@ -150,20 +116,19 @@ void prec()
     pw[0] = {1, 1};
     for (int i = 1; i < N; i++)
     {
-        pw[i].first = 1LL * pw[i - 1].first * p1 % MOD1;
-        pw[i].second = 1LL * pw[i - 1].second * p2 % MOD2;
+        pw[i].first = 1LL * pw[i - 1].first * p1 % M1;
+        pw[i].second = 1LL * pw[i - 1].second * p2 % M2;
     }
-    ip1 = power(p1, MOD1 - 2, MOD1);
-    ip2 = power(p2, MOD2 - 2, MOD2);
+    ip1 = bex(p1, M1 - 2, M1);
+    ip2 = bex(p2, M2 - 2, M2);
     ipw[0] = {1, 1};
     for (int i = 1; i < N; i++)
     {
-        ipw[i].first = 1LL * ipw[i - 1].first * ip1 % MOD1;
-        ipw[i].second = 1LL * ipw[i - 1].second * ip2 % MOD2;
+        ipw[i].first = 1LL * ipw[i - 1].first * ip1 % M1;
+        ipw[i].second = 1LL * ipw[i - 1].second * ip2 % M2;
     }
 }
-struct Hashing
-{
+struct Hashing {
     int n;
     string s;                  // 0 - indexed
     vector<pair<int, int>> hs; // 1 - indexed
@@ -176,8 +141,8 @@ struct Hashing
         for (int i = 0; i < n; i++)
         {
             pair<int, int> p;
-            p.first = (hs[i].first + 1LL * pw[i].first * s[i] % MOD1) % MOD1;
-            p.second = (hs[i].second + 1LL * pw[i].second * s[i] % MOD2) % MOD2;
+            p.first = (hs[i].first + 1LL * pw[i].first * s[i] % M1) % M1;
+            p.second = (hs[i].second + 1LL * pw[i].second * s[i] % M2) % M2;
             hs.push_back(p);
         }
     }
@@ -185,8 +150,8 @@ struct Hashing
     { // 1 - indexed
         assert(1 <= l && l <= r && r <= n);
         pair<int, int> ans;
-        ans.first = (hs[r].first - hs[l - 1].first + MOD1) * 1LL * ipw[l - 1].first % MOD1;
-        ans.second = (hs[r].second - hs[l - 1].second + MOD2) * 1LL * ipw[l - 1].second % MOD2;
+        ans.first = (hs[r].first - hs[l - 1].first + M1) * 1LL * ipw[l - 1].first % M1;
+        ans.second = (hs[r].second - hs[l - 1].second + M2) * 1LL * ipw[l - 1].second % M2;
         return ans;
     }
     pair<int, int> get_hash()
@@ -321,7 +286,7 @@ using namespace std;
 
 const int N = 1e5 + 9;
 
-int power(long long n, long long k, const int mod)
+int bex(long long n, long long k, const int mod)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -358,7 +323,7 @@ void prec()
         pw[i] = pw[i - 1] * p;
     }
     ipw[0] = {1, 1};
-    T ip = {power(p[0], MOD[0] - 2, MOD[0]), power(p[1], MOD[1] - 2, MOD[1])};
+    T ip = {bex(p[0], MOD[0] - 2, MOD[0]), bex(p[1], MOD[1] - 2, MOD[1])};
     for (int i = 1; i < N; i++)
     {
         ipw[i] = ipw[i - 1] * ip;

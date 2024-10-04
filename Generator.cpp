@@ -16,21 +16,21 @@ long long ran(long long L, long long R) {
 void test() {
     ll a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, m = 0, n = 0, q = 0;
     cout << 1 << '\n'; // For testcase input
-    n = ran(1, 10);
+    n = ran(1, 5);
     cout << n << ' ';
-    k = ran(1, 10);
+    k = ran(1, 5);
     cout << k << '\n';
-    // for (i = 0; i < n; ++i) {
-    //     cout << ran(1, 3) << ' ';
-    // }
-    // cout << '\n';
+    for (i = 0; i < n; ++i) {
+        cout << ran(1, 5) << ' ';
+    }
+    cout << '\n';
     // while(k--) {
     //     a = ran(1, n); cout << a << ' ';
     //     a = ran(a, n); cout << a << '\n';
     // }
     // set<ll> st;
     // while (st.size() != n) {
-    //     ll a = ran(1, 100);
+    //     ll a = ran(1, 30);
     //     if (st.find(a) == st.end()) {
     //         cout << a << ' '; st.insert(a);
     //     }

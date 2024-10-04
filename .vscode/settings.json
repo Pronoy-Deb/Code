@@ -15,6 +15,10 @@
         "chrono": "cpp",
         "random": "cpp",
         "limits": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "iomanip": "cpp",
+        "iosfwd": "cpp",
+        "compare": "cpp",
+        "cstdint": "cpp"
     },
 }

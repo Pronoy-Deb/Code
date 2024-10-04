@@ -16,7 +16,6 @@ void pre() {
 long long xr(int l, int r) { return pxr[r] ^ pxr[l - 1]; }
 
 // OR,
-
     cin >> n >> q;
     ll ar[n + 1][32];
     for (i = 0; i < 32; ++i) ar[0][i] = 0;

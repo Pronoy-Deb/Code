@@ -60,11 +60,20 @@
         const double rd = 1e-9;
 
     -> For .txt type input/output:
-        #ifdef LOCAL
+        #ifndef ONLINE_JUDGE
         freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
         #endif
 
-    -> printf(), scanf():
+    -> Printing large (128-bit) integer:
+    void pl(__int128_t x) {
+        if (x == 0) { cout << '0'; return; }
+        if (x < 0) { cout << '-'; x = -x; }
+        char buffer[40] = {0}; int i = 39;
+        while (x > 0) { buffer[--i] = '0' + x % 10; x /= 10; }
+        cout << &buffer[i] << '\n';
+    }
+
+    -> Fast I/O:
         void in(auto &n) {string s=typeid(n).name();if(s=="i")scanf("%d",&n);else if(s=="x")scanf("%lld",&n);else if(s=="c")scanf("%c",&n);else if(s=="b"){int t;scanf("%d",&t);n=t;}else if(s=="f")scanf("%f",&n);else if(s=="d")scanf("%lf",&n);else cin>>n;}
         void out(auto n) {string s=typeid(n).name();if(s=="i" or s=="b")printf("%d ",n);else if(s=="x")printf("%lld ",n);else if(s=="c")printf("%c",n);else if(s=="f")printf("%f",n);else if(s=="d")printf("%lf",n);else cout<<n;}
 
@@ -72,4 +81,11 @@
         cout << boolalpha << bool(n);
 
     -> LAMBDA function:
-        [] (int a) {return a%2==0;}
+        auto f = [&](int x, int y) { return x + y; };
+        
+    -> LAMBDA function with recursion:
+        auto sum = [&](auto&& self, int n) {
+            if (n == 0) return 0;
+            return n + self(self, n - 1);
+        };
+        cout << sum(sum, 5);
