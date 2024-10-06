@@ -9,16 +9,12 @@ using namespace std;
 #define ck(...)
 #endif
 const ll M = 1e9 + 7, N = 2e5 + 5;
-// long long xr(int l, int r) { return xr[r] ^ xr[l - 1]; }
+
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
     cin >> n;
-    long long xr[n+5], ar[n]; xr[0] = 0;
-    for (i = 0; i < n; ++i) { cin >> ar[i]; xr[i + 1] = xr[i] ^ ar[i]; }
-    for(i=1;i<n;++i) {
-        c += (xr[i] == (xr[n] ^ xr[i]));
-    }
-    cout << c;
+    vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    
     cout << '\n';
 }
 

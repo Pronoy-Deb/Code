@@ -46,6 +46,7 @@ int get(int l, int r, long long val, int nd = 0, int s = 0, int e = n - 1) {
     int m = (e + s) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     return get(l, r, val, lc, s, m) + get(l, r, val, rc, m + 1, e);
 }
+void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // Operation:
     cin >> n >> q;
@@ -87,6 +88,7 @@ int get(int l, int r, int x, int nd = 0, int s = 0, int e = n - 1) {
     int m = (s + e) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     return get(l, r, x, lc, s, m) + get(l, r, x, rc, m + 1, e);
 }
+void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // OR,
 
@@ -117,6 +119,7 @@ int get(int lx, int rx, int x, int nd = 0, int l = 0, int r = n - 1) {
     int m = (l + r) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     return get(lx, rx, x, lc, l, m) + get(lx, rx, x, rc, m + 1, r);
 }
+void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // Dynamic Lower Bound Problem:
 
@@ -145,6 +148,7 @@ long long get(int lx, int rx, long long x, int nd = 0, int l = 0, int r = n - 1)
     int m = (l + r) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     return min(get(lx, rx, x, lc, l, m), get(lx, rx, x, rc, m + 1, r));
 }
+void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // Operation:
     cin >> n >> q;

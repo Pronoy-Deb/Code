@@ -12,10 +12,30 @@ const ll M = 1e9 + 7, N = 2e5 + 5;
 
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    // cin >> n;
+    cin >> n;
     // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    
-    cout << '\n';
+    map<string, int> mp;
+    while (n--) {
+        string s; cin >> s;
+        mp[s]++;
+    }
+    cin >> q;
+    while (q--) {
+        c = 0; string r(10, 'z');
+        string s; cin >> s; a = s.size();
+        for (auto &[e, f] : mp) {
+            if (e.size() < a) continue;
+            if (e.substr(0, a) == s) {
+                if (mp[e] == c) r = min(r, e);
+                else if (mp[e] > c) {
+                    c = f; r = e;
+                }
+            }
+        }
+        if (!c) cout << "-1\n";
+        else cout << r << ' ' << c << '\n';
+    }
+    // cout << '\n';
 }
 
 signed main() {
@@ -25,20 +45,3 @@ signed main() {
     while (tc < t) test(++tc);
     return 0;
 }
-
-
-
-// #include <sys/resource.h>
-// void set_stack_size(rlim_t stack_size) {
-//   struct rlimit rl;
-//   int result = getrlimit(RLIMIT_STACK, &rl);
-//   if (result == 0) {
-//     if (rl.rlim_cur < stack_size) {
-//       rl.rlim_cur = stack_size;
-//       result = setrlimit(RLIMIT_STACK, &rl);
-//     }
-//   }
-// }
-
-
-// set_stack_size(1024 * 1024 * 1024); // 1 GB
