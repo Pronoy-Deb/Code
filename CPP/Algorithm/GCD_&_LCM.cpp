@@ -43,7 +43,7 @@ void pre() {
     }
 }
 
-// Operation: gc[a][b] ? gc[a][b] : 1
+Operation: gc[a][b] ? gc[a][b] : 1
 // LCM:
 // Complexity: O(log(min(a, b)))
 // Built-in: lcm(a, b);

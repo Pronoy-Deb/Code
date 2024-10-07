@@ -1,7 +1,5 @@
 // Complexity: O(log(pow))
 // Note: Modular multiplicative inverse: 1 / n = bex(n, M - 2)
-
-// For int value:
 // Iterative Approach:
 
 long long bex(long long base, long long pow = M - 2) {

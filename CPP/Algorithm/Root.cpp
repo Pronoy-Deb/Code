@@ -56,8 +56,7 @@ auto nr(long long num, int n) {
 #include <bits/stdc++.h>
 using namespace std;
 
-int power(int a, int b, int m)
-{
+int power(int a, int b, int m) {
     int res = 1;
     while (b > 0)
     {

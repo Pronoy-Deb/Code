@@ -1,8 +1,8 @@
 #!/bin/bash
 #Command: bash ck.sh 10
 
-g++ -std=c++23 Generator.cpp -o gen
-g++ -std=c++23 Optimized.cpp -o opti
+g++ -O2 -std=c++23 Generator.cpp -o gen
+g++ -O2 -std=c++23 Optimized.cpp -o opti
 
 for i in $(seq 1 "$1") ; do
     ./gen > inp

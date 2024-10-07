@@ -25,20 +25,3 @@ signed main() {
     while (tc < t) test(++tc);
     return 0;
 }
-
-
-
-// #include <sys/resource.h>
-// void set_stack_size(rlim_t stack_size) {
-//   struct rlimit rl;
-//   int result = getrlimit(RLIMIT_STACK, &rl);
-//   if (result == 0) {
-//     if (rl.rlim_cur < stack_size) {
-//       rl.rlim_cur = stack_size;
-//       result = setrlimit(RLIMIT_STACK, &rl);
-//     }
-//   }
-// }
-
-
-// set_stack_size(1024 * 1024 * 1024); // 1 GB

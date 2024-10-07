@@ -4,8 +4,8 @@
 	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
 	// same ids are connected.
 	// Example:
-	"Print to console": {
-		"prefix": "te",
+	"Boilerplate Code": {
+		"prefix": "bc",
 		"body": [
 			// 		"console.log('$1');",
 			// 		"$2"
@@ -39,8 +39,8 @@
 		"description": "Log output to console",
 	},
 
-	"Print to console1": {
-		"prefix": "mi",
+	"Modint": {
+		"prefix": "mint",
 		"body": [
 			"template <const int64_t MOD>",
 			"struct modint {",
@@ -67,6 +67,55 @@
 			"template <int64_t MOD> ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.val; }",
 			"using mint = modint<M>;",
 		],
-		// "description": "Log output to console",
-	}
+	},
+
+	"Binary Exponentiation": {
+	"prefix": "bex",
+		"body": [
+			"long long bex(long long base, long long pow = M - 2) {",
+			"\tlong long ans = 1;",
+			"\twhile (pow) {",
+			"\t\tif (pow & 1) ans = (ans * base) % M;",
+			"\t\tbase = (base * base) % M; pow >>= 1;",
+			"\t}",
+			"\treturn ans;",
+			"}",
+		],
+	},
+
+	"Square Root": {
+	"prefix": "sr",
+		"body": [
+			"long long sr(long long x) {",
+			"\tlong long p = sqrtl(0.5 + x); while (p * p < x) ++p;",
+			"\twhile (p * p > x) --p; return p;",
+			"}",
+		],
+	},
+
+	"Greatest Common Divisor": {
+	"prefix": "gcd",
+		"body": [
+			"long long gc(long long a, long long b) {",
+			"\twhile (b) {",
+			"\t\tlong long tmp = a; a = b; b = tmp % b;",
+			"\t}",
+			"\treturn a;",
+			"}",
+		],
+	},
+
+	"Least Common Multiple": {
+	"prefix": "lcm",
+		"body": [
+			"long long lc(long long a, long long b) {",
+			"\tlong long ans = a * b;",
+			"\twhile (b) {",
+			"\t\tlong long tmp = a; a = b; b = tmp % b;",
+			"\t}",
+			"\treturn (ans / a);",
+			"}",
+		],
+	},
+
 }

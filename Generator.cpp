@@ -6,17 +6,18 @@ using namespace std;
 #define ps(b) cout << (b ? "YES" : "NO") << '\n';
 const ll M = 1e9 + 7, N = 2e5 + 5;
 
-long long ran(long long L, long long R) {
+auto ran(auto l, auto r) {
     random_device rd; mt19937_64 gen(rd());
-    uniform_int_distribution<long long> dis(L, R);
+    uniform_int_distribution<ll> dis(l, r);
+    // uniform_real_distribution<> dis(l, r);
     return dis(gen);
-    // return L + rand() % (R - L + 1);
+    // return l + rand() % (r - l + 1);
 }
 
 void test() {
     ll a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, m = 0, n = 0, q = 0;
     cout << 1 << '\n'; // For testcase input
-    n = ran(1, 10000);
+    n = ran(1, 10);
     cout << n << ' ';
     // k = ran(1, 5);
     // cout << k << '\n';

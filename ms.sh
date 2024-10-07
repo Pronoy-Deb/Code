@@ -3,9 +3,9 @@
 # Example: bash ms.sh 100
 sed -i 's/\r$//' ms.sh
 
-g++ -std=c++23 Generator.cpp -o gen
-g++ -std=c++23 Optimized.cpp -o opti
-g++ -std=c++23 Checker.cpp -o checker
+g++ -O2 -std=c++23 Generator.cpp -o gen
+g++ -O2 -std=c++23 Optimized.cpp -o opti
+g++ -O2 -std=c++23 Checker.cpp -o checker
 
 for i in $(seq 1 "$1") ; do
     ./gen > inp
@@ -23,4 +23,4 @@ for i in $(seq 1 "$1") ; do
         echo "Passed test $i / $1"
     fi
 done
-echo -e "All tests passed successfully!\n"
+echo -e "Pretests passed successfully!\n"

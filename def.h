@@ -1,3 +1,4 @@
+
 #define pa(c)             \
     cerr << #c << " = ";  \
     for (auto &e : c)     \
@@ -87,6 +88,46 @@ template <typename T, size_t N>
 struct is_c_array<T[N]> : true_type
 {
 };
+
+// Helper to identify if a type is a stack
+template <typename T>
+struct is_stack : false_type {};
+
+template <typename T, typename Container>
+struct is_stack<stack<T, Container>> : true_type {};
+
+// Helper to identify if a type is a queue
+template <typename T>
+struct is_queue : false_type {};
+
+template <typename T, typename Container>
+struct is_queue<queue<T, Container>> : true_type {};
+
+// Printing stacks
+template <typename T>
+void stack_impl(auto *x, stack<T> y) {
+    cerr << '\n'
+         << x << " = [";
+    while (!y.empty()) {
+        cerr << y.top();
+        y.pop();
+        if (!y.empty()) cerr << ", ";
+    }
+    cerr << "]\n";
+}
+
+// Printing queues
+template <typename T>
+void queue_impl(auto *x, queue<T> y) {
+    cerr << '\n'
+         << x << " = [";
+    while (!y.empty()) {
+        cerr << y.front();
+        y.pop();
+        if (!y.empty()) cerr << ", ";
+    }
+    cerr << "]\n";
+}
 
 // Custom output function for pairs
 template <typename T, typename U>
@@ -244,24 +285,23 @@ void r_impl(auto *x, T &&y, Ts &&...g)
         r_impl(c + 2, forward<Ts>(g)...);
 }
 
+// ck_impl dispatches to the correct printing function based on the type
 void ck_impl(auto *x) {}
 
-auto ck_impl(auto *x, auto &&y)
-{
-    if constexpr (is_2d_container<decay_t<decltype(y)>>::value)
-    {
+auto ck_impl(auto *x, auto &&y) {
+    if constexpr (is_stack<decay_t<decltype(y)>>::value) {
+        stack_impl(x, forward<decltype(y)>(y));
+    } else if constexpr (is_queue<decay_t<decltype(y)>>::value) {
+        queue_impl(x, forward<decltype(y)>(y));
+    } else if constexpr (is_2d_container<decay_t<decltype(y)>>::value) {
         r_impl(x, forward<decltype(y)>(y));
-    }
-    else if constexpr (is_map<decay_t<decltype(y)>>::value)
-    {
+    } else if constexpr (is_map<decay_t<decltype(y)>>::value) {
         p_impl(x, forward<decltype(y)>(y));
-    }
-    else if constexpr (is_iterable<decay_t<decltype(y)>>::value)
-    {
+    } else if constexpr (is_iterable<decay_t<decltype(y)>>::value) {
         e_impl(x, forward<decltype(y)>(y));
-    }
-    else
-    {
+    } else if constexpr (is_c_array<decay_t<decltype(y)>>::value) {
+        e_impl(x, forward<decltype(y)>(y));
+    } else {
         v_impl(x, forward<decltype(y)>(y));
     }
 }

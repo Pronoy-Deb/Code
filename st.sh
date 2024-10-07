@@ -1,9 +1,9 @@
 #!/bin/bash
 # Command: bash st.sh Number_of_Tests
 
-g++ -std=c++23 Generator.cpp -o gen
-g++ -std=c++23 Brute_Force.cpp -o brute
-g++ -std=c++23 Optimized.cpp -o opti
+g++ -O2 -std=c++23 Generator.cpp -o gen
+g++ -O2 -std=c++23 Brute_Force.cpp -o brute
+g++ -O2 -std=c++23 Optimized.cpp -o opti
 
 for i in $(seq 1 "$1"); do
     ./gen > inp
