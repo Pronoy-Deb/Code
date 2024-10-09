@@ -1,43 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
+#define pe(c)                           \
+    for (auto &e : c) cout << e << ' '; \
+    cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
 #ifdef LOCAL
 #include "def.h"
 #else
 #define ck(...)
 #endif
-const ll M = 1e9 + 7, N = 1e7 + 200;
-bitset<N> ip; vector<long long> pri;
-void pre() {
-	pri.push_back(2);
-	for (long long i = 3; i < N; i += 2) {
-		if (!ip[i]) {
-			if(i>=5 and !ip[i - 2]) pri.push_back(i - 2);
-			for (long long j = i * i; j < N; j += (i << 1)) ip[j] = 1;
-		}
-	}
-}
+const ll M = 1e9 + 7, N = 2e6;
+
 void test(int tc) {
-    ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    cout << "Case #" << tc << ": ";
+    ll n = 0, m = 0, a = -M, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
     cin >> n;
-    if(n<=4) {
-        cout << 0 << '\n'; return;
+    vector<ll> ar(n);
+    for (i = 0; i < n; ++i) {
+        cin >> ar[i];
+        // a = max(a, ar[i]);
     }
-    // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    a = lower_bound(pri.begin(), pri.end(), n - 1) - pri.begin();
-    // if(pri[a] == n) a--;
-    cout << a;
+    // a = (2*a + (a % 2));
+    cout << N << ' ';
+    // cout << a << ' ';
+    if (n == 1) {
+        return;
+    }
+    cout << ar[1] << ' ';
+    if (n == 2) {
+        return;
+    }
+    c = N + ar[1];
+    for (i = 2; i < n; ++i) {
+        d = ar[i] + N - c;
+        cout << d << ' ';
+        c += d;
+        // a = max(a, d);
+    }
     cout << '\n';
 }
 
 signed main() {
-    cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
-    pre();
-    // pn(pri, 20);
-    // ck(pri);
+    cin.tie(0)->sync_with_stdio(0);
+    cin.exceptions(cin.failbit | cin.badbit);
     int tc = 0, t = 1;
     cin >> t;
     while (tc < t) test(++tc);

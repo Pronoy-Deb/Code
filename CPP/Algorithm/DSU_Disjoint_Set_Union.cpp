@@ -8,7 +8,7 @@ void make() {
     }
 }
 int get(int i) {
-    return par[i] = (par[i] == i ? i : get(par[i]));
+    return (par[i] == i ? i : par[i] = get(par[i]));
 }
 void uni(int a, int b) {
     a = get(a); b = get(b);
@@ -38,8 +38,7 @@ struct dsu {
     vector<int> par;
     dsu(){};
     dsu(int n) {
-        par.resize(n + 2);
-        iota(par.begin(), par.end(), 0);
+        par.resize(n + 2); iota(par.begin(), par.end(), 0);
     }
     int get(int u) {
         if (u == par[u]) return u;
@@ -153,11 +152,10 @@ void uni(int a, int b, int d) {
         pot[ra] = d + pot[b] - pot[a]; prec[ra] = rb;
     }
 }
-Operation:
+// Operation:
     int n;   //no. of variables
-    cin >> n;
     int m;   // no. of equations
-    cin >> m;
+    cin >> n >> m;
     make(n);
     for (int i = 1; i <= m; ++i) { //consider 1-based indexing of variables
         int a, b, d;         //asserting a-b=d;
@@ -168,19 +166,58 @@ Operation:
     //queries of type y-x=? can be given through pot[y]-pot[x] (only when then are in same component
     //i.e., can be extracted from the information so far )
 
-// DSU Partially Persistent:
+// Partially Persistent DSU:
+https://cses.fi/problemset/task/2101
+https://codeforces.com/gym/100814/problem/C
 
-struct DSU {
+int par[N], Time[N], sz[N], n;
+void make() {
+ 	for (int i = 1; i <= n; ++i) {
+        par[i] = i; sz[i] = 1;
+	}
+}
+int get(int i) { return (par[i] == i ? i : get(par[i])); }
+void uni(int a, int b, int t) {
+	a = get(a); b = get(b);
+	if (a == b) return;
+    if (sz[a] > sz[b]) swap(a, b);
+	sz[b] += sz[a]; par[a] = b; Time[a] = t;
+}
+
+// Operation:
+	cin >> n >> m >> q;
+    make();
+	for (i = 1; i <= m; ++i) {
+        cin >> a >> b; uni(a, b, i);
+	}
+	while (q--) {
+        cin >> a >> b; int ans = 0;
+		while (a != b) {
+			if (par[a] == a && par[b] == b) {
+				ans = -1; break;
+			}
+			if (par[a] != a && (Time[a] < Time[b] || par[b] == b)) {
+				ans = Time[a]; a = par[a];
+			}
+            else {
+				ans = Time[b]; b = par[b];
+			}
+		}
+		cout << ans << "\n";
+	}
+
+// OR,
+
+struct dsu {
 vector<vector<pair<int, int>>> par;
-int time = 0; // initial time
-DSU(int n) : par(n + 1, {{-1, 0}}) {}
+int time = 0;
+dsu(int n) : par(n + 1, {{-1, 0}}) {}
 bool uni(int u, int v) {
     ++time;
     if ((u = root(u, time)) == (v = root(v, time))) return false;
     if (par[u].back().first > par[v].back().first) swap(u, v);
     par[u].push_back({par[u].back().first + par[v].back().first, time});
-    par[v].push_back({u, time}); // par[v] = u
-    return true;
+    par[v].push_back({u, time}); return true;
 }
 bool same(int u, int v, int t) { return root(u, t) == root(v, t); }
 int root(int u, int t) { // root of u at time t
@@ -199,10 +236,9 @@ int size(int u, int t) { // size of the component of u at time t
 }
 };
 
-int ar[N];
 // Operation:
     cin >> n >> m;
-    DSU d(n);
+    dsu d(n); int ar[n + 1];
     for (i = 1; i <= m; ++i) {
         int ty, u, v; cin >> ty >> u >> v;
         if (ty == 1) {
@@ -219,7 +255,103 @@ int ar[N];
         }
     }
 
-// Problem: https://codeforces.com/gym/100814/problem/C
+// Persistent Union Find:
+// https://judge.yosupo.jp/problem/persistent_unionfind
+
+template <typename T>
+struct PersistentArray { // 0-indexed
+    struct node {
+        node *l, *r; T x;
+    };
+    int n = 1; vector<node *> root;
+    int make(vector<T> v) {
+        int sz = v.size(); while (n < sz) n <<= 1;
+        root.push_back(make(0, n - 1, v)); return root.size() - 1;
+    }
+    node *make(int l, int r, vector<T> &v) {
+        node *cur = new node();
+        if (l == r) {
+            if (l < v.size()) cur->x = v[l]; else cur->x = 0;
+        }
+        else {
+            int lc = (l + r) >> 1, rc = lc + 1;
+            cur->l = make(l, lc, v); cur->r = make(rc, r, v);
+        }
+        return cur;
+    }
+    // get the ith value of the r-th array
+    T get_val(int r, int i) { return get_val(root[r], i, 0, n - 1); }
+    T get_val(node *cur, int i, int l, int r) {
+        if (l == r) return cur->x; int lc = (l + r) >> 1, rc = lc + 1;
+        if (i <= ((l + r) >> 1)) return get_val(cur->l, i, l, lc);
+        return get_val(cur->r, i, rc, r);
+    }
+    // update the ith value if the rth array by x and return the new root of the array
+    int up(int r, int i, T x) {
+        root.push_back(up(root[r], i, x, 0, n - 1)); return root.size() - 1;
+    }
+    void set(int r, int i, T x) {
+        int k = up(r, i, x); root[r] = root[k]; root.pop_back();
+    }
+    node *up(node *pre, int i, T x, int l, int r) {
+        node *cur = new node();
+        if (l == r) cur->x = x;
+        else {
+            int lc = (l + r) >> 1, rc = lc + 1;
+            if (i <= lc) {
+                cur->l = up(pre->l, i, x, l, lc); cur->r = pre->r;
+            }
+            else {
+                cur->l = pre->l; cur->r = up(pre->r, i, x, rc, r);
+            }
+        }
+        return cur;
+    }
+};
+mt19937_64 ran(chrono::high_resolution_clock::now().time_since_epoch().count());
+struct dsu {
+    PersistentArray<int> par, sz;
+    vector<int> c; int cur = 0; dsu() {}
+    dsu(int n, int q) { // q -> maximum instances of DSU
+        vector<int> p(n + 1); for (int i = 1; i <= n; ++i) p[i] = i;
+        par.make(p); sz.make(vector<int>(n + 1, 1)); c.resize(q + 1, n);
+        cur = 0; // initial DSU is the 0th one
+    }
+    int get(int r, int u) {
+        int p = par.get_val(r, u); if (p == u) return u;
+        int cur = get(r, p); par.set(r, u, cur); return cur;
+    }
+    bool same(int r, int u, int v) { return get(r, u) == get(r, v); }
+    int get_size(int r, int u) { return sz.get_val(r, get(r, u)); }
+    int count(int r) { return c[r]; } // connected components
+    int merge(int r, int u, int v) { // returns the updated root
+        cur++; c[cur] = c[r];
+        if ((u = get(r, u)) == (v = get(r, v))) {
+            par.up(r, 0, 0); sz.up(r, 0, 0);
+            // assert(cur == par.root.size() - 1);
+            return cur;
+        }
+        else c[cur]--; if (ran() & 1) swap(u, v);
+        int x = sz.get_val(r, v) + sz.get_val(r, u);
+        par.up(r, u, v); sz.up(r, v, x);
+        // assert(cur == par.root.size() - 1);
+        return cur;
+    }
+};
+int r[N];
+
+// Operation:
+    cin >> n >> q;
+    dsu o(n, q + 1);
+    for (i = 1; i <= q; i++) {
+        int ty, id, u, v;
+        cin >> ty >> id >> u >> v;
+        ++id, ++u; ++v;
+        if (ty == 0)  r[i] = o.merge(r[id], u, v);
+        else {
+            r[i] = r[i - 1]; cout << o.same(r[id], u, v) << '\n';
+        }
+    }
 
 // DSU with Rollbacks:
 https://codeforces.com/contest/1386/problem/C

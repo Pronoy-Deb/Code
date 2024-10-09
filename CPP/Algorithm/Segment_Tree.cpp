@@ -1,5 +1,5 @@
 // WITHOUT lazy Propagation:
-// Complexity: Constructing the tree: O(n), Update & Query: O(log(n))
+// Complexity: Constructing the tre: O(n), Update & Query: O(log(n))
 
 long long tre[N << 1], ar[N], n;
 long long com(long long x, long long y) { return x + y; }
@@ -303,22 +303,22 @@ long long get(int X, int xs, int xe, int x1, int x2, int y1, int y2) {
 
 class ST {
 public:
-    vector<int> tree; int sz;
+    vector<int> tre; int sz;
     ST(int n) {
-        sz = n; tree.resize((n << 2), 0);
+        sz = n; tre.resize((n << 2), 0);
     }
     void add(int nd, int s, int e, int sz, int val) {
-        if (s == e) tree[nd] += val;
+        if (s == e) tre[nd] += val;
         else {
             int mid = (s + e) >> 1, lc = (nd << 1), rc = lc + 1;
             if (sz <= mid) add(lc, s, mid, sz, val);
             else add(rc, mid + 1, e, sz, val);
-            tree[nd] = tree[lc] + tree[rc];
+            tre[nd] = tre[lc] + tre[rc];
         }
     }
     int get(int nd, int s, int e, int L, int R) {
         if (s > R || e < L) return 0;
-        if (s >= L && e <= R) return tree[nd];
+        if (s >= L && e <= R) return tre[nd];
         int mid = (s + e) >> 1, lc = (nd << 1), rc = lc + 1;
         return get(lc, s, mid, L, R) + get(rc, mid + 1, e, L, R);
     }
@@ -361,8 +361,7 @@ struct node {
         key = rnd();
         val = g = value;
     }
-    void pull()
-    {
+    void pull() {
         g = val;
         if (l)
             g = __gcd(g, l->g);
@@ -373,40 +372,32 @@ struct node {
     }
 };
 // memory O(n)
-struct treap
-{
+struct treap {
     node *root;
-    treap()
-    {
+    treap() {
         root = nullptr;
     }
-    void split(node *t, int pos, node *&l, node *&r)
-    {
-        if (t == nullptr)
-        {
+    void split(node *t, int pos, node *&l, node *&r) {
+        if (t == nullptr) {
             l = r = nullptr;
             return;
         }
-        if (t->pos < pos)
-        {
+        if (t->pos < pos) {
             split(t->r, pos, l, r);
             t->r = l;
             l = t;
         }
-        else
-        {
+        else {
             split(t->l, pos, l, r);
             t->l = r;
             r = t;
         }
         t->pull();
     }
-    node *com(node *l, node *r)
-    {
+    node *com(node *l, node *r) {
         if (!l || !r)
             return l ? l : r;
-        if (l->key < r->key)
-        {
+        if (l->key < r->key) {
             l->r = com(l->r, r);
             l->pull();
             return l;
@@ -415,11 +406,9 @@ struct treap
         r->pull();
         return r;
     }
-    bool find(int pos)
-    {
+    bool find(int pos) {
         node *t = root;
-        while (t)
-        {
+        while (t) {
             if (t->pos == pos)
                 return true;
             if (t->pos > pos)
@@ -429,10 +418,8 @@ struct treap
         }
         return false;
     }
-    void up(node *t, int pos, long long val)
-    {
-        if (t->pos == pos)
-        {
+    void up(node *t, int pos, long long val) {
+        if (t->pos == pos) {
             t->val = val;
             t->pull();
             return;
@@ -443,19 +430,16 @@ struct treap
             up(t->r, pos, val);
         t->pull();
     }
-    void insert(int pos, long long val)
-    { // set a_pos = val
+    void insert(int pos, long long val) { // set a_pos = val
         if (find(pos))
             up(root, pos, val);
-        else
-        {
+        else {
             node *l, *r;
             split(root, pos, l, r);
             root = com(com(l, new node(pos, val)), r);
         }
     }
-    long long get(node *t, int st, int en)
-    {
+    long long get(node *t, int st, int en) {
         if (t->mx < st || en < t->mn)
             return 0;
         if (st <= t->mn && t->mx <= en)
@@ -467,14 +451,12 @@ struct treap
             ans = __gcd(ans, get(t->r, st, en));
         return ans;
     }
-    long long get(int l, int r)
-    { // gcd of a_i such that l <= i <= r
+    long long get(int l, int r) { // gcd of a_i such that l <= i <= r
         if (!root)
             return 0;
         return get(root, l, r);
     }
-    void print(node *t)
-    {
+    void print(node *t) {
         if (!t)
             return;
         print(t->l);
@@ -483,22 +465,18 @@ struct treap
     }
 };
 // total memory along with treap = nlogn
-struct ST
-{
+struct ST {
     ST *l, *r;
     treap t;
     int b, e;
-    ST()
-    {
+    ST() {
         l = r = nullptr;
     }
-    ST(int st, int en)
-    {
+    ST(int st, int en) {
         l = r = nullptr;
         b = st, e = en;
     }
-    void fix(int pos)
-    {
+    void fix(int pos) {
         long long val = 0;
         if (l)
             val = __gcd(val, l->t.get(pos, pos));
@@ -506,25 +484,20 @@ struct ST
             val = __gcd(val, r->t.get(pos, pos));
         t.insert(pos, val);
     }
-    void up(int x, int y, long long val)
-    { // set ar[x][y] = val
+    void up(int x, int y, long long val) { // set ar[x][y] = val
         if (e < x || x < b)
             return;
-        if (b == e)
-        {
+        if (b == e) {
             t.insert(y, val);
             return;
         }
-        if (b != e)
-        {
-            if (x <= (b + e) / 2)
-            {
+        if (b != e) {
+            if (x <= (b + e) / 2) {
                 if (!l)
                     l = new ST(b, (b + e) / 2);
                 l->up(x, y, val);
             }
-            else
-            {
+            else {
                 if (!r)
                     r = new ST((b + e) / 2 + 1, e);
                 r->up(x, y, val);
@@ -532,8 +505,7 @@ struct ST
         }
         fix(y);
     }
-    long long get(int i, int j, int st, int en)
-    { // gcd of ar[x][y] such that i <= x <= j && st <= y <= en
+    long long get(int i, int j, int st, int en) { // gcd of ar[x][y] such that i <= x <= j && st <= y <= en
         if (e < i || j < b)
             return 0;
         if (i <= b && e <= j)
@@ -547,25 +519,21 @@ struct ST
     }
 };
 
-int32_t main()
-{
+int32_t main() {
     int n, m;
     cin >> n >> m;
     ST t(0, n - 1);
     int q;
     cin >> q;
-    while (q--)
-    {
+    while (q--) {
         int ty;
         cin >> ty;
-        if (ty == 1)
-        {
+        if (ty == 1) {
             int x, y, v;
             cin >> x >> y >> v;
             t.up(x, y, v);
         }
-        else
-        {
+        else {
             int x1, y1, x2, y2;
             cin >> x1 >> y1 >> x2 >> y2;
             cout << t.get(x1, x2, y1, y2) << '\n';
@@ -691,38 +659,31 @@ long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 // Segment Tree Merging:
 
 // works for multiple values too
-struct STM
-{
+struct STM {
 #define lc tre[cur].l
 #define rc tre[cur].r
-    struct node
-    {
+    struct node {
         int l, r, sz;
     } tre[N * 30];
     int T;
     int id[N * 30];
-    STM()
-    {
+    STM() {
         T = 0;
         for (int i = 1; i < N * 30; ++i)
             id[i] = i;
     }
-    inline int new_node()
-    {
+    inline int new_node() {
         int cur = id[++T];
         tre[cur].l = tre[cur].r = tre[cur].sz = 0;
         return cur;
     }
-    inline void save_memory(int x)
-    {
+    inline void save_memory(int x) {
         id[T--] = x;
     }
-    // create a segment tree with only node i
-    int make(int b, int e, int i)
-    {
+    // create a segment tre with only node i
+    int make(int b, int e, int i) {
         int cur = new_node();
-        if (b == e)
-        {
+        if (b == e) {
             tre[cur].sz = 1;
             return cur;
         }
@@ -734,9 +695,8 @@ struct STM
         tre[cur].sz = tre[lc].sz + tre[rc].sz;
         return cur;
     }
-    // merge segment tree a and b
-    int com(int a, int b)
-    {
+    // merge segment tre a and b
+    int com(int a, int b) {
         if (!a || !b)
             return a ^ b;
         tre[a].l = com(tre[a].l, tre[b].l);
@@ -746,8 +706,7 @@ struct STM
         return a;
     }
     // split cur into cur and b so that cur contains k smallest elements
-    void split(int cur, int &b, int k)
-    {
+    void split(int cur, int &b, int k) {
         if (tre[cur].sz < k)
             return;
         b = new_node();
@@ -761,9 +720,8 @@ struct STM
         tre[b].sz = tre[cur].sz - k;
         tre[cur].sz = k;
     }
-    // k -th sorted element in cur segment tree
-    int get(int cur, int b, int e, int k)
-    {
+    // k -th sorted element in cur segment tre
+    int get(int cur, int b, int e, int k) {
         if (b == e)
             return b;
         int lsz = tre[lc].sz;
@@ -780,14 +738,12 @@ int root[N], rb[N];
 set<int> cur; // maintains the left borders of ordered substrs
 int n, q, ar[N];
 // split (l, ...) so that rb[l] = r
-void split(int l, int r)
-{
+void split(int l, int r) {
     if (r >= rb[l] || r < l)
         return;
     if (!ty[l])
         t.split(root[l], root[r + 1], r - l + 1);
-    else
-    {
+    else {
         root[r + 1] = root[l];
         t.split(root[r + 1], root[l], rb[l] - r); // checkmate
     }
@@ -797,8 +753,7 @@ void split(int l, int r)
     ty[r + 1] = ty[l];
 }
 // merge adjacent substr a and b to a (ty[a] should be edited manually)
-void com(int a, int b)
-{
+void com(int a, int b) {
     if (a == b)
         return;
     cur.erase(b);
@@ -806,26 +761,22 @@ void com(int a, int b)
     rb[a] = rb[b];
 }
 // query for ar[k] on substr (l, ...)
-int get(int l, int k)
-{
+int get(int l, int k) {
     k -= l - 1;
     if (!ty[l])
         return t.get(root[l], 1, n, k);
     return t.get(root[l], 1, n, rb[l] - l + 1 - k + 1);
 }
-int main()
-{
+int main() {
     scanf("%d %d", &n, &q);
-    for (int i = 1; i <= n; ++i)
-    {
+    for (int i = 1; i <= n; ++i) {
         scanf("%d", &ar[i]);
         root[i] = t.make(1, n, ar[i]);
         cur.insert(i);
         rb[i] = i;
     }
 
-    while (q--)
-    {
+    while (q--) {
         // sort range [l, r]
         // type: 0 - inc  1 - dec
         int type, l, r;
@@ -840,8 +791,7 @@ int main()
         --R;
         int nw = *L;
         vector<int> v;
-        while (L != R)
-        {
+        while (L != R) {
             ++L;
             int k = *L;
             v.push_back(k);
@@ -898,45 +848,37 @@ template <int32_t MOD> istream &operator>>(istream &in, modint<MOD> &n) { return
 template <int32_t MOD> ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.val; }
 using mint = modint<M>;
 
-struct ST
-{
-    struct Int
-    { // arithmetic progression a, a + d, a + 2 * d, ...
+struct ST {
+    struct Int { // arithmetic progression a, a + d, a + 2 * d, ...
         mint a = 0, d = 0;
         Int() {};
         Int(mint _a, mint _d) { a = _a, d = _d; }
         mint at(mint n) { return (a + (n - 1) * d); }
         Int shift(mint n) { return Int((a + (n - 1) * d), d); }
         mint get_get(mint n) { return (((a * 2) + (n - 1) * d) * n) * ((mod + 1) / 2); }
-        const Int operator+(const Int &b) const
-        {
+        const Int operator+(const Int &b) const {
             return Int(a + b.a, d + b.d);
         }
     };
     mint tre[N << 2];
     Int lazy[N << 2];
-    ST()
-    {
+    ST() {
         memset(t, 0, sizeof t);
         memset(lazy, 0, sizeof lazy);
     }
-    void push(int n, int b, int e)
-    {
+    void push(int n, int b, int e) {
         if (lazy[n].a == 0 && lazy[n].d == 0)
             return;
         tre[n] += lazy[n].get_get(e - b + 1);
-        if (b != e)
-        {
+        if (b != e) {
             lazy[n << 1] = lazy[n << 1] + lazy[n];
             lazy[n << 1 | 1] = lazy[n << 1 | 1] + lazy[n].shift(((b + e) >> 1) + 2 - b);
         }
         lazy[n] = Int(0, 0);
     }
-    void make(int n, int b, int e)
-    {
+    void make(int n, int b, int e) {
         lazy[n] = Int(0, 0);
-        if (b == e)
-        {
+        if (b == e) {
             tre[n] = 0;
             return;
         }
@@ -945,13 +887,11 @@ struct ST
         make(r, m + 1, e);
         tre[n] = tre[l] + tre[r];
     }
-    void upd(int n, int b, int e, int i, int j, pair<mint, mint> v)
-    {
+    void upd(int n, int b, int e, int i, int j, pair<mint, mint> v) {
         push(n, b, e);
         if (b > j || e < i)
             return;
-        if (i <= b && e <= j)
-        {
+        if (i <= b && e <= j) {
             Int temp(v.first, v.second);
             lazy[n] = lazy[n] + temp.shift(b - i + 1);
             push(n, b, e);
@@ -962,8 +902,7 @@ struct ST
         upd(r, m + 1, e, i, j, v);
         tre[n] = tre[l] + tre[r];
     }
-    mint get(int n, int b, int e, int i, int j)
-    {
+    mint get(int n, int b, int e, int i, int j) {
         push(n, b, e);
         if (e < i || b > j)
             return 0;
@@ -975,31 +914,25 @@ struct ST
 };
 
 int n;
-int C(int i)
-{
+int C(int i) {
     return i * (i + 1) / 2;
 }
 mint g[N][N];
 ST t;
-int32_t main()
-{
+int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int k;
     cin >> n >> k;
     vector<mint> a(n + 1);
-    for (int i = 1; i <= n; ++i)
-    {
+    for (int i = 1; i <= n; ++i) {
         cin >> ar[i];
     }
-    for (int w = 0; w < k; w++)
-    {
+    for (int w = 0; w < k; w++) {
         t.make(1, 1, n);
-        for (int i = 1; i <= n; ++i)
-        {
+        for (int i = 1; i <= n; ++i) {
             t.upd(1, 1, n, i, i, {ar[i] * (C(i - 1) + C(n - i)), 0});
-            if (i * 2 <= n)
-            {
+            if (i * 2 <= n) {
                 int j = n - i + 1;
                 t.upd(1, 1, n, j, n, {ar[i] * (n - j + 1), mint(mod) - ar[i]});
                 if (i < j)
@@ -1008,8 +941,7 @@ int32_t main()
                 if (i > 1)
                     t.upd(1, 1, n, 1, i - 1, {ar[i], ar[i]});
             }
-            else
-            {
+            else {
                 if (i < n)
                     t.upd(1, 1, n, i + 1, n, {ar[i] * (n - i), mint(mod) - ar[i]});
 
@@ -1019,13 +951,11 @@ int32_t main()
                     t.upd(1, 1, n, j + 1, i, {ar[i] * (n - i + 1), 0});
             }
         }
-        for (int i = 1; i <= n; ++i)
-        {
+        for (int i = 1; i <= n; ++i) {
             ar[i] = t.get(1, 1, n, i, i);
         }
     }
-    for (int i = 1; i <= n; ++i)
-    {
+    for (int i = 1; i <= n; ++i) {
         cout << ar[i] / mint(C(n)).pow(k) << ' ';
     }
     cout << '\n';

@@ -4,13 +4,13 @@
 sed -i 's/\r$//' ms.sh
 
 g++ -O2 -std=c++23 Generator.cpp -o gen
-g++ -O2 -std=c++23 Optimized.cpp -o opti
-g++ -O2 -std=c++23 Checker.cpp -o checker
+g++ -O2 -std=c++23 Optimized.cpp -o op
+g++ -O2 -std=c++23 Checker.cpp -o ckr
 
 for i in $(seq 1 "$1") ; do
     ./gen > inp
-    ./opti < inp > out2
-    ./checker < inp > /dev/null
+    ./op < inp > out2
+    ./ckr < inp > /dev/null
 
     if [ $? -ne 0 ] ; then
         echo -e "Wrong answer on test $i\nInput:"

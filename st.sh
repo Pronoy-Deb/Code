@@ -2,13 +2,13 @@
 # Command: bash st.sh Number_of_Tests
 
 g++ -O2 -std=c++23 Generator.cpp -o gen
-g++ -O2 -std=c++23 Brute_Force.cpp -o brute
-g++ -O2 -std=c++23 Optimized.cpp -o opti
+g++ -O2 -std=c++23 BruteForce.cpp -o bf
+g++ -O2 -std=c++23 Optimized.cpp -o op
 
 for i in $(seq 1 "$1"); do
     ./gen > inp
-    ./brute < inp > out1
-    ./opti < inp > out2
+    ./bf < inp > out1
+    ./op < inp > out2
     diff -Z out1 out2 > /dev/null
 
     if [ $? -ne 0 ]; then
