@@ -1,8 +1,8 @@
 // Complexity: O(alpha(n))
 https://codeforces.com/contest/1857/problem/G
 
-int par[N], sz[N], n;
-void make() {
+int par[N], sz[N];
+void ini(int n) {
     for (int i = 1; i <= n; ++i) {
         par[i] = i; sz[i] = 1;
     }
@@ -22,6 +22,7 @@ int len(int a) { return sz[get(a)]; }
 
 // Operation: Determining the number of CONNECTED COMPONENTS after performing the union operation:
     cin >> n >> k;
+    ini(n);
     while (k--) {
         int u, v; cin >> u >> v; uni(u, v);
     }
@@ -73,8 +74,8 @@ int uni(int i, int j) {
 // Moving & Erasing Operation with Summation & Length:
 https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&category=0&problem=3138&mosmsg=Submission+received+with+ID+29844967
 
-long long sz[N << 1], tot[N << 1], n;
-void make() {
+long long sz[N << 1], tot[N << 1];
+void ini(int n) {
     for (int i = 1; i <= n; ++i) { sz[i] = n + i; sz[i + n] = -1; tot[i + n] = i; }
 }
 int get(int x) { return sz[x] < 0 ? x : sz[x] = get(sz[x]); }
@@ -91,87 +92,88 @@ void rem(int x) { if (del(x)) return; ++sz[get(x)]; sz[x] = -1; }
 int len(int x) { return -sz[get(x)]; }
 long long sum(int x) { return tot[get(x)]; } // summation of elements in a set
 
-// DSU on Tree:
+// DSU on Tree: O(n*logn)
+https://cses.fi/problemset/task/1139
 
-vector<int> g[N]; long long ans[N], col[N], sz[N], cnt[N]; bool big[N];
-void dfs(int u, int p) {
+vector<int> gp[N]; map<int, int> fre[N];
+long long cnt[N], clr[N], sz[N]; bitset<N> big;
+void dfs(int u = 1, int p = 1) {
     sz[u] = 1;
-    for (auto &v : g[u]) {
-        if (v == p) continue;
-        dfs(v, u); sz[u] += sz[v];
+    for (auto &v : gp[u]) {
+        if (v != p) { dfs(v, u); sz[u] += sz[v]; }
     }
 }
-void add(int u, int p, long long x) {
-    cnt[col[u]] += x;
-    for (auto &v : g[u]) {
-        if (v == p || big[v] == 1) continue;
-        add(v, u, x);
+void add(int u, int p, long long x, auto &freq) {
+    freq[clr[u]] += x;
+    if (freq[clr[u]] == 0) freq.erase(clr[u]);
+    for (auto &v : gp[u]) {
+        if (v != p && !big[v]) add(v, u, x, freq);
     }
 }
-void dsu(int u, int p, bool keep) {
-    int bigchild = -1, mx = -1;
-    for (auto &v : g[u]) {
-        if (v == p) continue;
-        if (sz[v] > mx) mx = sz[v], bigchild = v;
+void dsu(int u = 1, int p = 1, bool keep = 1) {
+    int bcld = -1, mx = -1;
+    for (auto &v : gp[u]) {
+        if (v != p and sz[v] > mx) mx = sz[v], bcld = v;
     }
-    for (auto &v : g[u]) {
-        if (v == p || v == bigchild) continue;
-        dsu(v, u, 0);
+    for (auto &v : gp[u]) {
+        if (v != p && v != bcld) dsu(v, u, 0);
     }
-    if (bigchild != -1) dsu(bigchild, u, 1), big[bigchild] = 1;
-    add(u, p, 1);
-    ans[u] = cnt[u];
-    if (bigchild != -1) big[bigchild] = 0;
-    if (keep == 0) add(u, p, -1);
+    if (~bcld) {
+        dsu(bcld, u, 1); big[bcld] = 1; fre[u].swap(fre[bcld]);
+    }
+    add(u, p, 1, fre[u]); cnt[u] = fre[u].size();
+    if (~bcld) big[bcld] = 0; if (!keep) add(u, p, -1, fre[u]);
 }
 
-/* Augmented DSU
-Application:- used for maintaining a system of equations of the form ( y-x = d ) along
-with  their consistencial queries dynamically using disjoint set union and get data structure.
-Inspired by the problem http://www.spoj.com/problems/CHAIN/  which utilises this concept, which can extended for solving
-problems of kind as explained above.
-*/
+// Operation:
+    cin >> n;
+    for (i = 1; i <= n; ++i) { cin >> clr[i]; }
+    for (i = 1; i < n; ++i) {
+        cin >> a >> b; gp[a].push_back(b); gp[b].push_back(a);
+    }
+    dfs(); dsu();2
+    for (i = 1; i <= n; ++i) cout << cnt[i] << ' ';
 
-int pot[N], prec[N], flaw; //counting numbers of inconsistent assertions
-void make(int n) {
-    flaw = 0;
+// Augmented DSU / Weighted DSU:
+// Application:- used for maintaining a system of equations of the form (y - x = d) along
+// with  their consistencial queries dynamically using disjoint set union and get data structure.
+// Inspired by the problem http://www.spoj.com/problems/CHAIN/ which utilises this concept, which can extended for solving
+https://atcoder.jp/contests/abc328/tasks/abc328_f
+
+long long pot[N], prec[N], inc; // numbers of inconsistencies
+void ini(int n) {
+    inc = 0;
     for (int i = 1; i <= n; ++i) {
         prec[i] = i; pot[i] = 0;
     }
 }
 int get(int x) {
     if (prec[x] == x) return x;
-    int rx = get(prec[x]);  // rx is the root of x
-    pot[x] = pot[prec[x]] + pot[x]; //add all potentials along the path,i.e.,potential calculated wrt root
+    int rx = get(prec[x]); pot[x] = pot[prec[x]] + pot[x];
     return prec[x] = rx;
 }
 void uni(int a, int b, int d) {
     int ra = get(a), rb = get(b);
-    if (ra == rb && pot[a] - pot[b] != d) flaw++;
+    if (ra == rb && pot[a] - pot[b] != d) ++inc;
     else if (ra != rb) {
         pot[ra] = d + pot[b] - pot[a]; prec[ra] = rb;
     }
 }
 // Operation:
-    int n;   //no. of variables
-    int m;   // no. of equations
     cin >> n >> m;
-    make(n);
-    for (int i = 1; i <= m; ++i) { //consider 1-based indexing of variables
-        int a, b, d;         //asserting a-b=d;
-        cin >> a >> b >> d;
-        uni(a, b, d);
+    ini(n);
+    for (i = 1; i <= m; ++i) {
+        cin >> a >> b >> d; uni(a, b, d);
     }
-    cout << "No. of inconsistencies= " << flaw;
-    //queries of type y-x=? can be given through pot[y]-pot[x] (only when then are in same component
-    //i.e., can be extracted from the information so far )
+    cout << inc;
+    // queries of type y - x = ? can be given through pot[y] - pot[x] (only when then are in same component, i.e., can be extracted from the information so far )
 
 // Partially Persistent DSU:
 https://cses.fi/problemset/task/2101
 https://codeforces.com/gym/100814/problem/C
 
-int par[N], Time[N], sz[N], n;
-void make() {
+int par[N], Time[N], sz[N];
+void ini(int n) {
  	for (int i = 1; i <= n; ++i) {
         par[i] = i; sz[i] = 1;
 	}
@@ -183,45 +185,45 @@ void uni(int a, int b, int t) {
     if (sz[a] > sz[b]) swap(a, b);
 	sz[b] += sz[a]; par[a] = b; Time[a] = t;
 }
+int time(int a, int b) { // minimum time when a & b are in the same set
+    int ans = 0;
+    while (a != b) {
+        if (par[a] == a && par[b] == b) return -1;
+        if (par[a] != a && (Time[a] < Time[b] || par[b] == b)) {
+            ans = Time[a]; a = par[a];
+        }
+        else { ans = Time[b]; b = par[b]; }
+    }
+    return ans;
+}
 
 // Operation:
 	cin >> n >> m >> q;
-    make();
+    ini(n);
 	for (i = 1; i <= m; ++i) {
         cin >> a >> b; uni(a, b, i);
 	}
 	while (q--) {
-        cin >> a >> b; int ans = 0;
-		while (a != b) {
-			if (par[a] == a && par[b] == b) {
-				ans = -1; break;
-			}
-			if (par[a] != a && (Time[a] < Time[b] || par[b] == b)) {
-				ans = Time[a]; a = par[a];
-			}
-            else {
-				ans = Time[b]; b = par[b];
-			}
-		}
-		cout << ans << "\n";
+        cin >> a >> b;
+        cout << time(a, b) << '\n';
 	}
 
 // OR,
 
 struct dsu {
 vector<vector<pair<int, int>>> par;
-int time = 0;
+int T = 0;
 dsu(int n) : par(n + 1, {{-1, 0}}) {}
 bool uni(int u, int v) {
-    ++time;
-    if ((u = root(u, time)) == (v = root(v, time))) return false;
+    ++T; if ((u = root(u, T)) == (v = root(v, T))) return false;
     if (par[u].back().first > par[v].back().first) swap(u, v);
-    par[u].push_back({par[u].back().first + par[v].back().first, time});
-    par[v].push_back({u, time}); return true;
+    par[u].push_back({par[u].back().first + par[v].back().first, T});
+    par[v].push_back({u, T}); return true;
 }
 bool same(int u, int v, int t) { return root(u, t) == root(v, t); }
 int root(int u, int t) { // root of u at time t
-    if (par[u].back().first >= 0 && par[u].back().second <= t) return root(par[u].back().first, t);
+    if (par[u].back().first >= 0 && par[u].back().second <= t)
+        return root(par[u].back().first, t);
     return u;
 }
 int size(int u, int t) { // size of the component of u at time t
@@ -234,25 +236,26 @@ int size(int u, int t) { // size of the component of u at time t
     }
     return -par[u][ans].first;
 }
+int time(int u, int v) { // minimum time when u & v are in the same set
+    int ans = -1, l = 0, r = T;
+    while (l <= r) {
+        int mid = l + r >> 1;
+        if (same(u, v, mid)) ans = ar[mid], r = mid - 1;
+        else l = mid + 1;
+    }
+    return ans;
+}
 };
 
 // Operation:
     cin >> n >> m;
-    dsu d(n); int ar[n + 1];
+    dsu o(n); int ar[n + 1];
     for (i = 1; i <= m; ++i) {
         int ty, u, v; cin >> ty >> u >> v;
         if (ty == 1) {
-            d.uni(u, v); ar[d.time] = i;
+            o.uni(u, v); ar[o.T] = i;
         }
-        else {
-            int ans = -1, l = 0, r = d.time;
-            while (l <= r) {
-                int mid = l + r >> 1;
-                if (d.same(u, v, mid)) ans = ar[mid], r = mid - 1;
-                else l = mid + 1;
-            }
-            cout << ans << '\n';
-        }
+        else cout << o.time(u, v) << '\n';
     }
 
 // Persistent Union Find:
@@ -264,18 +267,18 @@ struct PersistentArray { // 0-indexed
         node *l, *r; T x;
     };
     int n = 1; vector<node *> root;
-    int make(vector<T> v) {
+    int ini(vector<T> v) {
         int sz = v.size(); while (n < sz) n <<= 1;
-        root.push_back(make(0, n - 1, v)); return root.size() - 1;
+        root.push_back(ini(0, n - 1, v)); return root.size() - 1;
     }
-    node *make(int l, int r, vector<T> &v) {
+    node *ini(int l, int r, vector<T> &v) {
         node *cur = new node();
         if (l == r) {
             if (l < v.size()) cur->x = v[l]; else cur->x = 0;
         }
         else {
             int lc = (l + r) >> 1, rc = lc + 1;
-            cur->l = make(l, lc, v); cur->r = make(rc, r, v);
+            cur->l = ini(l, lc, v); cur->r = ini(rc, r, v);
         }
         return cur;
     }
@@ -314,7 +317,7 @@ struct dsu {
     vector<int> c; int cur = 0; dsu() {}
     dsu(int n, int q) { // q -> maximum instances of DSU
         vector<int> p(n + 1); for (int i = 1; i <= n; ++i) p[i] = i;
-        par.make(p); sz.make(vector<int>(n + 1, 1)); c.resize(q + 1, n);
+        par.ini(p); sz.ini(vector<int>(n + 1, 1)); c.resize(q + 1, n);
         cur = 0; // initial DSU is the 0th one
     }
     int get(int r, int u) {

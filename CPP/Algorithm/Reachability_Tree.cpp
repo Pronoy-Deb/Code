@@ -1,4 +1,4 @@
-// The tree is also known as Kruskal Reconstruction Tree(KST)
+// The tree is also known as Kruskal Reconstruction Tree (KST)
 
 #include <bits/stdc++.h>
 using namespace std;
