@@ -4,12 +4,6 @@
 // 3) Write after "using namespace std":
 Note: 1) Use less_equal<> instead of less<> to use it like a multiset
 
-#include <ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-
-template<class T> using ost = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
 Declaration: ost<long long> st;
 
 // OR,

@@ -1,18 +1,35 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
 using namespace std;
-#include "def.h"
 #define ll long long
+#ifdef LOCAL
+#include "def.h"
+#else
+#define ck(...)
+#endif
 #define pe(c) for (auto &e : c) cerr << e << ' '; cerr << '\n'
-auto ps(auto b) { return (b ? "YES" : "NO"); }
-const ll M = 1e9 + 7, N = 2e5 + 5;
+#define ps(b) cerr << (b ? "YES" : "NO") << '\n';
 ll m, n, q, ar[N], ar1[N]; string s;
 
-long long ran(long long a, long long b) {
+auto ranr(auto l, auto r) {
     random_device rd; mt19937_64 gen(rd());
-    uniform_int_distribution<long long> distrib(a, b);
-    return distrib(gen);
-    // return a + rand() % (b - a + 1);
+    uniform_real_distribution<> dis(l, r);
+    return dis(gen);
 }
+auto ran(auto l, auto r) {
+    random_device rd; mt19937_64 gen(rd());
+    uniform_int_distribution<ll> dis(l, r);
+    return dis(gen);
+    // return l + rand() % (r - l + 1);
+}
+const ll M = 1e9 + 7, N = 2e5 + 5;
 
 auto bruteForce() {
     ll a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0;
@@ -43,14 +60,11 @@ void test() {
         }
         cerr << "Passed test " << tc << " / " << t << '\n';
     }
-    cerr << "All tests passed successfully!\n";
+    cerr << "Pretests passed successfully!\n";
 }
 
 signed main() {
     cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
-    // auto now = chrono::high_resolution_clock::now();
-    // auto ns = chrono::duration_cast<chrono::nanoseconds>(now.time_since_epoch()).count();
-    // srand(ns);
     test();
     return 0;
 }

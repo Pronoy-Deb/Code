@@ -1,5 +1,4 @@
 // Complexity: O(log(n))
-// Returns: (0 / 1) whether the element is present or not
 // -> Works only on monotonic (sorted) arrays
 // Built-in: binary_search(v.begin(), v.end(), n);
 // Element Finding:
@@ -15,28 +14,79 @@ bool bs(auto &v, long long val) {
 	return false;
 }
 
+// OR,
+
+bool bs(auto &v, long long val) {
+	int i = 0, n = v.size();
+    for (int j = n; j; j >>= 1) {
+        while (i + j < n && v[i + j] <= val) i += j;
+    }
+    return (v[i] == val);
+}
+
 // Lower Bound:
 
 int lb(auto &v, long long val) {
-    int lo = 0, hi = v.size() - 1;
-    while (hi - lo > 1) {
+    int lo = 0, hi = v.size() - 1, in = -1;
+    while (lo <= hi) {
         int mid = (lo + hi) >> 1;
-        if (v[mid] < val) lo = mid + 1;
-        else hi = mid;
+        if (v[mid] < val) in = mid, lo = mid + 1;
+        else hi = mid - 1;
     }
-	return (v[lo] >= val ? lo : v[hi] >= val ? hi : -1);
+    return in + 1;
+}
+
+// OR,
+
+int lb(auto &v, long long val) {
+	int i = -1, n = v.size();
+	for (int j = n; j; j >>= 1) {
+		while (i + j < n && v[i + j] < val) i += j;
+	}
+	return i + 1;
 }
 
 // Upper Bound:
 
 int ub(auto &v, long long val) {
-    int lo = 0, hi = v.size() - 1;
-    while (hi - lo > 1) {
-        int mid = (hi + lo) >> 1;
-        if (v[mid] <= n) lo = mid + 1;
-        else hi = mid;
+    int lo = 0, hi = v.size() - 1, in = -1;
+    while (lo <= hi) {
+        int mid = (lo + hi) >> 1;
+        if (v[mid] <= val) in = mid, lo = mid + 1;
+        else hi = mid - 1;
     }
-	return (v[lo] > n ? lo : v[hi] > n ? hi : -1);
+    return in + 1;
+}
+
+// OR,
+
+int ub(auto &v, long long val) {
+	int i = -1, n = v.size();
+    for (int j = n; j; j >>= 1) {
+        while (i + j < n && v[i + j] <= val) i += j;
+    }
+    return i + 1;
+}
+
+// Equal Range (Lower Bound & Upper Bound):
+// Built-in: pair<int, int> er = equal_range(v.begin(), v.end(), val);
+
+pair<int, int> er(auto &v, long long val) {
+	int lo = 0, hi = v.size() - 1;
+	while (hi - lo > 1) {
+		int mid = (lo + hi) >> 1;
+		if (v[mid] < val) lo = mid + 1;
+		else hi = mid;
+	}
+	int l = (v[lo] == val ? lo : v[hi] == val ? hi : -1);
+	lo = 0, hi = v.size() - 1;
+	while (hi - lo > 1) {
+		int mid = (hi + lo) >> 1;
+		if (v[mid] <= val) lo = mid + 1;
+		else hi = mid;
+	}
+	int r = (v[lo] > val ? lo : v[hi] > val ? hi : -1);
+	return {l, r};
 }
 
 // Fraction Binary Search:

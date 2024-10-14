@@ -1,49 +1,97 @@
-// Longest Palindrome:
-// Complexity: O(n)
+// Is Palindrome?: O(|s|)
+
+bool pal(string &s) {
+    for (int i = 0, j = s.size() - 1; i < j; ++i, --j) {
+        if (s[i] != s[j]) return false;
+    }
+    return true;
+}
+
+// Hashing Approach:
+
+bool pal(string &s, int b = 29) {
+    long long sz = s.size(), l = s[0] - 'a', r = s[sz - 1] - 'a';
+    for (int i = 1; i < sz; ++i) l = ((l * b) + (s[i] - 'a')) % M;
+    for (int i = sz - 2; i >= 0; --i) r = ((r * b) + (s[i] - 'a')) % M;
+    return (l == r);
+}
+
+// Longest Palindrome: O(n)
 // Note: Inspired from Manacher algorithm
 
-auto man(auto &s)
-{
+auto man(string &s) {
     string t = "$#";
-    for (auto &c : s)
-        t += c + string("#");
-    t += '^';
+    for (auto &c : s) t += c + string("#"); t += '^';
     int n = t.size(), l = 0, r = 0, len = 0, in = -1, p[n];
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         p[i] = max(0, min(r - i, p[l + (r - i)]));
-        while (t[i - p[i]] == t[i + p[i]])
-            ++p[i];
-        if (i + p[i] > r)
-        {
-            l = i - p[i];
-            r = i + p[i];
-        }
-        if (p[i] > len)
-        {
-            len = p[i];
-            in = i;
-        }
+        while (t[i - p[i]] == t[i + p[i]]) ++p[i];
+        if (i + p[i] > r) { l = i - p[i]; r = i + p[i]; }
+        if (p[i] > len) { len = p[i]; in = i; }
     }
     return {len - 1, (in >> 1) - 1};
 }
 
 // Operation:
-string s;
-cin >> s;
-auto pr = man(s);
-int i = pr.second - (pr.first >> 1) + (~pr.first & 1), j = 0;
-while (++j <= pr.first)
-    cout << s[i++];
+    string s; cin >> s;
+    auto pr = man(s);
+    int i = pr.second - (pr.first >> 1) + (~pr.first & 1), j = 0;
+    while (++j <= pr.first) cout << s[i++];
 
-    // Problem: https://cses.fi/problemset/task/1111
+// Problem: https://cses.fi/problemset/task/1111
 
-    // Minimum Palindrome Factorization:
+// Number of Palindromic Subsequence having length k: O(n^2 * k)
 
-#include <bits/stdc++.h>
-using namespace std;
+int n;
+long long psk(string &s, int K) {
+	long long dp[n + 2][n + 2][K + 1]{};
+    for (int i = n; i >= 1; --i) {
+        for (int j = i; j <= n; ++j) {
+            dp[i][j][0] = 1; dp[i][j][1] = j - i + 1;
+            if (i + 1 == j) {
+                if (s[i - 1] == s[j - 1]) dp[i][j][2] = 1; continue;
+            }
+            for (int k = 3; k <= K; ++k)
+                dp[i][j][k] = (s[i - 1] == s[j - 1]) * dp[i + 1][j - 1][k - 2] + dp[i][j - 1][k] + dp[i + 1][j][k] - dp[i + 1][j - 1][k];
+        }
+    }
+    return dp[1][n][K];
+}
 
-const int N = 3e5 + 9;
+https://cses.fi/problemset/task/1111
+
+// If k <= 3: O(26 * n)
+
+long long l[26][N], r[26][N], n;
+void pre(string &s) {
+	l[s[0] - 'a'][0] = 1;
+	for (int i = 1; i < n; ++i) {
+		for (int j = 0; j < 26; ++j) l[j][i] += l[j][i - 1];
+		++l[s[i] - 'a'][i];
+	}
+	r[s[n - 1] - 'a'][n - 1] = 1;
+	for (int i = n - 2; i >= 0; --i) {
+		for (int j = 0; j < 26; ++j) r[j][i] += r[j][i + 1];
+		++r[s[i] - 'a'][i];
+	}
+}
+long long psk(int k) {
+	long long ans = 0;
+	if (k == 1) {
+		for (int i = 0; i < 26; ++i) ans += l[i][n - 1];
+		return ans;
+	}
+	if (k == 2) {
+		for (int i = 0; i < 26; ++i) ans += ((l[i][n - 1] * (l[i][n - 1] - 1)) >> 1);
+		return ans;
+	}
+	for (int i = 1; i < n - 1; ++i) {
+		for (int j = 0; j < 26; ++j) ans += l[j][i - 1] * r[j][i + 1];
+	}
+	return ans;
+}
+
+// Minimum Palindrome Factorization:
 
 /*
 -> diff(v) = len(v) - len(link(v))
@@ -52,18 +100,15 @@ const int N = 3e5 + 9;
 -> path within series links to the root contains only O(log n) vertices
 -> cnt contains the number of palindromic suffixes of the node
 */
-struct PalindromicTree
-{
-    struct node
-    {
+struct PalindromicTree {
+    struct node {
         int nxt[26], len, st, en, link, diff, slink, cnt, oc;
     };
     string s;
     vector<node> t;
     int sz, last;
     PalindromicTree() {}
-    PalindromicTree(string _s)
-    {
+    PalindromicTree(string _s) {
         s = _s;
         int n = s.size();
         t.clear();
@@ -75,19 +120,16 @@ struct PalindromicTree
         t[1].slink = 1;
         t[2].slink = 2;
     }
-    int extend(int pos)
-    { // returns 1 if it creates a new palindrome
+    int extend(int pos) { // returns 1 if it creates a new palindrome
         int cur = last, curlen = 0;
         int ch = s[pos] - 'a';
-        while (1)
-        {
+        while (1) {
             curlen = t[cur].len;
             if (pos - 1 - curlen >= 0 && s[pos - 1 - curlen] == s[pos])
                 break;
             cur = t[cur].link;
         }
-        if (t[cur].nxt[ch])
-        {
+        if (t[cur].nxt[ch]) {
             last = t[cur].nxt[ch];
             t[last].oc++;
             return 0;
@@ -99,16 +141,14 @@ struct PalindromicTree
         t[cur].nxt[ch] = sz;
         t[sz].en = pos;
         t[sz].st = pos - t[sz].len + 1;
-        if (t[sz].len == 1)
-        {
+        if (t[sz].len == 1) {
             t[sz].link = 2;
             t[sz].cnt = 1;
             t[sz].diff = 1;
             t[sz].slink = 2;
             return 1;
         }
-        while (1)
-        {
+        while (1) {
             cur = t[cur].link;
             curlen = t[cur].len;
             if (pos - 1 - curlen >= 0 && s[pos - 1 - curlen] == s[pos])
@@ -125,18 +165,15 @@ struct PalindromicTree
             t[sz].slink = t[sz].link;
         return 1;
     }
-    void calc_occurrences()
-    {
+    void calc_occurrences() {
         for (int i = sz; i >= 3; i--)
             t[t[i].link].oc += t[i].oc;
     }
-    vector<array<int, 2>> minimum_partition()
-    { //(even, odd), 1 indexed
+    vector<array<int, 2>> minimum_partition() { //(even, odd), 1 indexed
         int n = s.size();
         vector<array<int, 2>> ans(n + 1, {0, 0}), series_ans(n + 5, {0, 0});
         ans[0][1] = series_ans[2][1] = 1e9;
-        for (int i = 1; i <= n; i++)
-        {
+        for (int i = 1; i <= n; i++) {
             extend(i - 1);
             for (int k = 0; k < 2; k++)
             {
@@ -154,8 +191,7 @@ struct PalindromicTree
     }
 } t;
 
-int32_t main()
-{
+int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     string s;
@@ -185,22 +221,18 @@ using namespace std;
 
 const int N = 1e5 + 9;
 vector<int> d1, d2;
-void manachers(string &s)
-{
+void manachers(string &s) {
     int n = s.size();
     d1 = vector<int>(n); // maximum odd length palindrome centered at i
     // here d1[i]=the palindrome has d1[i]-1 right characters from i
     // e.g. for aba, d1[1]=2;
-    for (int i = 0, l = 0, r = -1; i < n; i++)
-    {
+    for (int i = 0, l = 0, r = -1; i < n; i++) {
         int k = (i > r) ? 1 : min(d1[l + r - i], r - i);
-        while (0 <= i - k && i + k < n && s[i - k] == s[i + k])
-        {
+        while (0 <= i - k && i + k < n && s[i - k] == s[i + k]) {
             k++;
         }
         d1[i] = k--;
-        if (i + k > r)
-        {
+        if (i + k > r) {
             l = i - k;
             r = i + k;
         }
@@ -208,16 +240,13 @@ void manachers(string &s)
     d2 = vector<int>(n); // maximum even length palindrome centered at i
     // here d2[i]=the palindrome has d2[i]-1 right characters from i
     // e.g. for abba, d2[2]=2;
-    for (int i = 0, l = 0, r = -1; i < n; i++)
-    {
+    for (int i = 0, l = 0, r = -1; i < n; i++) {
         int k = (i > r) ? 0 : min(d2[l + r - i + 1], r - i + 1);
-        while (0 <= i - k - 1 && i + k < n && s[i - k - 1] == s[i + k])
-        {
+        while (0 <= i - k - 1 && i + k < n && s[i - k - 1] == s[i + k]) {
             k++;
         }
         d2[i] = k--;
-        if (i + k > r)
-        {
+        if (i + k > r) {
             l = i - k - 1;
             r = i + k;
         }
@@ -227,14 +256,12 @@ const int MAXN = (int)5100;
 const int MAXV = (int)5100; // maximum value of any element in array
 
 // array values can be negative too, use appropriate minimum and maximum value
-struct wavelet_tree
-{
+struct wavelet_tree {
     int lo, hi;
     wavelet_tree *l, *r;
     int *b, *c, bsz, csz; //  c holds the prefix sum of elements
 
-    wavelet_tree()
-    {
+    wavelet_tree() {
         lo = 1;
         hi = 0;
         bsz = 0;
@@ -242,14 +269,12 @@ struct wavelet_tree
         r = NULL;
     }
 
-    void init(int *from, int *to, int x, int y)
-    {
+    void init(int *from, int *to, int x, int y) {
         lo = x, hi = y;
         if (from >= to)
             return;
         int mid = (lo + hi) >> 1;
-        auto f = [mid](int x)
-        {
+        auto f = [mid](int x) {
             return x <= mid;
         };
         b = (int *)malloc((to - from + 2) * sizeof(int));
@@ -258,8 +283,7 @@ struct wavelet_tree
         c = (int *)malloc((to - from + 2) * sizeof(int));
         csz = 0;
         c[csz++] = 0;
-        for (auto it = from; it != to; it++)
-        {
+        for (auto it = from; it != to; it++) {
             b[bsz] = (b[bsz - 1] + f(*it));
             c[csz] = (c[csz - 1] + (*it));
             bsz++;
@@ -275,8 +299,7 @@ struct wavelet_tree
     }
     // kth smallest element in [l, r]
     // for array [1,2,1,3,5] 2nd smallest is 1 and 3rd smallest is 2
-    int kth(int l, int r, int k)
-    {
+    int kth(int l, int r, int k) {
         if (l > r)
             return 0;
         if (lo == hi)
@@ -287,8 +310,7 @@ struct wavelet_tree
         return this->r->kth(l - lb, r - rb, k - inLeft);
     }
     // count of numbers in [l, r] Less than or equal to k
-    int LTE(int l, int r, int k)
-    {
+    int LTE(int l, int r, int k) {
         if (l > r || k < lo)
             return 0;
         if (hi <= k)
@@ -297,8 +319,7 @@ struct wavelet_tree
         return this->l->LTE(lb + 1, rb, k) + this->r->LTE(l - lb, r - rb, k);
     }
     // count of numbers in [l, r] equal to k
-    int count(int l, int r, int k)
-    {
+    int count(int l, int r, int k) {
         if (l > r || k < lo || k > hi)
             return 0;
         if (lo == hi)
@@ -310,8 +331,7 @@ struct wavelet_tree
         return this->r->count(l - lb, r - rb, k);
     }
     // sum of numbers in [l ,r] less than or equal to k
-    int sum(int l, int r, int k)
-    {
+    int sum(int l, int r, int k) {
         if (l > r or k < lo)
             return 0;
         if (hi <= k)
@@ -319,19 +339,16 @@ struct wavelet_tree
         int lb = b[l - 1], rb = b[r];
         return this->l->sum(lb + 1, rb, k) + this->r->sum(l - lb, r - rb, k);
     }
-    ~wavelet_tree()
-    {
+    ~wavelet_tree() {
         delete l;
         delete r;
     }
 };
-int get(int l, int r)
-{
+int get(int l, int r) {
     return r * (r + 1) / 2 - (l - 1) * l / 2;
 }
 wavelet_tree oddl, oddr;
-int odd(int l, int r)
-{
+int odd(int l, int r) {
     int m = (l + r) / 2;
     int c = 1 - l;
     int less_ = oddl.LTE(l, m, c);
@@ -342,8 +359,7 @@ int odd(int l, int r)
     return ansl + ansr;
 }
 wavelet_tree evenl, evenr;
-int even(int l, int r)
-{
+int even(int l, int r) {
     int m = (l + r) / 2;
     int c = -l;
     int less_ = evenl.LTE(l, m, c);
@@ -354,51 +370,43 @@ int even(int l, int r)
     return ansl + ansr;
 }
 int a[N], b[N], c[N], d[N];
-int sc()
-{
+int sc() {
     int c = getchar();
     int x = 0;
     int neg = 0;
     for (; ((c < 48 || c > 57) && c != '-'); c = getchar())
         ;
-    if (c == '-')
-    {
+    if (c == '-') {
         neg = 1;
         c = getchar();
     }
-    for (; c > 47 && c < 58; c = getchar())
-    {
+    for (; c > 47 && c < 58; c = getchar()) {
         x = (x << 1) + (x << 3) + c - 48;
     }
     if (neg)
         x = -x;
     return x;
 }
-inline void out(int n)
-{
+inline void out(int n) {
     int N = n < 0 ? -n : n, rev, cnt = 0;
     rev = N;
-    if (N == 0)
-    {
+    if (N == 0) {
         putchar('0');
         putchar('\n');
         return;
     }
-    while ((rev % 10) == 0)
-    {
+    while ((rev % 10) == 0) {
         cnt++;
         rev /= 10;
     }
     if (n < 0)
         putchar('-');
     rev = 0;
-    while (N != 0)
-    {
+    while (N != 0) {
         rev = (rev << 3) + (rev << 1) + N % 10;
         N /= 10;
     }
-    while (rev != 0)
-    {
+    while (rev != 0) {
         putchar(rev % 10 + '0');
         rev /= 10;
     }
@@ -407,8 +415,7 @@ inline void out(int n)
     putchar('\n');
     return;
 }
-int main()
-{
+int main() {
     int i, j, k, n, m, q, l, r;
     string s;
     cin >> s;
@@ -428,8 +435,7 @@ int main()
     evenr.init(d + 1, d + n + 1, -MAXV, MAXV);
 
     q = sc();
-    for (i = 0; i < q; i++)
-    {
+    for (i = 0; i < q; i++) {
         l = sc();
         r = sc();
         out(odd(l, r) + even(l, r));
@@ -448,18 +454,15 @@ const int N = 3e5 + 9;
 /*
 -> cnt contains the number of palindromic suffixes of the node
 */
-struct PalindromicTree
-{
-    struct node
-    {
+struct PalindromicTree {
+    struct node {
         int nxt[26], len, st, en, link, cnt, oc;
     };
     string s;
     vector<node> t;
     int sz, last;
     PalindromicTree() {}
-    PalindromicTree(string _s)
-    {
+    PalindromicTree(string _s) {
         s = _s;
         int n = s.size();
         t.clear();
@@ -468,19 +471,16 @@ struct PalindromicTree
         t[1].len = -1, t[1].link = 1;
         t[2].len = 0, t[2].link = 1;
     }
-    int extend(int pos)
-    { // returns 1 if it creates a new palindrome
+    int extend(int pos) { // returns 1 if it creates a new palindrome
         int cur = last, curlen = 0;
         int ch = s[pos] - 'a';
-        while (1)
-        {
+        while (1) {
             curlen = t[cur].len;
             if (pos - 1 - curlen >= 0 && s[pos - 1 - curlen] == s[pos])
                 break;
             cur = t[cur].link;
         }
-        if (t[cur].nxt[ch])
-        {
+        if (t[cur].nxt[ch]) {
             last = t[cur].nxt[ch];
             t[last].oc++;
             return 0;
@@ -492,14 +492,12 @@ struct PalindromicTree
         t[cur].nxt[ch] = sz;
         t[sz].en = pos;
         t[sz].st = pos - t[sz].len + 1;
-        if (t[sz].len == 1)
-        {
+        if (t[sz].len == 1) {
             t[sz].link = 2;
             t[sz].cnt = 1;
             return 1;
         }
-        while (1)
-        {
+        while (1) {
             cur = t[cur].link;
             curlen = t[cur].len;
             if (pos - 1 - curlen >= 0 && s[pos - 1 - curlen] == s[pos])
@@ -511,15 +509,13 @@ struct PalindromicTree
         t[sz].cnt = 1 + t[t[sz].link].cnt;
         return 1;
     }
-    void calc_occurrences()
-    {
+    void calc_occurrences() {
         for (int i = sz; i >= 3; i--)
             t[t[i].link].oc += t[i].oc;
     }
 } t;
 
-int32_t main()
-{
+int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     string s;
@@ -545,14 +541,11 @@ const int N = 1e6 + 9;
 // cnt contains the number of palindromic suffixes of the node
 // t[cur].smart_link[c] -> link to the maximum length of a palindromic suffix of t[cur]
 // s.t. ch is the immediate previous char of that suffix
-struct PalindromicTree
-{
+struct PalindromicTree {
     static const int A = 2;
-    struct node
-    {
+    struct node {
         int nxt[A], len, st, en, link, cnt, oc, smart_link[A];
-        node()
-        {
+        node() {
             memset(nxt, 0, sizeof nxt);
             for (int i = 0; i < A; i++)
             {
@@ -565,8 +558,7 @@ struct PalindromicTree
     vector<array<int, 4>> changes;
     int sz, last;
     vector<int> pref;
-    PalindromicTree()
-    {
+    PalindromicTree() {
         s = "";
         t.resize(3);
         sz = 2, last = 2;
@@ -574,22 +566,18 @@ struct PalindromicTree
         t[2].len = 0, t[2].link = 1;
         changes.clear();
     }
-    int extend(char c)
-    {
+    int extend(char c) {
         int cur = last, curlen = 0, pos = s.size();
         pref.push_back(0);
-        if (pos)
-        {
+        if (pos) {
             pref[pos] = pref[pos - 1];
         }
         s += c;
         int ch = c - 'a';
-        if (pos - t[cur].len - 1 < 0 || s[pos - t[cur].len - 1] != c)
-        {
+        if (pos - t[cur].len - 1 < 0 || s[pos - t[cur].len - 1] != c) {
             cur = t[cur].smart_link[ch];
         }
-        if (t[cur].nxt[ch])
-        {
+        if (t[cur].nxt[ch]) {
             changes.push_back({last, t[cur].nxt[ch], -1, -1});
             last = t[cur].nxt[ch];
             t[last].oc++;
@@ -605,15 +593,13 @@ struct PalindromicTree
         t[cur].nxt[ch] = sz;
         t[sz].en = pos;
         t[sz].st = pos - t[sz].len + 1;
-        if (t[sz].len == 1)
-        {
+        if (t[sz].len == 1) {
             t[sz].link = 2;
             t[sz].cnt = 1;
             t[sz].smart_link[ch] = 2;
             return 1;
         }
-        else
-        {
+        else {
             t[sz].link = t[t[cur].smart_link[ch]].nxt[ch];
             for (int i = 0; i < A; i++)
             {
@@ -631,8 +617,7 @@ struct PalindromicTree
         t[sz].cnt = 1 + t[t[sz].link].cnt;
         return 1;
     }
-    void rollback()
-    {
+    void rollback() {
         if (s.size() == 0)
             return;
         s.pop_back();
@@ -641,36 +626,30 @@ struct PalindromicTree
         int prvlast = x[0], oc = x[1], c = x[2], ch = x[3];
         changes.pop_back();
         last = prvlast;
-        if (oc == -1)
-        {
+        if (oc == -1) {
             t[c].nxt[ch] = 0;
             t.pop_back();
             sz--;
         }
-        else
-        {
+        else {
             t[oc].oc--;
         }
     }
 } t;
-int32_t main()
-{
+int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int q;
     cin >> q;
-    while (q--)
-    {
+    while (q--) {
         int ty;
         cin >> ty;
-        if (ty == 1)
-        {
+        if (ty == 1) {
             int k;
             cin >> k;
             t.extend(char(k + 'a'));
         }
-        else
-        {
+        else {
             t.rollback();
         }
         cout << (t.s.empty() ? 0 : t.pref[t.s.size() - 1]) << '\n';

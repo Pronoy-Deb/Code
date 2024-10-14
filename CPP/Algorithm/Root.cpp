@@ -12,10 +12,7 @@ long double sr(long long n) {
 
 // OR,
 
-long long sr(long long x) {
-	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
-	while (p * p > x) --p; return p;
-}
+
 
 // Cube Root using binary search:
 

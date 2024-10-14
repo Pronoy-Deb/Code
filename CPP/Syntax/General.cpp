@@ -82,8 +82,14 @@
 
     -> LAMBDA function:
         auto f = [&](int x, int y) { return x + y; };
-        
+
     -> LAMBDA function with recursion:
+        function<int(int, int)> f = [&](int x, int y) {
+            if (y == 0) return x;
+            return f(x + 1, y - 1);
+        };
+
+    // OR,
         auto sum = [&](auto&& self, int n) {
             if (n == 0) return 0;
             return n + self(self, n - 1);

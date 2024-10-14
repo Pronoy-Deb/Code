@@ -3,6 +3,8 @@
 #include <random>
 #include <vector>
 #include <string>
+#include <stack>
+#include <queue>
 #include <set>
 #include <map>
 using namespace std;
@@ -28,8 +30,7 @@ auto ran(auto l, auto r) {
 }
 const ll M = 1e9 + 7, N = 2e5 + 5;
 
-signed main() {
-    cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
+void test() {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0;
     cout << 1 << '\n'; // For testcase input
     n = ran(1, 10);
@@ -48,5 +49,10 @@ signed main() {
     //     }
     // }
     // cout << '\n';
+}
+
+signed main() {
+    cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
+    test();
     return 0;
 }

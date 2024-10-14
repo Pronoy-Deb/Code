@@ -9,13 +9,21 @@ using namespace std;
 #define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
 const ll M = 1e9 + 7, N = 2e5 + 5;
-
+bool bs(auto &v, long long val) {
+	int i = 0, n = v.size();
+    for (int j = n; j; j >>= 1) {
+        while (i + j < n && v[i + j] <= val) i += j;
+    }
+    return (v[i] == val);
+}
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    // cin >> n;
-    // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    
-    cout << '\n';
+    cin >> n >> q;
+    vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    while (q--) {
+        cin >> a; ps(bs(ar, a));
+    }
+    // cout << '\n';
 }
 
 signed main() {
