@@ -20,8 +20,10 @@ ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0, inp[N],
 bool check(ifstream &fin) {
     // Read Output from Optimized.cpp
     fin >> m;
-    // for (i = 0; i < m; ++i) fin >> ar[i];
-
+    for (i = 0; i < m; ++i) fin >> ar[i];
+    for(i=0;i<n-1;++i) {
+        if(abs(ar[i] - ar[i-1]) != 2) return false;
+    }
     return true;
 }
 

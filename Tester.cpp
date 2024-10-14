@@ -18,12 +18,7 @@ using namespace std;
 #define ps(b) cerr << (b ? "YES" : "NO") << '\n';
 ll m, n, q, ar[N], ar1[N]; string s;
 
-auto ranr(auto l, auto r) {
-    random_device rd; mt19937_64 gen(rd());
-    uniform_real_distribution<> dis(l, r);
-    return dis(gen);
-}
-auto ran(auto l, auto r) {
+ll ran(ll l, ll r) {
     random_device rd; mt19937_64 gen(rd());
     uniform_int_distribution<ll> dis(l, r);
     return dis(gen);
@@ -47,15 +42,15 @@ void test() {
     int tc = 0, t = 10000;
     while (++tc <= t) {
         n = ran(1, 10);
-        // for (i = 0; i < n; ++i) { ar[i] = ran(1, 100); }
+        // for (int i = 0; i < n; ++i) { ar[i] = ran(1, 100); }
         auto bf = bruteForce(), op = optimized();
         if (bf != op) {
             cerr << "Wrong answer on test " << tc << "\nInput:\n";
             cerr << n;
             cerr << "\nExpected:\n";
-            ck(bf);
+            cout << bf << '\n';
             cerr << "\nFound:\n";
-            ck(op);
+            cout << op << '\n';
             return;
         }
         cerr << "Passed test " << tc << " / " << t << '\n';
