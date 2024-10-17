@@ -20,7 +20,7 @@ auto sset(auto &inp) {
 
 vector<vector<long long>> res;
 auto sset(auto &inp, auto &sub, auto i) {
-    if (i == inp.size()) { res.emplace_back(sub); return; }
+    if (i == (int)inp.size()) { res.emplace_back(sub); return; }
     sset(inp, sub, i + 1);  // Not considering the i-th element
     sub.emplace_back(inp[i]);
     sset(inp, sub, i + 1);  // Considering the i-th element
@@ -31,7 +31,7 @@ auto sset(auto &inp, auto &sub, auto i) {
     vector<long long> inp = {1, 2, 3}, sub;
     sset(inp, sub, 0);
 
-                        // Subset Union of Bitsets:
+// Subset Union of Bitsets:
 
 #include<bits/stdc++.h>
 using namespace std;

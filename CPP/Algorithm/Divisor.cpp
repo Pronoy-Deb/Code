@@ -12,23 +12,44 @@ auto div(long long n) {
     return v;
 }
 
-// For number of divisors: // O(cbrt(n))
-// N = 1e6  + 5 for n = 1e18
+// Number of divisors & sum of divisors: O(nlogn)
 
-long long pri[N], spf[N]; bool sv[N];
+long long nd[N], sd[N];
 void pre() {
-    pri[0] = spf[2] = 2;
-    for (int i = 4; i < N; i += 2) { sv[i] = true; spf[i] = 2; }
-    for (long long i = 3, c = 0; i < N; i += 2) {
-        if (!sv[i]) {
-            pri[++c] = spf[i] = i;
-            for (long long j = i * i; j < N; j += (i << 1)) {
-                sv[j] = true; if (!spf[j]) spf[j] = i;
-            }
+    for (int i = 1; i < N; ++i) {
+        for (int j = i; j < N; j += i) {
+            ++nd[j]; sd[j] += i;
         }
     }
 }
-long long modmul(long long x, long long y, long long m) {
+
+// Number of divisors, sum of divisors & product of divisors given prime factorization:
+https://cses.fi/problemset/task/2182
+
+    cin >> n;
+    long long num = 1, sum = 1, pro = 1;
+    while (n--) {
+        long long p, e; cin >> p >> e; // prime factor p with power e
+        num = (num * (e + 1)) % M;
+        sum = (sum * (((bex(p, e + 1) - 1 + M) % M * bex(p - 1)) % M)) % M;
+        pro = (bex(pro, e + 1) * bex(bex(p, e * (e + 1) >> 1), d)) % M;
+        d = (d * (e + 1)) % (M - 1);
+    }
+    cout << num << ' ' << sum << ' ' << pro;
+
+// For number of divisors: // O(cbrt(n))
+// N = 1e6  + 5 for n = 1e18
+
+long long pri[N >> 3], spf[N];
+void pre() {
+    for (int i = 2, c = 0; i < N; ++i) {
+        if (!spf[i]) pri[c++] = spf[i] = i;
+        for (int j = 0, k; (k = i * pri[j]) < N; ++j) {
+            spf[k] = pri[j]; if (spf[i] == spf[k]) break;
+        }
+    }
+}
+long long mmul(long long x, long long y, long long m) {
     long long res = __int128(x) * y % m; return res;
     // long long res = x * y - (long long)((long double)x * y / m + 0.5) * m;
     // return res < 0 ? res + m : res;
@@ -36,19 +57,20 @@ long long modmul(long long x, long long y, long long m) {
 long long bex(long long x, long long n, long long m) {
     long long res = 1 % m;
     while (n) {
-        if (n & 1) res = modmul(res, x, m);
-        x = modmul(x, x, m); n >>= 1;
+        if (n & 1) res = mmul(res, x, m);
+        x = mmul(x, x, m); n >>= 1;
     }
     return res;
 }
 bool ip(long long n) {
 	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
     if (n < N) return spf[n] == n;
-    long long s = 0, r = n - 1; while (~r & 1) { r >>= 1; ++s; }
+    long long s = 0, r = n - 1;
+    while (~r & 1) { r >>= 1; ++s; }
     for (int i = 0; pri[i] < n && pri[i] < 32; ++i) {
         long long c = bex(pri[i], r, n);
         for (int j = 0; j < s; ++j) {
-            long long d = modmul(c, c, n);
+            long long d = mmul(c, c, n);
             if (d == 1 && c != 1 && c != (n - 1)) return false;
             c = d;
         }
@@ -58,14 +80,14 @@ bool ip(long long n) {
 }
 long long sr(long long x) {
 	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
-    while (p * p > x) --p; return p;
+	while (p * p > x) --p; return (p * p == x ? p : -1);
 }
 long long div(long long n) {
-    long long dv = 1, c = 0;
+    long long d = 1, c = 0;
     for (int i = 0; pri[i] * pri[i] * pri[i] <= n; ++i, c = 0) {
-        while (++c and !(n % pri[i]) and n > 1) n /= pri[i]; dv *= c;
+        while (++c and !(n % pri[i]) and n > 1) n /= pri[i]; d *= c;
     }
-    return (ip(n) ? (dv << 1) : ip(sr(n)) ? dv * 3 : n != 1 ? (dv << 2) : dv);
+    return (ip(n) ? (d << 1) : ip(sr(n)) ? d * 3 : n != 1 ? (d << 2) : d);
 }
 
 // For summation of divisors:
@@ -117,7 +139,7 @@ void div() {
 // For summation of divisors:
 
 vector<long long> dv[N]; long long sdv[N];
-auto div() {
+void div() {
     dv[1].push_back(1); sdv[1] = 1;
     for (long long i = 2; i < N; ++i) {
         dv[i].push_back(1);

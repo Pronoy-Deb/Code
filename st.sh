@@ -5,13 +5,25 @@ g++ -O2 -std=c++23 Generator.cpp -o gen
 g++ -O2 -std=c++23 BruteForce.cpp -o bf
 g++ -O2 -std=c++23 Optimized.cpp -o op
 
+max_time=0
+
 for i in $(seq 1 "$1"); do
     ./gen > inp
     ./bf < inp > out1
-    ./op < inp > out2
-    diff -Z out1 out2 > /dev/null
 
-    if [ $? -ne 0 ]; then
+    start_time=$(date +%s%N)
+    ./op < inp > out2
+    end_time=$(date +%s%N)
+
+    elapsed=$(( (end_time - start_time) / 1000000 ))
+    if [ "$elapsed" -gt "$max_time" ]; then
+        max_time=$elapsed
+    fi
+
+    expected=$(tr -d '[:space:]' < out1)
+    found=$(tr -d '[:space:]' < out2)
+
+    if [ "$expected" != "$found" ]; then
         mismatch=$(awk ' {
             getline out2_line < "out2";
             split($0, ar1); split(out2_line, ar2);
@@ -31,10 +43,10 @@ for i in $(seq 1 "$1"); do
         cat out1
         echo "Found:"
         cat out2
-        echo ""
+        echo -e "\nTime taken: ${max_time} ms"
         exit 1
     else echo "Passed test $i / $1"
     fi
 done
 
-echo -e "Pretests passed successfully!\n"
+echo -e "\nPretests passed!\nTime taken: ${max_time} ms"

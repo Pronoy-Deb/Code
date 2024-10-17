@@ -5,7 +5,7 @@
 
 // Syntax:
     Finding out the Number of Digits in a Number:
-        (long long)log10(n) + 1;
+        (int)log10(n) + 1;
 
     To print the COMPOSITION of two integers as a double type value:
         long long a = 12, b = 345, digit = (!b ? 1 : (int)(log10(b)) + 1);

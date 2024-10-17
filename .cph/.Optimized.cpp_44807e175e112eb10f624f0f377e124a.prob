@@ -1,1 +1,1 @@
-{"name":"Local: Optimized","url":"/media/pronoy/Backup/CP/Code/Optimized.cpp","tests":[{"id":1728490104404,"input":"1\n10\n0 -1 -5 -4 4 -9 8 -1 2 6 ","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Code/Optimized.cpp","group":"local","local":true}
+{"name":"Local: Optimized","url":"/media/pronoy/Backup/CP/Code/Optimized.cpp","tests":[],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Code/Optimized.cpp","group":"local","local":true}

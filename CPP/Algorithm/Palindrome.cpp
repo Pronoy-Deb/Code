@@ -18,6 +18,7 @@ bool pal(string &s, int b = 29) {
 
 // Longest Palindrome: O(n)
 // Note: Inspired from Manacher algorithm
+https://cses.fi/problemset/task/1111
 
 auto man(string &s) {
     string t = "$#";
@@ -38,8 +39,6 @@ auto man(string &s) {
     int i = pr.second - (pr.first >> 1) + (~pr.first & 1), j = 0;
     while (++j <= pr.first) cout << s[i++];
 
-// Problem: https://cses.fi/problemset/task/1111
-
 // Number of Palindromic Subsequence having length k: O(n^2 * k)
 
 int n;
@@ -58,7 +57,6 @@ long long psk(string &s, int K) {
     return dp[1][n][K];
 }
 
-https://cses.fi/problemset/task/1111
 
 // If k <= 3: O(26 * n)
 

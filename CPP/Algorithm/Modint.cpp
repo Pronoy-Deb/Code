@@ -9,9 +9,8 @@ struct modint {
     inline modint<MOD> &operator*=(modint<MOD> other) { this->val = (__int128_t)this->val * other.val % MOD; if (this->val < 0) this->val += MOD; return *this; }
     inline modint<MOD> operator-() const { return modint<MOD>(this->val ? MOD - this->val : 0); }
     modint<MOD> pow(uint64_t k) const { modint<MOD> x = *this, y = 1; for (; k; k >>= 1) { if (k & 1) y *= x; x *= x; } return y; }
-    modint<MOD> inv() const { return pow(MOD - 2); }
-    inline modint<MOD> operator/(modint<MOD> other) const { return *this * other.inv(); }
-    inline modint<MOD> operator/=(modint<MOD> other) { return *this *= other.inv(); }
+    inline modint<MOD> operator/(modint<MOD> other) const { return *this * other.pow(M - 2); }
+    inline modint<MOD> operator/=(modint<MOD> other) { return *this *= other.pow(M - 2); }
     inline bool operator==(modint<MOD> other) const { return val == other.val; }
     inline bool operator!=(modint<MOD> other) const { return val != other.val; }
     inline bool operator<(modint<MOD> other) const { return val < other.val; }

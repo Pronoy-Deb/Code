@@ -1,16 +1,15 @@
 // Miller-Rabin Method of Primality Test:
 
-long long pri[N], spf[N];
+long long pri[N >> 3], spf[N];
 void pre() {
     for (int i = 2, c = 0; i < N; ++i) {
         if (!spf[i]) pri[c++] = spf[i] = i;
         for (int j = 0, k; (k = i * pri[j]) < N; ++j) {
-            spf[k] = pri[j];
-            if (spf[i] == spf[k]) break;
+            spf[k] = pri[j]; if (spf[i] == spf[k]) break;
         }
     }
 }
-long long modmul(long long x, long long y, long long m) {
+long long mmul(long long x, long long y, long long m) {
     long long res = __int128(x) * y % m; return res;
     // long long res = x * y - (long long)((long double)x * y / m + 0.5) * m;
     // return res < 0 ? res + m : res;
@@ -18,8 +17,8 @@ long long modmul(long long x, long long y, long long m) {
 long long bex(long long x, long long n, long long m) {
     long long res = 1 % m;
     while (n) {
-        if (n & 1) res = modmul(res, x, m);
-        x = modmul(x, x, m); n >>= 1;
+        if (n & 1) res = mmul(res, x, m);
+        x = mmul(x, x, m); n >>= 1;
     }
     return res;
 }
@@ -31,7 +30,7 @@ bool ip(long long n) {
     for (int i = 0; pri[i] < n && pri[i] < 32; ++i) {
         long long c = bex(pri[i], r, n);
         for (int j = 0; j < s; ++j) {
-            long long d = modmul(c, c, n);
+            long long d = mmul(c, c, n);
             if (d == 1 && c != 1 && c != (n - 1)) return false;
             c = d;
         }
@@ -91,7 +90,7 @@ long long jaco(long long a, long long n) {
 	}
 	return (n == 1 ? ans : 0);
 }
-bool ip(long long p, int k = 50) {
+bool ip(long long p, int k = 12) {
 	if (p < 2 || (~p & 1) || !(p % 3)) return (p == 2 || p == 3);
 	while (k--) {
 		long long a = ran() % (p - 1) + 1, jb = (p + jaco(a, p)) % p, m = bex(a, (p - 1) >> 1, p);

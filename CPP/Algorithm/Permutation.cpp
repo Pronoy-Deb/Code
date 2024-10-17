@@ -1,37 +1,42 @@
-// Permutation Generation:
-// Complexity: O(n!)
-// Printing all permutations of a sorted sequence in ascending order:
+// Permutation Generation: O(n!)
 
-vector<long long> v = {1, 2, 3};
+bitset<N> vis; vector<vector<int>> per; vector<int> p; int n;
+void gen() {
+    if ((int)p.size() == n) { per.push_back(p); return; }
+    for (int i = 1; i <= n; ++i) {
+        if (!vis[i]) {
+            vis[i] = 1; p.push_back(i); gen();
+            vis[i] = 0; p.pop_back();
+        }
+    }
+}
+
+// Ascending order:
+
+vecotr<vector<int>> per; vector<int> v = {1, 2, 3};
 sort(v.begin(), v.end());
-do
-{
-    for (auto &i : v)
-        cout << i << ' ';
-    cout << '\n';
+do {
+    per.push_back(v);
 } while (next_permutation(v.begin(), v.end()));
 
-// Printing all permutations of a sorted sequence in descending order:
+// Descending order:
 
-vector<long long> v = {3, 2, 1};
-sort(v.begin(), v.end(), greater());
-do
-{
-    for (auto &i : v)
-        cout << i << ' ';
-    cout << '\n';
+vecotr<vector<int>> per; vector<int> v = {3, 2, 1};
+sort(v.rbegin(), v.rend());
+do {
+    per.push_back(v);
 } while (prev_permutation(v.begin(), v.end()));
 
 // Comparing whether permutation or not:
 
-vector<long long> v = {5, 2, 4, 3, 1}, v1 = {4, 3, 2, 5, 1};
+vector<int> v = {5, 2, 4, 3, 1}, v1 = {4, 3, 2, 5, 1};
 cout << is_permutation(v.begin(), v.end(), begin(v1));
 
 // Permutation Tree:
+
 const int N = 1e5 + 9, inf = 1e9 + 7, LG = 19;
 
-struct ST
-{
+struct ST {
 #define lc (n << 1)
 #define rc ((n << 1) | 1)
     int tre[N << 2], lz[N << 2];
@@ -97,26 +102,21 @@ pair<int, int> span[N << 1];  // range of permutation indices
 vector<int> ptre[N << 1];     // directed permutation tree
 int par[N << 1], ty[N << 1];  // 0 if cut node and 1 if increasing join node, 2 if decreasing join node
 int id;                       // new index to assign to nodes
-pair<int, int> get_range(pair<int, int> x, pair<int, int> y)
-{
+pair<int, int> get_range(pair<int, int> x, pair<int, int> y) {
     return pair<int, int>(min(x.first, y.first), max(x.second, y.second));
 }
-void add(int u, int v)
-{ // u is parent of v
+void add(int u, int v) { // u is parent of v
     par[v] = u;
     ptre[u].push_back(v);
 }
-bool adjacent(int i, int j)
-{
+bool adjacent(int i, int j) {
     return range[i].second == range[j].first - 1;
 }
-int length(int i)
-{
+int length(int i) {
     return range[i].second - range[i].first + 1;
 }
 // leaf node is a cut node
-int make(int n)
-{ // returns root of the tree
+int make(int n) { // returns root of the tree
     for (int i = 1; i <= (n << 1); ++i)
     {
         ptre[i].clear();
@@ -207,8 +207,7 @@ int make(int n)
     return r;
 }
 int P[N << 1][LG];
-void dfs(int u, int p = 0)
-{
+void dfs(int u, int p = 0) {
     P[u][0] = p;
     for (int k = 1; k < LG; ++k)
         P[u][k] = P[P[u][k - 1]][k - 1];
@@ -227,8 +226,7 @@ for (i = 1; i <= n; ++i)
 int r = make(n);
 dfs(r);
 cin >> q;
-while (q--)
-{
+while (q--) {
     int l, r;
     cin >> l >> r;
     if (l == r)
@@ -272,8 +270,7 @@ const int N = 3e5 + 9;
 // 0-indexed, values are also from 0 to n-1
 
 // decompose into cycles
-vector<vector<int>> decompose(vector<int> &p)
-{
+vector<vector<int>> decompose(vector<int> &p) {
     int n = p.size();
     vector<vector<int>> cycles;
     vector<bool> vis(n, 0);
@@ -295,8 +292,7 @@ vector<vector<int>> decompose(vector<int> &p)
 }
 
 // restore the permutation from the cycles
-vector<int> restore(int n, vector<vector<int>> &cycles)
-{
+vector<int> restore(int n, vector<vector<int>> &cycles) {
     vector<int> p(n);
     for (auto v : cycles)
     {
@@ -308,8 +304,7 @@ vector<int> restore(int n, vector<vector<int>> &cycles)
 }
 
 // cycle decomposition of the k-th power of p
-vector<vector<int>> power(vector<int> &p, int k)
-{
+vector<vector<int>> power(vector<int> &p, int k) {
     int n = p.size();
     auto cycles = decompose(p);
     vector<vector<int>> ans;
@@ -329,8 +324,7 @@ vector<vector<int>> power(vector<int> &p, int k)
     return ans;
 }
 
-int32_t main()
-{
+int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int n;

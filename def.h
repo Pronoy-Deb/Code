@@ -1,28 +1,39 @@
 
-#define pa(c)             \
-    cerr << #c << " = ";  \
-    for (auto &e : c)     \
-        cerr << e << ' '; \
-    cerr << '\n'
+#define pa(c) cerr << #c << " = "; for (auto &e : c) cerr << e << ' '; cerr << '\n'
 
-#define pn(c, n)             \
-    cerr << #c << " = ";     \
-    for (size_t i = 0; i < n; ++i)  \
-        cerr << c[i] << ' '; \
-    cerr << '\n'
+#define pn(c, n) cerr << #c << " = "; for (size_t l = 0; l < n; ++l) cerr << c[l] << ' '; cerr << '\n'
 
 #define pr(c)                \
     cerr << #c << " = ";     \
     bool flag = false;       \
-    for (auto &r : c)        \ {                        \
+    for (auto &r : c) {      \
         if (flag)            \
             cerr << ", ";    \
         cerr << '{';         \
         bool flag2 = false;  \
-        for (auto &e : r)    \ {                    \
+        for (auto &e : r) {  \
             if (flag2)       \
                 cerr << ' '; \
             cerr << e;       \
+            flag2 = true;    \
+        }                    \
+        cerr << '}';         \
+        flag = true;         \
+    }                        \
+    cerr << '\n'
+
+#define prc(c, n, m)         \
+    cerr << #c << " = ";     \
+    bool flag = false;       \
+    for (size_t x = 0; x < n; ++x) { \
+        if (flag)            \
+            cerr << ", ";    \
+        cerr << '{';         \
+        bool flag2 = false;  \
+        for (size_t y = 0; y < m; ++y) { \
+            if (flag2)       \
+                cerr << ' '; \
+            cerr << c[x][y]; \
             flag2 = true;    \
         }                    \
         cerr << '}';         \
@@ -34,10 +45,10 @@
     cerr << #c << " = ";     \
     bool flag = false;       \
     cerr << '{';             \
-    for (auto &[f, s] : c)   \ {                        \
+    for (auto &[f, s] : c) { \
         if (flag)            \
             cerr << ", ";    \
-        cerr << '(' << f << ", " << s << ")";         \
+        cerr << '(' << f << ", " << s << ")"; \
         flag = true;         \
     } \
     cerr << "}\n"
@@ -52,9 +63,9 @@ struct is_iterable<T, void_t<decltype(begin(declval<T>())), decltype(end(declval
 template <typename T, typename = void>
 struct is_pbds_tree_set : false_type {};
 
-// Specialization for PBDS maps
-template <typename Key, typename Value, typename Cmp, typename Tag, template <typename, typename, typename, typename> class Node_Update, typename Allocator>
-struct is_pbds_tree_set<tree<Key, Value, Cmp, Tag, Node_Update, Allocator>> : true_type {};
+// // Specialization for PBDS sets
+// template <typename Key, typename Value, typename Cmp, typename Tag, template <typename, typename, typename, typename> class Node_Update, typename Allocator>
+// struct is_pbds_tree_set<tree<Key, Value, Cmp, Tag, Node_Update, Allocator>> : true_type {};
 
 // Helper to identify if a type is a map-like container
 template <typename T, typename = void>

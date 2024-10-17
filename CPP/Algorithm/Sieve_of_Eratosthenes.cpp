@@ -23,18 +23,14 @@ void pre() {
 
 // Comlexity: O(n)
 
-bitset<N> ip; long long spf[N]; vector<long long> pri;
+long long pri[N], spf[N];
 void pre() {
-	ip[0] = ip[1] = true;
-	for (int i = 2; i < N; ++i) {
-		if (!ip[i]) {
-			pri.push_back(i); spf[i] = i;
-		}
-		int sz = pri.size();
-		for (int j = 0; j < sz && i * pri[j] < N && pri[j] <= spf[i]; ++j) {
-			ip[i * pri[j]] = true; spf[i * pri[j]] = pri[j];
-		}
-	}
+    for (int i = 2, c = 0; i < N; ++i) {
+        if (!spf[i]) pri[c++] = spf[i] = i;
+        for (int j = 0, k; (k = i * pri[j]) < N; ++j) {
+            spf[k] = pri[j]; if (spf[i] == spf[k]) break;
+        }
+    }
 }
 
 // Bitwise Sieve: if (ip(n)) --> prime
