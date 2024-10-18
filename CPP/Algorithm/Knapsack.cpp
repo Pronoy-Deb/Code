@@ -15,7 +15,7 @@ long long rec(auto in, auto wet) {
     memset(dp, -1, sizeof(dp));
     cout << rec(n - 1, w);
 
-                            // Bounded Knapsack:
+// Bounded Knapsack:
 #include<bits/stdc++.h>
 using namespace std;
 

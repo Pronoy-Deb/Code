@@ -1,3 +1,5 @@
-oid arr(auto ar[]) {
-//     for (auto &e : ar) cout << e << ' '; cout << '\n';
-// }
+
+    // for(i=mn.back();i<n and ar[i]!= b;++i) {
+    //     m = max(m, ar[i]);
+    //     d = min(d, a+b-m);
+    // }

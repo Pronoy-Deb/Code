@@ -5,12 +5,18 @@ fileName="$1"
 
 g++ -O2 -std=c++23 -DLOCAL -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-misleading-indentation "$fileName" -o l
 
-start_time=$(date +%s%N)
-timeout 7s ./l < Input > out1
-exit_status=$?
+overhead_start_time=$(date +%s%N)
+timeout 7s true
+overhead_end_time=$(date +%s%N)
+overhead_time=$((overhead_end_time - overhead_start_time))
 
+start_time=$(date +%s%N)
+(
+    timeout 7s ./l < Input > out1
+)
+exit_status=$?
 end_time=$(date +%s%N)
-elapsed=$(( (end_time - start_time) / 1000000 ))
+elapsed=$(((end_time - start_time - overhead_time) / 1000000 ))
 
 if [ $exit_status -eq 124 ]; then
     echo -e "\nTime limit exceeded!\nTime taken: ${elapsed} ms"

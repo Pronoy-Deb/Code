@@ -12,10 +12,12 @@ for i in $(seq 1 "$1"); do
     ./bf < inp > out1
 
     start_time=$(date +%s%N)
-    ./op < inp > out2
+    (
+        ./op < inp > out2
+    )
     end_time=$(date +%s%N)
 
-    elapsed=$(( (end_time - start_time) / 1000000 ))
+    elapsed=$(((end_time - start_time) / 1000000 ))
     if [ "$elapsed" -gt "$max_time" ]; then
         max_time=$elapsed
     fi
@@ -39,9 +41,9 @@ for i in $(seq 1 "$1"); do
 
         echo -e "Wrong answer on test $i [$mismatch]\nInput:"
         cat inp
-        echo "Expected:"
+        echo "Expected Output:"
         cat out1
-        echo "Found:"
+        echo "Received Output:"
         cat out2
         echo -e "\nTime taken: ${max_time} ms"
         exit 1
