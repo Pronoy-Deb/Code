@@ -95,3 +95,17 @@
             return n + self(self, n - 1);
         };
         cout << sum(sum, 5);
+
+    -> To calculate execution time:
+        auto start = clock();
+        
+        auto stop = clock();
+        auto duration = (stop - start) / (double)CLOCKS_PER_SEC;
+        cout << "Time: " << duration << " seconds\n";
+
+    // OR,
+        auto start = chrono::high_resolution_clock::now();
+
+        auto stop = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+        cout << "Time: " << duration.count() << " microseconds\n";

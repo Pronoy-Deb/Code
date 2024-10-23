@@ -2,7 +2,7 @@
 // Complexity: Make: O(nlog(n)) Query: O(1)
 
 const int L = 21;
-int tab[N][L], ar[N], n;
+long long tab[N][L], ar[N], n;
 void make() {
 	for (int i = 1; i <= n; ++i) tab[i][0] = ar[i];
 	for (int k = 1; k < L; ++k) {
@@ -11,6 +11,7 @@ void make() {
 	}
 }
 int get(int l, int r) {
+    if (l > r) return LLONG_MAX;
 	int k = 31 - __builtin_clz(r - l + 1);
 	return min(tab[l][k], tab[r - (1 << k) + 1][k]);
 }

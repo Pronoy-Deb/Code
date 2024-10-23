@@ -3,8 +3,8 @@
 bitset<N> ip;
 void pre() {
 	ip[2] = true; for (int i = 3; i < N; i += 2) ip[i] = true;
-    for (long long i = 3; i * i < N; i += 2) {
-        for (long long j = i * i; ip[i] && j < N; j += (i << 1)) ip[j] = false;
+    for (long long i = 3, j; (j = i * i) < N; i += 2) {
+        for (; ip[i] && j < N; j += (i << 1)) ip[j] = false;
     }
 }
 

@@ -1,16 +1,17 @@
 #!/bin/bash
 # Command to run: bash ms.sh number_of_tests
-
 # sed -i 's/\r$//' ms.sh
 
 g++ -O2 -std=c++23 Generator.cpp -o gen
 g++ -O2 -std=c++23 Optimized.cpp -o op
 g++ -O2 -std=c++23 Checker.cpp -o ckr
+# g++ -O2 -std=c++23 BruteForce.cpp -o bf
 
 max_time=0
 
 for i in $(seq 1 "$1") ; do
     ./gen > inp
+    # ./bf < inp > out1
 
     start_time=$(date +%s%N)
     (
@@ -28,6 +29,8 @@ for i in $(seq 1 "$1") ; do
     if [ $? -ne 0 ] ; then
         echo -e "Wrong answer on test $i\nInput:"
         cat inp
+        # echo "Expected Output:"
+        # cat out1
         echo "Received Output:"
         cat out2
         echo -e "\nTime taken: ${max_time} ms"

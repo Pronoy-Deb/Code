@@ -14,16 +14,14 @@ using namespace std;
 #endif
 #define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
-const ll M = 1e9 + 7, N = 2e6;
+const ll M = 1e9 + 7, N = 2e5 + 5;
 ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0, inp[N], ar[N]; string s;
 
-bool check(ifstream &fin) {
-    // Read Output from Optimized.cpp
+auto check(ifstream &fin) {
+    // Read the Output
     fin >> m;
-    for (i = 0; i < m; ++i) fin >> ar[i];
-    for(i=0;i<n-1;++i) {
-        if(abs(ar[i] - ar[i-1]) != 2) return false;
-    }
+    // for (i = 0; i < n; ++i) fin >> ar[i];
+
     return true;
 }
 

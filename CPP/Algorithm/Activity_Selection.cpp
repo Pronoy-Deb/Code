@@ -2,8 +2,8 @@
 https://cses.fi/problemset/task/1629
 
 pair<long long, long long> ar[N];
-auto cmp(const auto &a, const auto &b) {
-    return (a.second < b.second);
+bool cmp(const pair<long long, long long> &a, const pair<long long, long long> &b) {
+    return a.second < b.second;
 }
 int as() {
     sort(ar, ar + N, cmp);
