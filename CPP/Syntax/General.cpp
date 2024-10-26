@@ -90,15 +90,15 @@
         };
 
     // OR,
-        auto sum = [&](auto&& self, int n) {
+        auto sum = [&](auto&& sum, int n) {
             if (n == 0) return 0;
-            return n + self(self, n - 1);
+            return n + sum(sum, n - 1);
         };
         cout << sum(sum, 5);
 
     -> To calculate execution time:
         auto start = clock();
-        
+
         auto stop = clock();
         auto duration = (stop - start) / (double)CLOCKS_PER_SEC;
         cout << "Time: " << duration << " seconds\n";

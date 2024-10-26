@@ -9,57 +9,31 @@ using namespace std;
 #define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
 const ll M = 1e9 + 7, N = 2e5 + 5;
+int n; map<pair<vector<ll>, int>, int> mp;
+int rec(auto &ar, int i) {
+    if (i == (n>>1)) {
+        int c = 0;
+        for (int i = 0; i < n - 1; ++i) c += (ar[i] == ar[i + 1]);
+        return c;
+    }
+    if (mp.count({ar, i})) return mp[{ar, i}];
+    int c = M;
+    if(ar[i] != ar[n-i-1]) {
+        swap(ar[i], ar[n - i - 1]);
+        c = rec(ar, i + 1);
+        swap(ar[i], ar[n - i - 1]);
+    }
+    c = min(c, rec(ar, i + 1));
+    return mp[{ar, i}] = c;
+}
 
-// bitset<N> vis; vector<vector<int>> per; vector<int> p; int n;
-// void gen() {
-//     if ((int)p.size() == n) { per.push_back(p); return; }
-//     for (int i = 1; i <= n; ++i) {
-//         if (!vis[i]) {
-//             vis[i] = 1; p.push_back(i); gen();
-//             vis[i] = 0; p.pop_back();
-//         }
-//     }
-// }
 void test(int tc) {
-    ll n = 0, m = M*M, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
+    ll o = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
     cin >> n;
-    pair<int,int> ar[n + 5];
-    for (i = 1; i <= n; ++i) {
-        cin >> ar[i].first >> ar[i].second;
-    }
-    // gen();
-    vector<vector<int>> per;
-    vector<int> v(n);
-    iota(v.begin(), v.end(), 1);
-    // sort(v.begin(), v.end());
-    do {
-        per.push_back(v);
-    } while (next_permutation(v.begin(), v.end()));
-    vector<pair<int, int>> pr;
-    for (auto &v : per) {
-        vector<pair<int,int>> st;
-        for (i = 0; i < n; ++i) {
-            st.push_back(ar[v[i]]);
-        }
-        c = 0;
-        for (i = 0; i < 2*n; ++i) {
-            for(j=i+1;j<2*n;++j) {
-                c += (st[i] > st[j]);
-            }
-        }
-        if(c < m) {
-            m = c;
-            // pr.clear();
-            // for (i = 0; i < n; ++i) {
-            //     pr.push_back({ar[v[i]].first, ar[v[i]].second});
-            // }
-            pr = st;
-        }
-        // cout << '\n';
-    }
-    for(auto &[f, s] : pr) cout << f << ' ' << s << ' ';
-    cout << '\n';
-    // ck(st.size());
+    vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    cout << rec(ar, 0) << '\n';
+    mp.clear();
+    // cout << '\n';
 }
 
 signed main() {

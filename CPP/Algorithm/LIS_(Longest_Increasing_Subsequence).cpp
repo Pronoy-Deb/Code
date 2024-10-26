@@ -1,11 +1,9 @@
 // Note: Gives result of STRICTLY incresing subsequence
 // For longest non-decreasing subsequence, replace 'lower_bound' with 'upper_bound' and for longest decreasing subsequence, replace ar[i] *= -1;
-// To determine the length:
-// Iterative Approach:
-// Complexity: O(n * log(n))
+// Iterative Approach to determine the length: O(n * log(n))
 
 long long ar[N], n;
-long long lis() {
+int lis() {
     vector<long long> ans; ans.push_back(ar[0]);
     for (int i = 1; i < n; ++i) {
         if (ar[i] > ans.back()) ans.push_back(ar[i]);
@@ -19,8 +17,8 @@ long long lis() {
 
 // Complexity: O(n^2)  // For all of the following codes
 
-long long lis(auto &v) {
-    long long n = v.size(), dp[n], ans = 1;
+int lis(auto &v) {
+    int n = v.size(), dp[n], ans = 1;
     for (int i = 0; i < n; ++i) {
         dp[i] = 1;
         for (int j = 0; j < i; ++j) {
@@ -37,29 +35,29 @@ long long lis(auto &v) {
 
 // Recursive Approach:
 
-long long v[N], dp[N];
-long long lis(int i) {
+int ar[N], dp[N];
+int lis(int i) {
     if (dp[i] != -1) return dp[i];
-    long long ans = 1;
+    int ans = 1;
     for (int j = 0; j < i; ++j) {
-        if (v[i] > v[j]) ans = max(ans, lis(j) + 1);
+        if (ar[i] > ar[j]) ans = max(ans, lis(j) + 1);
     }
     return dp[i] = ans;
 }
 
 // Operation:
-    cin >> n; for (i = 0; i < n; ++i) cin >> v[i];
+    cin >> n; for (i = 0; i < n; ++i) cin >> ar[i];
     memset(dp, -1, sizeof dp);
-    long long ans = 0;
+    int ans = 0;
     for (i = 0; i < n; ++i) ans = max(ans, lis(i));
     cout << ans;
 
 // To determine the subsequence:
 
-long long ar[N], dp[N], in = 0; vector<long long> sub;
-long long lis(auto i) {
+int ar[N], dp[N], in = 0; vector<int> sub;
+int lis(auto i) {
     if (dp[i] != -1) return dp[i];
-    long long ans = 1; bool ok = true;
+    int ans = 1; bool ok = true;
     for (int j = 0; j < i; ++j) {
         if (ar[i] >= ar[j]) {
             ans = max(ans, lis(j) + 1);
@@ -84,4 +82,4 @@ long long lis(auto i) {
     cout << sub.size() << '\n';
     for (i = sub.size() - 1; i >= 0; --i) cout << sub[i] << ' ';
     // reverse(sub.begin(), sub.end());
-    // for (auto &i : sub) cout << i << ' ';
+    // for (auto &e : sub) cout << e << ' ';

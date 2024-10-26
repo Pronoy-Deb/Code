@@ -15,8 +15,8 @@ void sseq(auto &inp) {
     }
 }
 
-                    // Recursive Approach:
-                    // Complexity: O(2^n)  // n = inp.size()
+// Recursive Approach:
+// Complexity: O(2^n)  // n = inp.size()
 
 vector<string> res;
 auto sseq(auto &inp, auto &sub, auto i) {

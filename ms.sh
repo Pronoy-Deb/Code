@@ -11,15 +11,19 @@ max_time=0
 
 for i in $(seq 1 "$1") ; do
     ./gen > inp
-    # ./bf < inp > out1
+
+    # timeout 5s ./bf < inp > out1
+    # exit_status=$?
+    # if [ $exit_status -eq 124 ]; then
+    #     echo "TLE on test $i / $1"
+    #     continue
+    # fi
 
     start_time=$(date +%s%N)
-    (
-        ./op < inp > out2
-    )
+    ./op < inp > out2
     end_time=$(date +%s%N)
-
     elapsed=$(((end_time - start_time) / 1000000 ))
+    
     if [ "$elapsed" -gt "$max_time" ]; then
         max_time=$elapsed
     fi
