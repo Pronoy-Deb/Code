@@ -33,7 +33,7 @@ signed main() {
     // Read Input from Generator.cpp
     int tc; fin >> tc; // For testcase
     fin >> n;
-    for (i = 0; i < n; ++i) fin >> inp[i];
+    // for (i = 0; i < n; ++i) fin >> inp[i];
     return (check(op) ? 0 : -1);
     // return (check(bf) == check(op) ? 0 : -1);
 }

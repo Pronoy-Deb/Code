@@ -1,7 +1,6 @@
 # Complexity: O(log(n))
 # Returns: (0/1) whether the element is present or not
 # -> Works only on monotonic (sorted) arrays
-
 # Built-in:
 
 from bisect import bisect_left
@@ -12,7 +11,7 @@ def bs(ls, val):
 # User-defined:
 
 def bs(val):
-    lo = 0; hi = n - 1
+    lo, hi = 0, n - 1
     while lo <= hi:
         mid = (hi + lo) >> 1
         if ls[mid] == val: return True
@@ -23,7 +22,7 @@ def bs(val):
 # OR,
 
 def bs(val):
-    lo =0; hi = n - 1
+    lo, hi = 0, n - 1
     while lo < hi:
         mid = (hi + lo + 1) >> 1
         if ls[mid] < val: lo = mid + 1

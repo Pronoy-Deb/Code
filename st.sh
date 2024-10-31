@@ -9,6 +9,7 @@ max_time=0
 
 for i in $(seq 1 "$1"); do
     ./gen > inp
+    
     timeout 5s ./bf < inp > out1
     exit_status=$?
     if [ $exit_status -eq 124 ]; then
@@ -16,10 +17,10 @@ for i in $(seq 1 "$1"); do
         continue
     fi
 
-    start_time=$(date +%s%N)
+    start_time=$(date +%s%3N)
     ./op < inp > out2
-    end_time=$(date +%s%N)
-    elapsed=$(((end_time - start_time) / 1000000 ))
+    end_time=$(date +%s%3N)
+    elapsed=$((end_time - start_time))
 
     if [ "$elapsed" -gt "$max_time" ]; then
         max_time=$elapsed

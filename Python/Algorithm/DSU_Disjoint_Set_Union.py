@@ -30,3 +30,20 @@ for _ in range(n-1):
 cc = uf.cnt(); print(cc)
 
 # Problem: https://codeforces.com/contest/1857/problem/G
+
+OR,
+
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+
+    def find(self, a):
+        acopy = a
+        while a != self.parent[a]:
+            a = self.parent[a]
+        while acopy != a:
+            self.parent[acopy], acopy = a, self.parent[acopy]
+        return a
+
+    def union(self, a, b):
+        self.parent[self.find(b)] = self.find(a)

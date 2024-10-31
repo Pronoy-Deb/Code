@@ -1,8 +1,8 @@
 # Complexity: O(log(pow))
 # Iterative Approach:
 
-def bex(base, pow):
-    ans = 1
+def bex(base, pow = M - 2):
+    base %= M; ans = 1
     while pow:
         if pow & 1: ans = (ans * base) % M
         base = (base * base) % M; pow >>= 1
@@ -10,11 +10,11 @@ def bex(base, pow):
 
 # Recursive Approach
 
-def bex(base, pow):
-    if not pow: return 1
-    call = bex(base, pow >> 1)
-    if pow & 1: return (base * (call * call) % M) % M
-    return (call * call) % M
+def bex(base, pow = M - 2):
+    if not pow: yield 1
+    call = yield bex(base, pow >> 1)
+    if pow & 1: yield (base * (call * call) % M) % M
+    yield (call * call) % M
 
 # M = 10**18 + 7
 

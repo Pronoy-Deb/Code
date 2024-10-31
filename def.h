@@ -1,7 +1,7 @@
 
-#define pa(c) cerr << #c << " = "; for (auto &e : c) cerr << e << ' '; cerr << '\n'
+#define pa(c) cerr << #c << " = { "; for (auto &e : c) cerr << e << ' '; cerr << "}\n"
 
-#define pn(c, n) cerr << #c << " = "; for (size_t l = 0; l < n; ++l) cerr << c[l] << ' '; cerr << '\n'
+#define pn(c, n) cerr << #c << " = { "; for (int l = 0; l < n; ++l) cerr << c[l] << ' '; cerr << "}\n"
 
 #define pr(c)                \
     cerr << #c << " = ";     \
@@ -105,7 +105,7 @@ struct is_queue<queue<T, Container>> : true_type {};
 // Printing stacks
 template <typename T>
 void stack_impl(auto *x, stack<T> y) {
-    cerr << '\n' << x << " = [";
+    cerr << x << " = [";
     while (!y.empty()) {
         cerr << y.top();
         y.pop();
@@ -116,8 +116,7 @@ void stack_impl(auto *x, stack<T> y) {
 // Printing queues
 template <typename T>
 void queue_impl(auto *x, queue<T> y) {
-    cerr << '\n'
-         << x << " = [";
+    cerr << x << " = [";
     while (!y.empty()) {
         cerr << y.front();
         y.pop();
@@ -134,7 +133,8 @@ ostream &operator<<(ostream &os, const pair<T, U> &p) {
 // Implementations for different types of containers
 template <typename T>
 void v_impl(auto *x, T &&y) {
-    cerr << x << " = " << y << ", ";}
+    cerr << x << " = " << y << '\n';
+}
 
 template <typename T, typename... Ts>
 void v_impl(auto *x, T &&y, Ts &&...g) {
@@ -150,13 +150,13 @@ void v_impl(auto *x, T &&y, Ts &&...g) {
 
 template <typename T>
 void e_impl(auto *x, T &&y) {
-    cerr << '\n' << x << " = ";
-    for (const auto &e : y) cerr << e << ' ';
+    cerr << x << " = { ";
+    for (const auto &e : y) cerr << e << ' '; cerr << "}\n";
 }
 
 template <typename T, size_t N>
 void e_impl(auto *x, T (&y)[N]) {
-    cerr << '\n' << x << " = ";
+    cerr << x << " = ";
     bool flag = false;
     for (size_t i = 0; i < N; ++i) {
         if (flag)
@@ -177,7 +177,6 @@ void e_impl(auto *x, T (&y)[N]) {
 template <typename T, typename... Ts>
 void e_impl(auto *x, T &&y, Ts &&...g) {
     auto *c = strchr(x, ',');
-    cerr << '\n';
     cerr.write(x, c ? c - x : strlen(x)) << " = ";
     for (const auto &e : y) cerr << e << ' ';
     if (c) e_impl(c + 2, forward<Ts>(g)...);
@@ -185,7 +184,7 @@ void e_impl(auto *x, T &&y, Ts &&...g) {
 
 template <typename T>
 void p_impl(auto *x, T &&y) {
-    cerr << '\n' << x << " = ";
+    cerr << x << " = ";
     bool flag = false;
     for (const auto &[f, s] : y) {
         if (flag) cerr << ", ";
@@ -197,7 +196,6 @@ void p_impl(auto *x, T &&y) {
 template <typename T, typename... Ts>
 void p_impl(auto *x, T &&y, Ts &&...g) {
     auto *c = strchr(x, ',');
-    cerr << '\n';
     cerr.write(x, c ? c - x : strlen(x)) << " = ";
     bool flag = false;
     for (const auto &[f, s] : y) {
@@ -210,7 +208,7 @@ void p_impl(auto *x, T &&y, Ts &&...g) {
 
 template <typename T>
 void r_impl(auto *x, T &&y) {
-    cerr << '\n' << x << " = ";
+    cerr << x << " = ";
     bool flag = false;
     for (const auto &r : y) {
         if (flag) cerr << ", ";
@@ -229,7 +227,6 @@ void r_impl(auto *x, T &&y) {
 template <typename T, typename... Ts>
 void r_impl(auto *x, T &&y, Ts &&...g) {
     auto *c = strchr(x, ',');
-    cerr << '\n';
     cerr.write(x, c ? c - x : strlen(x)) << " = ";
     bool flag = false;
     for (const auto &r : y) {

@@ -1,17 +1,10 @@
 #!/bin/bash
-# Command: bash cpp.sh file.cpp
+# Command: bash py.sh file.py
 
 fileName="$1"
 
-g++ -O2 -std=c++23 -DLOCAL -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-misleading-indentation "$fileName" -o l
-
-if [ $? -ne 0 ]; then
-    echo -e "\nCompilation error!"
-    exit 1
-fi
-
 start_time=$(date +%s%3N)
-timeout 5s ./l < Input > out2
+timeout 5s python3 "$fileName" < Input > out2
 exit_status=$?
 end_time=$(date +%s%3N)
 elapsed=$((end_time - start_time))

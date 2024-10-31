@@ -1,6 +1,5 @@
 #!/bin/bash
 # Command to run: bash ms.sh number_of_tests
-# sed -i 's/\r$//' ms.sh
 
 g++ -O2 -std=c++23 Generator.cpp -o gen
 g++ -O2 -std=c++23 Optimized.cpp -o op
@@ -15,15 +14,15 @@ for i in $(seq 1 "$1") ; do
     # timeout 5s ./bf < inp > out1
     # exit_status=$?
     # if [ $exit_status -eq 124 ]; then
-    #     echo "TLE on test $i / $1"
+    #     echo "Skipped test $i / $1"
     #     continue
     # fi
 
-    start_time=$(date +%s%N)
+    start_time=$(date +%s%3N)
     ./op < inp > out2
-    end_time=$(date +%s%N)
-    elapsed=$(((end_time - start_time) / 1000000 ))
-    
+    end_time=$(date +%s%3N)
+    elapsed=$((end_time - start_time))
+
     if [ "$elapsed" -gt "$max_time" ]; then
         max_time=$elapsed
     fi
@@ -42,4 +41,4 @@ for i in $(seq 1 "$1") ; do
     else echo "Passed test $i / $1"
     fi
 done
-echo -e "Pretests passed!\nTime taken: ${max_time} ms"
+echo -e "\nPretests passed!\nTime taken: ${max_time} ms"

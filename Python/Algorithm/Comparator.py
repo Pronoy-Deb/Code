@@ -1,8 +1,7 @@
 # Returns: true/false
 # Work: Changes the behaviour of the built-in sort() function
 
-def cmp(item):
-    return (item[0], -item[1])
+def cmp(item): return (item[0], -item[1])
 pairs = [(1, 2), (1, 3), (2, 1)]
 
 # Work: Prints Ascending pair of first elements & Descending pair of second elements

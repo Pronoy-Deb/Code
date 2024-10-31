@@ -19,7 +19,7 @@ void test(int tc) {
 }
 
 signed main() {
-    cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
+    cin.tie(0)->sync_with_stdio(0); cin.exceptions(ios::failbit | ios::badbit);
     int tc = 0, t = 1;
     cin >> t;
     while (tc < t) test(++tc);

@@ -3,13 +3,15 @@
 
 # General:
     # File I/O:
-    import sys 
-    sys.stdin = open('input.txt', 'r')
-    sys.stdout = open('output.txt', 'w')
+    from sys import stdin, stdout
+    stdin = open('input.txt', 'r')
+    stdout = open('output.txt', 'w')
+
+    # Fast Input:
+    input = sys.stdin.buffer.readline
 
     # Fast Output:
     out = lambda x: stdout.write(' '.join(map(str, x)) + '\n' if isinstance(x, list) else str(x) + '\n')
-
 
     # Taking multiple values as input in one line:
         a, b, c = map(int, input().split())
@@ -26,9 +28,12 @@
 
     # Writing multiline comments:
         """                 """
-    
+
     # ASCII value of a character:
         ord('character')
-    
+
     # Checking the type of a container :
         print(type(container))
+
+# Python User ID:
+#     Bullet, kclee2172, zii.hrs, rishabhxchoudhary, Moody_in_a_hoodie, pajenegod,
