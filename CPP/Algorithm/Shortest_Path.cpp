@@ -9,7 +9,7 @@ void dij(int src) {
     dis[src] = 0; set<pair<long long, int>> st;
     st.emplace(0, src);
     while (!st.empty()) {
-        int nd = (*st.top()).second; st.erase(st.top());
+        int nd = (*st.begin()).second; st.erase(st.begin());
         if(vis[nd]) continue; vis[nd] = true;
         for (auto &[cld, wt] : gp[nd]) {
             if (dis[nd] + wt < dis[cld]) {

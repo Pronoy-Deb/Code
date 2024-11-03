@@ -1,2 +1,1 @@
- in range(n):
-    #     l
+get

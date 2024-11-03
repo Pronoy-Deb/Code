@@ -151,7 +151,8 @@ void v_impl(auto *x, T &&y, Ts &&...g) {
 template <typename T>
 void e_impl(auto *x, T &&y) {
     cerr << x << " = { ";
-    for (const auto &e : y) cerr << e << ' '; cerr << "}\n";
+    for (const auto &e : y) cerr << e << ' ';
+    cerr << "}\n";
 }
 
 template <typename T, size_t N>

@@ -26,6 +26,15 @@
     # e - notation:
         1000 == 1e3
 
+    # Random float numbers:
+        from random import uniform
+        print(uniform(0.0, 1.0))
+
+    # Random characters:
+        from random import choise
+        from string import ascii_lowercase
+        print(choise(ascii_lowercase))  # All lowercase letters
+
     # Writing multiline comments:
         """                 """
 

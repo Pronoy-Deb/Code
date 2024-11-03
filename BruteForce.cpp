@@ -12,25 +12,18 @@ const ll M = 1e9 + 7, N = 2e5 + 5;
 
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    cin >> n;
-    // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    // vecotr<vector<int>> per;
-    vector<int> v(n); iota(v.begin(), v.end(), 1);
-    // sort(v.begin(), v.end());
-    do {
-        d = 0;
-        for (i = 0; i < n; ++i) {
-            if(i&1) d |= v[i];
-            else d &= v[i];
-        }
-        c = max(c, d);
-    } while (next_permutation(v.begin(), v.end()));
-    cout << c;
-    cout << '\n';
+    string s, r; cin >> s;
+    cin >> q;
+    while(q--) {
+        cin >> a; char ch; cin >> ch;
+        s[a-1] = ch;
+        ck(s);
+        ps(s.find("1100") != -1);
+    }
 }
 
 signed main() {
-    cin.tie(0)->sync_with_stdio(0); cin.exceptions(cin.failbit | cin.badbit);
+    cin.tie(0)->sync_with_stdio(0); cin.exceptions(ios::failbit | ios::badbit);
     int tc = 0, t = 1;
     cin >> t;
     while (tc < t) test(++tc);

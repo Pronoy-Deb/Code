@@ -1,16 +1,14 @@
 #!/bin/bash
 # Command: bash st.sh Number_of_Tests
 
-g++ -O2 -std=c++23 Generator.cpp -o gen
-g++ -O2 -std=c++23 BruteForce.cpp -o bf
-g++ -O2 -std=c++23 Optimized.cpp -o op
+# Compile Python files to .pyc (optional but can speed up execution)
+python3 -m compileall Generator.py BruteForce.py Optimized.py
 
 max_time=0
 
 for i in $(seq 1 "$1"); do
-    ./gen > inp
-
-    timeout 5s ./bf < inp > out1
+    python3 Generator.py > inp
+    timeout 5s python3 BruteForce.py < inp > out1
     exit_status=$?
     if [ $exit_status -eq 124 ]; then
         echo "Skipped test $i / $1"
@@ -18,24 +16,9 @@ for i in $(seq 1 "$1"); do
     fi
 
     start_time=$(date +%s%3N)
-    timeout 5s ./op < inp > out2
-    exit_status=$?
+    python3 Optimized.py < inp > out2
     end_time=$(date +%s%3N)
     elapsed=$((end_time - start_time))
-    elapsed=$((elapsed > 5 ? elapsed - 5 : elapsed))
-
-    if [ $exit_status -eq 124 ]; then
-        echo "TLE on test $i / $1"
-        echo "Input:"
-        cat inp
-        echo -e "\nTime taken: ${elapsed} ms"
-        exit 1
-    elif [ $exit_status -ne 0 ]; then
-        echo "\nRuntime error!"
-        echo "Input:"
-        cat inp
-        exit 1
-    fi
 
     if [ "$elapsed" -gt "$max_time" ]; then
         max_time=$elapsed
@@ -66,7 +49,8 @@ for i in $(seq 1 "$1"); do
         cat out2
         echo -e "\nTime taken: ${max_time} ms"
         exit 1
-    else echo "Passed test $i / $1"
+    else
+        echo "Passed test $i / $1"
     fi
 done
 
