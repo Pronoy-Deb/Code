@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-mapfile -t inputs < Input
+mapfile -t inputs < Sample_Input
 mapfile -t expected_outputs < Expected_Output
 
 all_passed=true
@@ -60,25 +60,31 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
 
     actual_output=$(<out2)
     echo "Received Output $test_num:"
-    echo -e "$actual_output\n"
 
     if [ $exit_status -eq 124 ]; then
-        echo -e "\nTest $test_num: Timed out! (${elapsed} ms)"
+        echo -e "Timed out!\n"
         all_passed=false
         failed_tests+=("$test_num")
         continue
     elif [ $exit_status -ne 0 ]; then
-        echo -e "\nTest $test_num: Runtime error!"
+        echo -e "Runtime error!\n"
         all_passed=false
         failed_tests+=("$test_num")
         continue
     fi
 
+    echo -e "$actual_output\n"
+
     mismatch=$(awk -v test_num="$test_num" '
-        NR == FNR { expected_lines[NR] = $0; next }
+        NR == FNR { expected_lines[NR] = $0; expected_line_count = NR; next }
         {
             received_line = $0
             expected_line = expected_lines[FNR]
+
+            if (expected_line == "") {
+                print "[" FNR, 1 "]\nExpected: null\nReceived: " received_line
+                exit
+            }
 
             split(received_line, ar1)
             split(expected_line, ar2)
@@ -91,11 +97,10 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
                     exit
                 }
             }
-
-            if (length(ar1) != length(ar2)) {
-                print "Mismatch at test " test_num " [line " FNR ", column " (length(ar1) < length(ar2) ? length(ar1) + 1 : length(ar2) + 1) "]:"
-                print "Expected: " (length(ar2) > length(ar1) ? ar2[length(ar2)] : "null")
-                print "Received: " (length(ar1) > length(ar2) ? ar1[length(ar1)] : "null")
+        }
+        END {
+            if (FNR < expected_line_count) {
+                print "[" FNR + 1, 1 "]\nExpected: " expected_lines[FNR + 1] "\nReceived: null"
                 exit
             }
         }
@@ -116,4 +121,5 @@ else
     echo "Failed tests: ${failed_tests[*]}"
 fi
 
+max_time=$((max_time > 5 ? max_time - 5 : max_time))
 echo -e "Time taken: ${max_time} ms"

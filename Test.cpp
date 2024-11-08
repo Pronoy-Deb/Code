@@ -1,112 +1,116 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-#ifdef LOCAL
-#include "def.h"
-#else
-#define ck(...)
-#endif
-#define ll long long
-#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
-#define ps(b) cout << (b ? "YES" : "NO") << '\n'
-const ll M = 1e9 + 7, N = 2e5 + 5;
 
-auto nge(auto &v) {
-    int n = v.size();
-    vector<ll> ng(n);
+const int N = 5e5 + 9;
 
-    stack<ll> sk;
-    for (int i=0;i<n;++i) {
-        while(!sk.empty() and v[i]>v[sk.top()]) {
-            ng[sk.top()] = i; sk.pop();
+int st[N], en[N], a[N], par[N], rid[N], root[N];
+struct ST {
+    pair<int, int> t[4 * N];
+    void build(int n, int b, int e) {
+        if(b == e) {
+            t[n] = {0, b};
+            return;
         }
-        sk.push(i);
+        int mid = (b + e) >> 1,  l = n << 1,  r = l | 1;
+        build(l, b, mid);
+        build(r, mid + 1, e);
+        t[n] = max(t[l], t[r]);
     }
-    while(!sk.empty()) {
-        ng[sk.top()] = -1;
-        sk.pop();
+    void upd(int n, int b, int e, int i, int x) {
+        if(b > i || e < i) return;
+        if(b == e && b == i) {
+            t[n] = {x, b};
+            return;
+        }
+        int mid = (b + e) >> 1,  l = n << 1,  r = l | 1;
+        upd(l, b, mid, i, x);
+        upd(r, mid + 1, e, i, x);
+        t[n] = max(t[l], t[r]);
     }
-   return ng;
+    pair<int, int> query(int n, int b, int e, int i, int j) {
+        if(b > j || e < i) return {0, 0};
+        if(b >= i && e <= j) return t[n];
+        int mid = (b + e) >> 1,  l = n << 1,  r = l | 1;
+        auto L = query(l, b, mid, i, j);
+        auto R = query(r, mid + 1, e, i, j);
+        return max(L, R);
+    }
+} t;
+
+int find(int u) {
+	if (par[u] == u) return u;
+	return par[u] = find(par[u]);
 }
-auto nse(auto &v){
-    int n = v.size();
-    vector<ll> ng(n);
-    stack<ll> sk;
-    for (int i=0;i<n;++i) {
-        while(!sk.empty() and v[i]<v[sk.top()]) {
-            ng[sk.top()] = i; sk.pop();
-        }
-        sk.push(i);
-    }
-    while(!sk.empty()) {
-        ng[sk.top()] = -1;
-        sk.pop();
-    }
-   return ng;
+int T, I;
+vector<int> g[N];
+void merge(int u, int v) {
+	u = find(u); v = find(v);
+	if (u == v) return;
+	++T;
+	g[T].push_back(u);
+	g[T].push_back(v);
+	par[u] = T;
+	par[v] = T;
+	return;
 }
-//  ll dpg[N], dps[N], in = -1;
-// ll rec(int i) {
-//     if(ng[i] == -1) {
-//         in = i; return 0;
-//     }
-//     if(dpg[i] != -1) return dpg[i];
-//    ll c =
-//    i = ng[i];
-
-//     ll c = rec(ng[i]) + (ng[i] - i - 1);
-//     return dpg[i] =c;
-// }
-
-// ll rec2(int i) {
-//     if(ns[i] == -1) return 0;
-//     if(dps[i] != -1) return dps[i];
-//     ll c = ns[i] - i - 1 + rec2(ns[i]);
-// //    i = ng[i];
-//     return dps[i] = c;
-// }
-
-void test(int tc) {
-    ll n = 0, m = 0, a = 0, b = 0, c = 0, d = M, i = 0, j = 0, k = 0, q = 0;
-    cin >> n;
-    vector<ll> v(n);
-    for(i=0;i<n;++i) cin >> v[i];
-    auto ng = nge(v); auto ns = nse(v);
-    ck(ng, ns);
-    // for(i=0;i<=n;++i) {
-    //     dpg[i] = dps[i] = -1;
-    // }
-    // in = -1;
-//    memset(dpg, -1, sizeof dpg);
-//    memset(dps, -1, sizeof dps);
-    for(i=0;i<n;++i) {
-       a = i;
-       c = n - 1;
-        while(ng[a] != -1) {
-            c--;
-            a = ng[a];
-        }
-        b = c - 1;
-        ck(i, b, a);
-        for (j = a + 1;j<n;++j) {
-            b = c - 1;
-            a = j;
-            while (ns[a] != -1) {
-                b--;
-                a = ns[a];
-            }
-            ck(i, b);
-            d = min(d, b);
-        }
-    }
-    cout << d;
-    cout << '\n';
+bool vis[N];
+void dfs(int u) {
+	vis[u] = 1;
+	st[u] = I + 1;
+	for (auto v: g[u]) {
+		dfs(v);
+	}
+	if (st[u] == I + 1) {
+		++I;
+		rid[I] = u;
+	}
+	en[u] = I;
 }
-
-signed main() {
-    cin.tie(0)->sync_with_stdio(0);
-    int t = 0, tc = 1;
-    cin >> tc;
-    while(++t <= tc) {
-        test(t);
-    }
+pair<int, int> ed[N];
+int ty[N], x[N];
+int32_t main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int n, m, q; cin >> n >> m >> q;
+	T = n;
+	for (int i = 1; i <= 2 * n; i++) par[i] = i;
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	for (int i = 1; i <= m; i++) {
+		int u, v; cin >> u >> v;
+		ed[i] = {u, v};
+	}
+	set<int> se;
+	for (int i = 1; i <= m; i++) {
+		se.insert(i);
+	}
+	for (int i = 1; i <= q; i++) {
+		cin >> ty[i] >> x[i];
+		if (ty[i] == 2) {
+			se.erase(x[i]);
+		}
+	}
+	for (auto x: se) {
+		merge(ed[x].first, ed[x].second);
+	}
+	for (int i = q; i >= 1; i--) {
+		if (ty[i] == 2) {
+			merge(ed[x[i]].first, ed[x[i]].second);
+		}
+		else root[i] = find(x[i]);
+	}
+	for (int i = T; i >= 1; i--) {
+		if (!vis[i]) dfs(i);
+	}
+	t.build(1, 1, n);
+	for (int i = 1; i <= n; i++) {
+		t.upd(1, 1, n, i, a[rid[i]]);
+	}
+	for (int i = 1; i <= q; i++) {
+		if (ty[i] == 1) {
+			auto f = t.query(1, 1, n, st[root[i]], en[root[i]]);
+			t.upd(1, 1, n, f.second, 0);
+			cout << f.first << '\n';
+		}
+	}
     return 0;
 }

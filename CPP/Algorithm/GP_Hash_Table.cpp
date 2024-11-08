@@ -1,3 +1,5 @@
+https://cses.fi/problemset/task/1640
+
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
@@ -14,7 +16,6 @@ struct custom_hash {
         return splitmix64(x + FIXED_RANDOM);
     }
 };
-
 gp_hash_table<int, int, custom_hash> mp;
 
 // Operation:
@@ -27,5 +28,3 @@ gp_hash_table<int, int, custom_hash> mp;
         mp[ar[i]] = i + 1;
     }
     cout << "IMPOSSIBLE\n";
-
-// https://cses.fi/problemset/task/1640

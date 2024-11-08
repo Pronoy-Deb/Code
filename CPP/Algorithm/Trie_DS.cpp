@@ -1,4 +1,3 @@
-// Trie DS:
 https://codeforces.com/contest/706/problem/D
 
 const int L = 31;
@@ -48,22 +47,26 @@ int get(int x, int k) { // no of values s.t. val ^ x < k
     return ans;
 }
 
-// Another Approach: Inserts, erases and searches strings in the trie
+// OR: Inserts, erases and searches strings in the trie in O(sz)
 https://www.spoj.com/problems/ADAINDEX/
 
 struct Trie {
-    bool isWord; int cnt; map<char, Trie*> mp;
+    bool isWord; int cnt;
+    map<char, Trie*> mp;
+    Trie() : isWord(false), cnt(0) {}
+    ~Trie() { for (auto& p : mp) delete p.second; }
 };
-Trie* Node() {
-    Trie* nd = new Trie; nd->isWord = false; nd->cnt = 0; return nd;
-}
-void ins(Trie*& head, const char* str) { // Inserting a string
+Trie* Node() { return new Trie; }
+int dis = 0;
+void ins(Trie*& head, const char* str) {
     if (head == nullptr) head = Node(); Trie* cur = head;
     while (*str) {
         if (cur->mp.find(*str) == cur->mp.end()) cur->mp[*str] = Node();
         cur = cur->mp[*str]; cur->cnt++; ++str;
     }
-    cur->isWord = true;
+    if (!cur->isWord) {
+        cur->isWord = true; ++dis;
+    }
 }
 bool haveChild(Trie const* cur) {
     for (auto it : cur->mp) {
@@ -71,17 +74,25 @@ bool haveChild(Trie const* cur) {
     }
     return false;
 }
-bool rem(Trie*& cur, const char* str) { // Deleting a string
+bool rem(Trie*& cur, const char* str) {
     if (cur == nullptr) return false;
     if (*str) {
-        if (cur != nullptr && cur->mp.find(*str) != cur->mp.end() && rem(cur->mp[*str], str + 1) && cur->isWord == false) {
-            if (!haveChild(cur)) { delete cur; cur = nullptr; return true; }
+        if (cur->mp.find(*str) != cur->mp.end() &&
+            rem(cur->mp[*str], str + 1) && cur->isWord == false) {
+            if (!haveChild(cur)) {
+                delete cur; cur = nullptr; return true;
+            }
             return false;
         }
     }
     if (*str == '\0' && cur->isWord) {
-        if (!haveChild(cur)) { delete cur; cur = nullptr; return true; }
-        else { cur->isWord = false; return false; }
+        if (!haveChild(cur)) {
+            cur->isWord = false; dis--; delete cur;
+            cur = nullptr; return true;
+        }
+        else {
+            cur->isWord = false; --dis; return false;
+        }
     }
     return false;
 }
@@ -93,13 +104,14 @@ bool get(Trie* head, const char* str) { // Checking the presence of a string
     }
     return cur->isWord;
 }
-int cnt(Trie* head, const char* c) { // Counting the number of strings with a prefix `c`
+int cnt(Trie* head, const char* c) { // Counting the number of strings with a prefix "c"
     if (head == nullptr) return 0; Trie* cur = head;
     while (*c) {
         cur = cur->mp[*c]; if (cur == nullptr) return 0; ++c;
     }
     return cur->cnt;
 }
+void reset() { delete t; t = nullptr; dis = 0; }
 Trie* t = nullptr;
 
 // Operation:
@@ -112,34 +124,33 @@ Trie* t = nullptr;
     }
 
 // Persistent Trie:
-
 // find maximum value (x ^ a[j]) in the range (l,r) where l<=j<=r
-const int N = 1e5 + 100;
-const int K = 15;
-struct node_t; typedef node_t *pnode;
+
+const int N = 1e5 + 100, K = 15;
+struct node_t; typedef node_t *node_p;
 struct node_t {
-    int time; pnode to[2];
+    int time; node_p to[2];
     node_t() : time(0) { to[0] = to[1] = 0; }
     bool go(int l) const {
         if (!this) return false; return time >= l;
     }
-    pnode clone() {
-        pnode cur = new node_t();
+    node_p clone() {
+        node_p cur = new node_t();
         if (this) {
             cur->time = time; cur->to[0] = to[0]; cur->to[1] = to[1];
         }
         return cur;
     }
 };
-pnode last, version[N];
+node_p last, version[N];
 void ins(int a, int time) {
-    pnode v = version[time] = last = last->clone();
+    node_p v = version[time] = last = last->clone();
     for (int i = K - 1; i >= 0; --i) {
-        int bit = (a >> i) & 1; pnode &child = v->to[bit];
+        int bit = (a >> i) & 1; node_p &child = v->to[bit];
         child = child->clone(); v = child; v->time = time;
     }
 }
-int query(pnode v, int x, int l) {
+int get(node_p v, int x, int l) {
     int ans = 0;
     for (int i = K - 1; i >= 0; --i) {
         int bit = (x >> i) & 1;
@@ -159,5 +170,5 @@ int query(pnode v, int x, int l) {
     }
     while (q--) {
         int x, l, r; cin >> x >> l >> r; --l, --r;
-        cout << query(version[r], ~x, l) << '\n'; // Trie version[r] contains the trie for [0...r] elements
+        cout << get(version[r], ~x, l) << '\n'; // Trie version[r] contains the trie for [0...r] elements
     }

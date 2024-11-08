@@ -1,5 +1,24 @@
-// The tree is also known as Kruskal Reconstruction Tree (KST)
+// Note: The tree is also known as Kruskal Reconstruction Tree (KST) or DSU-tree
 
+long long par[N], n; vector<int> gp[N];
+void make() {
+    for (int i = 0; i < n; ++i) par[i] = i;
+}
+int get(int i) {
+    return (par[i] == i ? i : par[i] = get(par[i]));
+}
+void merge(int u, int v) {
+    u = get(u); v = get(v);
+    par[n] = n; par[u] = par[v] = n;
+    gp[n].push_back(u);
+    if (u != v) gp[n].push_back(v);
+    ++n;
+}
+// void build() {
+//   for (int i = 0; i < m; ++i) merge(U[i], V[i]);
+// }
+
+https://www.codechef.com/problems/TULIPS
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -70,8 +89,7 @@ inline pair<int, int> com(pair<int, int> a, pair<int, int> b) {
 }
 inline void up(int n, int l, int r, int ql, int qr, int val) {
     push(n, l, r);
-    if (l > qr || r < ql)
-        return;
+    if (l > qr || r < ql) return;
     if (l >= ql && r <= qr) {
         lz[n] += val;
         push(n, l, r);
@@ -118,4 +136,3 @@ int32_t main() {
     }
     return 0;
 }
-// https://www.codechef.com/problems/TULIPS

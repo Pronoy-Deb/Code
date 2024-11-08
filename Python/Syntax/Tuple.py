@@ -1,2 +1,2 @@
-Deprecation :
+Deprecation:
     tp = (ele, ele)

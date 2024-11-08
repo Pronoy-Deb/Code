@@ -89,6 +89,10 @@
         del ls[index]  OR,  del ls[start_index : number_of_elements]
         ls.remove(ele)  # Removes first occurance of the element
 
+    # List of pairs:
+        ls = [(0, 0)] * n
+        print(ls[0][0], ls[0][1])
+
     # insert(): inserts an item at the specified index
 
     # remove(): removes item present at the given index

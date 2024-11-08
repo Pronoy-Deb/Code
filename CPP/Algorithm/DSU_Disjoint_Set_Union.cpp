@@ -2,7 +2,7 @@
 https://codeforces.com/contest/1857/problem/G
 
 int par[N], sz[N];
-void ini(int n) {
+void make(int n) {
     for (int i = 1; i <= n; ++i) {
         par[i] = i; sz[i] = 1;
     }
@@ -22,12 +22,12 @@ int len(int a) { return sz[get(a)]; }
 
 // Operation: Determining the number of CONNECTED COMPONENTS after performing the union operation:
     cin >> n >> k;
-    ini(n);
+    make(n);
     while (k--) {
         int u, v; cin >> u >> v; uni(u, v);
     }
-    int cc = 0;
-    for (i = 1; i <= n; ++i) {
+                  int cc = 0;
+                  for (i = 1; i <= n; ++i) {
         if (get(i) == i) ++cc;
     }
     cout << cc;
@@ -53,7 +53,7 @@ struct dsu {
 struct DSU {
 vector<int> par, rnk, sz; int c;
 DSU(int n) : par(n + 1), rnk(n + 1, 0), sz(n + 1, 1), c(n) {
-    for (int i = 1; i <= n; ++i) par[i] = i;
+    iota(par.begin(), par.end(), 0);
 }
 int get(int i) {
     return (par[i] == i ? i : (par[i] = get(par[i])));
@@ -75,7 +75,7 @@ int uni(int i, int j) {
 https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&category=0&problem=3138&mosmsg=Submission+received+with+ID+29844967
 
 long long sz[N << 1], tot[N << 1];
-void ini(int n) {
+void make(int n) {
     for (int i = 1; i <= n; ++i) { sz[i] = n + i; sz[i + n] = -1; tot[i + n] = i; }
 }
 int get(int x) { return sz[x] < 0 ? x : sz[x] = get(sz[x]); }
@@ -131,7 +131,7 @@ void dsu(int u = 1, int p = 1, bool keep = 1) {
     for (i = 1; i < n; ++i) {
         cin >> a >> b; gp[a].push_back(b); gp[b].push_back(a);
     }
-    dfs(); dsu();2
+    dfs(); dsu();
     for (i = 1; i <= n; ++i) cout << cnt[i] << ' ';
 
 // Augmented DSU / Weighted DSU:
@@ -357,6 +357,57 @@ int r[N];
     }
 
 // DSU with Rollbacks:
+https://codeforces.com/edu/course/2/lesson/7/3/practice/contest/289392/problem/A
+
+class DSU {
+  private:
+	vector<int> par, sz; int c;
+    vector<pair<int&, int>> history;
+  public:
+	DSU(int n) : par(n + 1), sz(n + 1, 1), c(n) {
+        iota(par.begin(), par.end(), 0);
+    }
+	int get(int i) {
+        return (par[i] == i ? i : get(par[i]));
+    }
+    int cc() { return c; }
+	void uni(int a, int b) {
+		a = get(a); b = get(b); if (a == b) return;
+		if (sz[a] < sz[b]) { swap(a, b); }
+        history.push_back({c, c});
+        history.push_back({sz[a], sz[a]});
+        history.push_back({par[b], par[b]});
+		par[b] = a; sz[a] += sz[b]; --c;
+	}
+	int ss() { return history.size(); }
+	void rlbk(int until) {
+		while (ss() > until) {
+			history.back().first = history.back().second;
+			history.pop_back();
+		}
+	}
+};
+
+// Operation:
+    cin >> n >> q; DSU dsu(n);
+    vector<int> ss;
+    while (q--) {
+        string op; cin >> op;
+        if (op == "union") {
+            cin >> a >> b; dsu.uni(a, b);
+            cout << dsu.cc() << '\n';
+        }
+        else if (op == "persist")
+            ss.push_back(dsu.ss());
+        else {
+            if (ss.empty()) continue;
+            dsu.rlbk(ss.back());
+            ss.pop_back();
+            cout << dsu.cc() << '\n';
+        }
+    }
+
+// OR,
 https://codeforces.com/contest/1386/problem/C
 https://codeforces.com/blog/entry/83467
 

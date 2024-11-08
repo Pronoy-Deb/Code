@@ -17,7 +17,7 @@ def bootstrap(f, stack=[]):
     return wrappedfunc
 @bootstrap
 
-# Uses yield in the recursion
+# Use yield to CALL and to RETURN in the recursion
 
 # OR,
 

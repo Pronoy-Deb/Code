@@ -1,1 +1,1 @@
-{"name":"Local: Test","url":"/media/pronoy/Backup/CP/Code/Test.py","tests":[{"id":1730017912433,"input":"1\n5\n1 2 3 4 5\n","output":"1\n5\n1 2 3 4 5\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Code/Test.py","group":"local","local":true}
+{"name":"Local: Test","url":"/media/pronoy/Backup/CP/Code/Test.py","tests":[{"id":1730909970480,"input":"","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Code/Test.py","group":"local","local":true}

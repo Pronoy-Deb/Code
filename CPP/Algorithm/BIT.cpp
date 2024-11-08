@@ -75,7 +75,7 @@ long long get(int x1, int y1, int x2, int y2) {
 }
 void reset() { for (auto &[i, j] : ind) bit[i][j] = 0; ind.clear(); }
 
-// OR, Range Update & Range Query:
+// 2-D BIT with Range Update & Range Query:
 
 long long pro[N][N][2], sum[N][N][2]; set<pair<int, int>> ind;
 void up2(long long t[N][N][2], int x, int y, long long mul, long long add) {
