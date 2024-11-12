@@ -12,81 +12,29 @@ const ll M = 1e9 + 7, N = 2e5 + 5;
 
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    string s, r; cin >> s;
-    n = s.size();
-    if(n<4) {
-        cin >> q;
-        while(q--) {
-            cin >> a >> b;
-            ps(0);
-        }
+    cin >> n >> a >> b;
+    // vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    if (n == 1) {
+        cout << (b > 0) << '\n'; return;
+    }
+    if(b >= n) {
+        cout << n << '\n';
         return;
     }
-    // for(i=0;i<4;++i) r+=s[i];
-    // if (r == "1100") c++;
-    for(a=0;a<n;) {
-        if(s[a] == '0') {
-            if(a-2>=0 and a+1<n) {
-                if(s[a-2] == '1' and s[a-1] == '1' and s[a+1] == '0') c++, a+=4;
-                else a++;
-            }
-            else if(a-3>=0 and s[a-3] == '1' and s[a-2] == '1' and s[a-1] == '0') c++, a+=4;
-            else a++;
-        }
-        else {
-            if(a-1>=0 and a+2<n) {
-                if(s[a-1] == '1' and s[a+1] == '0' and s[a+2] == '0') c++, a+=4;
-            }
-            else if(a+3<n and s[a+1] == '1' and s[a+2] == '0' and s[a+3] == '0') c++, a+=4;
-            else a++;
-        }
+    c = a + b;
+    // d = c - b;
+    if (b == 0 and c == 0) {
+        if (n == 2) cout << 1;
+        else cout << -1;
+        cout << '\n';
+        return;
     }
-    ck(tc, c);
-    // d = c;
-    cin >> q;
-    while(q--) {
-        cin >> a;
-        a--;
-        char ch; cin >> ch;
-        // if(ch == s[a]) {
-        //     ps(c>0);
-        //     continue;
-        // }
-        // c = d;
-        if(s[a] == '0') {
-            if(a-2>=0 and a+1<n) {
-                if(s[a-2] == '1' and s[a-1] == '1' and s[a+1] == '0') c--;
-            }
-            else if(a-3>=0 and s[a-3] == '1' and s[a-2] == '1' and s[a-1] == '0') c--;
-        }
-        else {
-            if(a-1>=0 and a+2<n) {
-                if(s[a-1] == '1' and s[a+1] == '0' and s[a+2] == '0') c--;
-            }
-            else if(a+3<n and s[a+1] == '1' and s[a+2] == '0' and s[a+3] == '0') c--;
-        }
-        ck(tc, c);
-        s[a] = ch;
-        if(s[a] == '0') {
-            if(a-2>=0 and a+1<n) {
-                if(s[a-2] == '1' and s[a-1] == '1' and s[a+1] == '0') c++;
-            }
-            else if(a-3>=0 and s[a-3] == '1' and s[a-2] == '1' and s[a-1] == '0') c++;
-        }
-        else {
-            if(a-1>=0 and a+2<n) {
-                if(s[a-1] == '1' and s[a+1] == '0' and s[a+2] == '0') c++;
-            }
-            else if(a+3<n and s[a+1] == '1' and s[a+2] == '0' and s[a+3] == '0') c++;
-        }
-        ck(tc, c);
-        // for (i = min(0ll, a - 3); i+3<n and i <= a; ++i) {
-        //     r = s.substr(i, 4);
-        //     if(r == "1100") c++;
-        // }
-        ps(c > 0);
-        // s[a] = ch2;
+    if (a == 0) {
+        cout << n - (b < n) << '\n';
+        return;
     }
+    cout << n - ((n - b) / a + bool((n - b) % a)) << '\n';
+    // cout << '\n';
 }
 
 signed main() {

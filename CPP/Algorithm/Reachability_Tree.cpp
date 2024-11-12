@@ -29,8 +29,7 @@ struct RT {
     int T, st[N << 1], en[N << 1];
     vector<int> tre[N << 1]; // reachability tree
     int get(int x) {
-        if (par[x] == x) return x;
-        return par[x] = get(par[x]);
+        return (par[x] == x ? x : par[x] = get(par[x]));
     }
     void dfs(int u) {
         st[u] = T + 1;
@@ -43,25 +42,25 @@ struct RT {
         }
         en[u] = T;
     }
-    void make(vector<array<int, 3>> e) { //{w, u, v}
+    void make(vector<array<int, 3>> e) { // {w, u, v}
         n = e.size() + 1; sort(e.begin(), e.end());
         for (int x = 1; x < (n << 1); x++) {
             par[x] = x; tre[x].clear(); val[x] = 0; sp[0][x] = 0;
         }
-        for (int i = 0; i + 1 < n; i++) {
+        for (int i = 0; i + 1 < n; ++i) {
             int u = e[i][1], v = e[i][2], w = e[i][0], id = n + i + 1;
             u = get(u), v = get(v); par[u] = par[v] = id;
             val[id] = w; tre[id].push_back(u); tre[id].push_back(v);
         }
         val[0] = 1e9; // inf
         T = 0; dfs((n << 1) - 1);
-        for (int k = 1; k <= L; k++) {
-            for (int u = 1; u < (n << 1); u++)
+        for (int k = 1; k <= L; ++k) {
+            for (int u = 1; u < (n << 1); ++u)
                 sp[k][u] = sp[k - 1][sp[k - 1][u]];
         }
     }
     int lift(int u, int x) { // all nodes reachable from u s.t. edges <= w, returns the cooresponding root of the subtree
-        for (int k = L; k >= 0; k--) {
+        for (int k = L; k >= 0; --k) {
             if (val[sp[k][u]] <= x) u = sp[k][u];
         }
         return u;
@@ -117,7 +116,7 @@ int32_t main() {
         while (!Q.empty()) Q.pop();
         int n; cin >> n;
         vector<array<int, 3>> e(n - 1);
-        for (int i = 0; i + 1 < n; i++) cin >> e[i][1] >> e[i][2] >> e[i][0];
+        for (int i = 0; i + 1 < n; ++i) cin >> e[i][1] >> e[i][2] >> e[i][0];
         rt.make(e); make(1, 1, n);
         int q, x; cin >> q >> x;
         while (q--) {
@@ -135,4 +134,91 @@ int32_t main() {
         }
     }
     return 0;
+}
+
+https://codeforces.com/contest/1416/problem/D
+
+int st[N], en[N], ar[N], par[N], rid[N], root[N];
+struct ST {
+    pair<int, int> t[N << 2];
+    void make(int n, int b, int e) {
+        if(b == e) {
+            t[n] = {0, b}; return;
+        }
+        int mid = (b + e) >> 1, l = n << 1, r = l | 1;
+        make(l, b, mid); make(r, mid + 1, e);
+        t[n] = max(t[l], t[r]);
+    }
+    void up(int n, int b, int e, int i, int x) {
+        if(b > i || e < i) return;
+        if(b == e && b == i) {
+            t[n] = {x, b}; return;
+        }
+        int mid = (b + e) >> 1, l = n << 1, r = l | 1;
+        up(l, b, mid, i, x); up(r, mid + 1, e, i, x);
+        t[n] = max(t[l], t[r]);
+    }
+    pair<int, int> get(int n, int b, int e, int i, int j) {
+        if(b > j || e < i) return {0, 0};
+        if(b >= i && e <= j) return t[n];
+        int mid = (b + e) >> 1,  l = n << 1,  r = l | 1;
+        auto L = get(l, b, mid, i, j);
+        auto R = get(r, mid + 1, e, i, j);
+        return max(L, R);
+    }
+} t;
+
+int find(int u) {
+    return par[u] == u ? u : par[u] = find(par[u]);
+}
+int T, I; vector<int> gp[N];
+void uni(int u, int v) {
+	u = find(u); v = find(v);
+	if (u == v) return; ++T;
+	gp[T].push_back(u); gp[T].push_back(v);
+	par[u] = par[v] = T; return;
+}
+bitset<N> vis;
+void dfs(int u) {
+	vis[u] = 1; st[u] = I + 1;
+	for (auto v: gp[u]) dfs(v);
+	if (st[u] == I + 1) {
+		++I; rid[I] = u;
+	}
+	en[u] = I;
+}
+
+void test(int tc) {
+    ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
+    cin >> n >> m >> q; T = n;
+	for (i = 1; i <= n; ++i) {
+        cin >> ar[i]; par[i] = i;
+    }
+    for (i = n + 1; i <= 2 * n; ++i) par[i] = i;
+    pair<int, int> ed[m + 5]; set<int> se;
+	for (i = 1; i <= m; ++i) {
+		int u, v; cin >> u >> v; ed[i] = {u, v};
+        se.insert(i);
+	}
+    int ty[q + 5], x[q + 5];
+	for (i = 1; i <= q; ++i) {
+		cin >> ty[i] >> x[i];
+		if (ty[i] == 2) se.erase(x[i]);
+	}
+	for (auto x : se) uni(ed[x].first, ed[x].second);
+	for (i = q; i >= 1; --i) {
+		if (ty[i] == 2) uni(ed[x[i]].first, ed[x[i]].second);
+		else root[i] = find(x[i]);
+	}
+	for (i = T; i >= 1; i--) {
+		if (!vis[i]) dfs(i);
+	}
+	t.make(1, 1, n);
+	for (i = 1; i <= n; ++i) t.up(1, 1, n, i, ar[rid[i]]);
+	for (i = 1; i <= q; ++i) {
+		if (ty[i] == 1) {
+			auto f = t.get(1, 1, n, st[root[i]], en[root[i]]);
+			t.up(1, 1, n, f.second, 0); cout << f.first << '\n';
+		}
+	}
 }

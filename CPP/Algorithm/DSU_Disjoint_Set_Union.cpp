@@ -140,23 +140,23 @@ void dsu(int u = 1, int p = 1, bool keep = 1) {
 // Inspired by the problem http://www.spoj.com/problems/CHAIN/ which utilises this concept, which can extended for solving
 https://atcoder.jp/contests/abc328/tasks/abc328_f
 
-long long pot[N], prec[N], inc; // numbers of inconsistencies
+long long pot[N], par[N], inc; // numbers of inconsistencies
 void ini(int n) {
     inc = 0;
     for (int i = 1; i <= n; ++i) {
-        prec[i] = i; pot[i] = 0;
+        par[i] = i; pot[i] = 0;
     }
 }
 int get(int x) {
-    if (prec[x] == x) return x;
-    int rx = get(prec[x]); pot[x] = pot[prec[x]] + pot[x];
-    return prec[x] = rx;
+    if (par[x] == x) return x;
+    int rx = get(par[x]); pot[x] = pot[par[x]] + pot[x];
+    return par[x] = rx;
 }
 void uni(int a, int b, int d) {
     int ra = get(a), rb = get(b);
     if (ra == rb && pot[a] - pot[b] != d) ++inc;
     else if (ra != rb) {
-        pot[ra] = d + pot[b] - pot[a]; prec[ra] = rb;
+        pot[ra] = d + pot[b] - pot[a]; par[ra] = rb;
     }
 }
 // Operation:
@@ -259,7 +259,7 @@ int time(int u, int v) { // minimum time when u & v are in the same set
     }
 
 // Persistent Union Find:
-// https://judge.yosupo.jp/problem/persistent_unionfind
+https://judge.yosupo.jp/problem/persistent_unionfind
 
 template <typename T>
 struct PersistentArray { // 0-indexed

@@ -1,6 +1,16 @@
 #!/bin/bash
 # Command to run: bash ms.sh number_of_tests
 
+# BLACK='\033[1;90m'
+red='\033[1;91m'
+green='\033[1;92m'
+# yellow='\033[1;93m'
+blue='\033[1;94m'
+magenta='\033[1;95m'
+cyan='\033[1;96m'
+# white='\033[1;97m'
+nc='\033[0m' # No Color
+
 g++ -O2 -std=c++23 Generator.cpp -o gen
 g++ -O2 -std=c++23 Optimized.cpp -o op
 g++ -O2 -std=c++23 Checker.cpp -o ckr
@@ -14,7 +24,7 @@ for i in $(seq 1 "$1") ; do
     # timeout 5s ./bf < inp > out1
     # exit_status=$?
     # if [ $exit_status -eq 124 ]; then
-    #     echo "Skipped test $i / $1"
+    #     echo -e "${magenta}Skipped test $i / $1${nc}"
     #     continue
     # fi
 
@@ -30,15 +40,15 @@ for i in $(seq 1 "$1") ; do
     ./ckr < inp > /dev/null
 
     if [ $? -ne 0 ] ; then
-        echo -e "Wrong answer on test $i\nInput:"
+        echo -e "${red}Wrong answer on test $i${nc}\n${magenta}Sample Input:${nc}"
         cat inp
-        # echo "Expected Output:"
+        # echo -e "${green}Expected Output:${nc}"
         # cat out1
-        echo "Received Output:"
+        echo -e "${red}Received Output:${nc}"
         cat out2
-        echo -e "\nTime taken: ${max_time} ms"
+        echo -e "\n${cyan}Time taken: ${max_time} ms${nc}"
         exit 1
-    else echo "Passed test $i / $1"
+    else echo -e "P${green}assed test $i / $1${nc}"
     fi
 done
-echo -e "\nPretests passed!\nTime taken: ${max_time} ms"
+echo -e "\n${green}Pretests passed!${nc}\n${cyan}Time taken: ${max_time} ms${nc}"

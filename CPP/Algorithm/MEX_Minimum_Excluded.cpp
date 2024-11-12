@@ -1,12 +1,10 @@
 // Compelxity: O(n)
 // For an unchanging array:
 
-int mex(auto &v)
-{
+int mex(auto &v) {
     set<int> st(v.begin(), v.end());
     int i = 0;
-    while (st.find(i) != st.end())
-        ++i;
+    while (st.find(i) != st.end()) ++i;
     return i;
 }
 

@@ -39,9 +39,10 @@ long long get(int l, int r) {
 }
 
 // With Range Compression:
+https://codeforces.com/contest/863/problem/E
 // const long long N = 4 * 2e5 + 5;
 long long l[N], r[N], n;
-long long com() {
+long long com() {   
     set<long long> st;
 	for (int i = 0; i < n; ++i) {
         st.insert(l[i]); st.insert(l[i] + 1);
@@ -71,7 +72,6 @@ long long com() {
     }
     cout << -1;
 
-// Problem: https://codeforces.com/contest/863/problem/E
 
 // With the frequency of the minimum number:
 // Problem: https://codeforces.com/edu/course/2/lesson/4/1/practice/contest/273169/problem/C

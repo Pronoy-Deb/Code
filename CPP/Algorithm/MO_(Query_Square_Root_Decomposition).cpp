@@ -1,36 +1,72 @@
-// Complexity: O((m+n) * sqrt(n))
-// Application: Used to determine the answer of queries by sorting them.
-// The algorithm is also known as "Square Root Decomposition".
+// Complexity: O((m+n) * sqrt(n)), 0-based indexing
+// For Dynamic Array:
 
-long long blk, ans[N], ar[N], n;
-auto cmp(const pair<pair<long long, long long>, long long>& a, const pair<pair<long long, long long>, long long>& b) {
-    if (a.first.first / blk != b.first.first / blk)
-        return a.first.first / blk < b.first.first / blk;
-    return a.first.second < b.first.second;
+long long ar[N], bs, n, ini = 0; vector<long long> block;
+long long op(long long a, long long b) { return (a + b); }
+void pre() {
+    bs = (int)ceil(sqrt(n)); block.assign((n + bs - 1) / bs, ini);
+    for (int i = 0; i < n; ++i) block[i / bs] = op(block[i / bs], ar[i]);
 }
-void mo(auto q[], auto m) {
-    blk = sqrt(n); sort(q, q + m, cmp);
-    long long curL = 0, curR = 0, curSum = 0;
-    for (int i = 0; i < m; ++i) {
-        long long L = q[i].first.first, R = q[i].first.second;
-        while (curL < L) curSum -= ar[curL++];
-        while (curL > L) curSum += ar[--curL];
-        while (curR <= R) curSum += ar[curR++];
-        while (curR > R + 1) curSum -= ar[--curR];
-        ans[q[i].second] = curSum;
+void up(int in, int val) {
+    block[in / bs] = ini; ar[in] = val;
+    for (int i = (in / bs) * bs, e = min(n, (in / bs + 1) * bs); i < e; ++i)
+        block[in / bs] = op(block[in / bs], ar[i]);
+}
+long long get(int l, int r) {
+    long long sb = l / bs, eb = r / bs, res = ini;
+    if (sb == eb) {
+        for (int i = l; i <= r; ++i) res = op(res, ar[i]);
+    }
+    else {
+        for (int i = l, e = (sb + 1) * bs; i < e; ++i) res = op(res, ar[i]);
+        for (int i = sb + 1; i < eb; ++i) res = op(res, block[i]);
+        for (int i = eb * bs; i <= r; ++i) res = op(res, ar[i]);
+    }
+    return res;
+}
+
+https://codeforces.com/contest/220/problem/B
+
+long long bs, ans[N], ar[N], n, q; tuple<int, int, int> qr[N];
+bool cmp(const tuple<int, int, int>& a, const tuple<int, int, int>& b) {
+    int L1 = get<0>(a), R1 = get<1>(a);
+    int L2 = get<0>(b), R2 = get<1>(b);
+    if (L1 / bs != L2 / bs) return L1 / bs < L2 / bs;
+    return R1 < R2;
+}
+void mo() {
+    bs = sqrt(n); sort(qr, qr + q, cmp);
+    long long l = -1, r = -1, res = 0;
+    unordered_map<int, int> cnt; // NB
+    auto add = [&](int x) {
+        if (cnt[ar[x]] == ar[x]) res--;
+        cnt[ar[x]]++;
+        if (cnt[ar[x]] == ar[x]) res++;
+    };
+    auto rem = [&](int x) {
+        if (cnt[ar[x]] == ar[x]) res--;
+        cnt[ar[x]]--;
+        if (cnt[ar[x]] == ar[x]) res++;
+    };
+    for (int i = 0; i < q; ++i) {
+        auto &[L, R, in] = qr[i];
+        while (l < L) rem(l++);
+        while (l > L) add(--l);
+        while (r < R) add(r++);
+        while (r > R) rem(--r);
+        ans[in] = res;
     }
 }
 
 // Operation:
-    cin >> n >> m;
+    cin >> n >> q;
     for (i = 0; i < n; ++i) { cin >> ar[i]; }
-    pair<pair<long long, long long>, long long> q[m];
-    for (i = 0; i < m; ++i) {
-        cin >> q[i].first.first >> q[i].first.second;
-        q[i].second = i;
+    for (i = 0; i < q; ++i) {
+        cin >> a >> b;
+        qr[i] = {a - 1, b - 1, i};
     }
-    mo(ar, n, q, m);
-    for (i = 0; i < m; ++i) cout << ans[i] << '\n';
+    mo();
+    for (i = 0; i < q; ++i) cout << ans[i] << '\n';
 
 // OR,
 
@@ -374,13 +410,13 @@ void add(int idx) { d.unite(ar[idx].u, ar[idx].v); }
         q[cnt_q++] = query(l, r, i);
     }
     m = cnt_q; sort(q, q + m, cmp);
-    int lst, border, lstblk = -1, blk;
+    int lst, border, lstblk = -1, bs;
     for (i = 0; i < m; ++i) {
-        blk = q[i].l / rt;
-        if (lstblk != blk) {
-            d.init(n); border = rt * (blk + 1); lst = border;
+        bs = q[i].l / rt;
+        if (lstblk != bs) {
+            d.init(n); border = rt * (bs + 1); lst = border;
         }
-        lstblk = blk;
+        lstblk = bs;
         for (k = lst + 1; k <= q[i].r; ++k) add(k);
         d.snapshot();
         for (k = q[i].l; k <= border; ++k) add(k);

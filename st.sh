@@ -1,6 +1,16 @@
 #!/bin/bash
 # Command: bash st.sh Number_of_Tests
 
+# BLACK='\033[1;90m'
+red='\033[1;91m'
+green='\033[1;92m'
+# yellow='\033[1;93m'
+blue='\033[1;94m'
+magenta='\033[1;95m'
+cyan='\033[1;96m'
+# white='\033[1;97m'
+nc='\033[0m' # No Color
+
 g++ -O2 -std=c++23 Generator.cpp -o gen
 g++ -O2 -std=c++23 BruteForce.cpp -o bf
 g++ -O2 -std=c++23 Optimized.cpp -o op
@@ -13,7 +23,7 @@ for i in $(seq 1 "$1"); do
     timeout 5s ./bf < inp > out1
     exit_status=$?
     if [ $exit_status -eq 124 ]; then
-        echo "Skipped test $i / $1"
+        echo -e "${magenta}Skipped test $i / $1${nc}"
         continue
     fi
 
@@ -25,14 +35,14 @@ for i in $(seq 1 "$1"); do
     elapsed=$((elapsed > 5 ? elapsed - 5 : elapsed))
 
     if [ $exit_status -eq 124 ]; then
-        echo "TLE on test $i / $1"
-        echo "Input:"
+        echo -e "${red}Timed Out!${nc}"
+        echo -e "${magenta}Sample Input:${nc}"
         cat inp
-        echo -e "\nTime taken: ${elapsed} ms"
+        echo -e "\n${cyan}Time taken: ${elapsed} ms${nc}"
         exit 1
     elif [ $exit_status -ne 0 ]; then
-        echo "\nRuntime error!"
-        echo "Input:"
+        echo -e "\n${red}Runtime error!${nc}"
+        echo -e "${magenta}Sample Input:${nc}"
         cat inp
         exit 1
     fi
@@ -58,16 +68,16 @@ for i in $(seq 1 "$1"); do
             }
         }' out1)
 
-        echo -e "\nWrong answer! [$mismatch]\nInput:"
+        echo -e "${red}Wrong answer! [$mismatch]${nc}\n${magenta}Sample Input:${nc}"
         cat inp
-        echo "Expected Output:"
+        echo -e "${green}Expected Output:${nc}"
         cat out1
-        echo "Received Output:"
+        echo -e "${red}Received Output:${nc}"
         cat out2
-        echo -e "\nTime taken: ${max_time} ms"
+        echo -e "\n${cyan}Time taken: ${max_time} ms${nc}"
         exit 1
-    else echo "Passed test $i / $1"
+    else echo -e "${green}Passed test $i / $1${nc}"
     fi
 done
 
-echo -e "\nPretests passed!\nTime taken: ${max_time} ms"
+echo -e "\n${green}Pretests passed!${nc}\n${cyan}Time taken: ${max_time} ms${nc}"

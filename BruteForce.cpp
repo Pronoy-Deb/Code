@@ -9,17 +9,44 @@ using namespace std;
 #define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
 const ll M = 1e9 + 7, N = 2e5 + 5;
-
+int mex(auto &v) {
+    set<int> st(v.begin(), v.end());
+    int i = 0;
+    while (st.find(i) != st.end())
+        ++i;
+    return i;
+}
 void test(int tc) {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    string s, r; cin >> s;
-    cin >> q;
-    while(q--) {
-        cin >> a; char ch; cin >> ch;
-        s[a-1] = ch;
-        ck(s);
-        ps(s.find("1100") != -1);
+    cin >> n >> d >> a;
+    vector<ll> ar; for(i=0;i<n;++i) {
+        ar.push_back(a);
+        a += d;
     }
+    c = 0;
+    while (1) {
+        if(k>n) {
+            cout << -1 << '\n';
+            return;
+        }
+        bool ok = 1;
+        for (i = 0; i < n; ++i) {
+            sort(ar.begin(), ar.end());
+            if(ar[i]!=i) {
+                ok = 0;
+                break;
+            }
+        }
+        if(ok) {
+            cout << c << '\n';
+            return;
+        }
+        ar[n-1] = mex(ar);
+        c++;
+        k++;
+    }
+    cout << c << '\n';
+    // cout << '\n';
 }
 
 signed main() {

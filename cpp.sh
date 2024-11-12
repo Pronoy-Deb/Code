@@ -3,14 +3,26 @@
 
 fileName="$1"
 
+red='\033[1;91m'
+green='\033[1;92m'
+blue='\033[1;94m'
+magenta='\033[1;95m'
+cyan='\033[1;96m'
+nc='\033[0m' # No Color
+
 g++ -O2 -std=c++23 -DLOCAL -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter "$fileName" -o l
 if [ $? -ne 0 ]; then
-    echo -e "\nCompilation error!"
+    echo -e "\n${red}Compilation error!${nc}"
     exit 1
 fi
 
 mapfile -t inputs < Sample_Input
 mapfile -t expected_outputs < Expected_Output
+
+if [ ${#expected_outputs[@]} -eq 0 ]; then
+    echo -e "${red}\nEmpty Expected Output!${nc}"
+    exit 1
+fi
 
 all_passed=true
 failed_tests=()
@@ -58,56 +70,65 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
         max_time=$elapsed
     fi
 
-    actual_output=$(<out2)
-    echo "Received Output $test_num:"
-
     if [ $exit_status -eq 124 ]; then
-        echo -e "Timed out!\n"
+        echo -e "${red}Timed out!${nc}\n"
         all_passed=false
         failed_tests+=("$test_num")
         continue
     elif [ $exit_status -ne 0 ]; then
-        echo -e "Runtime error!\n"
+        echo -e "${red}Runtime error!${nc}\n"
         all_passed=false
         failed_tests+=("$test_num")
         continue
     fi
 
-    echo -e "$actual_output\n"
+    actual_output=$(<out2)
 
-    mismatch=$(awk -v test_num="$test_num" '
-        NR == FNR { expected_lines[NR] = $0; expected_line_count = NR; next }
-        {
-            received_line = $0
-            expected_line = expected_lines[FNR]
+    echo -e "${magenta}Received Output $test_num:${nc}"
+    cat out2
+    echo ""
+    IFS=$'\n' read -d '' -r -a actual_lines <<< "$actual_output"
+    IFS=$'\n' read -d '' -r -a expected_lines <<< "$expected_data"
 
-            if (expected_line == "") {
-                print "[" FNR, 1 "]\nExpected: null\nReceived: " received_line
-                exit
-            }
+    if [ "${#actual_lines[@]}" -ne "${#expected_lines[@]}" ]; then
+        max_lines=$(( ${#actual_lines[@]} > ${#expected_lines[@]} ? ${#actual_lines[@]} : ${#expected_lines[@]} ))
+        for (( j=0; j<$max_lines; j++ )); do
+            if [ -z "${expected_lines[j]}" ]; then
+                echo -e "${red}Wrong answer! ${nc}${blue}[$((j + 1)) 1]${nc}\n${green}Expected: null${nc}\n${red}Received: ${actual_lines[j]}${nc}\n"
+                mismatch=true
+                break
+            elif [ -z "${actual_lines[j]}" ]; then
+                echo -e "${red}Wrong answer! ${nc}${blue}[$((j + 1)) 1]${nc}\n${green}Expected: ${expected_lines[j]}${nc}\n${red}Received: null${nc}\n"
+                mismatch=true
+                break
+            fi
+        done
+        all_passed=false
+        failed_tests+=("$test_num")
+        continue
+    fi
 
-            split(received_line, ar1)
-            split(expected_line, ar2)
+    mismatch=false
+    for (( j=0; j<${#expected_lines[@]}; j++ )); do
+        expected_line="${expected_lines[j]}"
+        actual_line="${actual_lines[j]}"
 
-            for (i = 1; i <= length(ar1) || i <= length(ar2); ++i) {
-                if (ar1[i] != ar2[i]) {
-                    print "[" FNR, i "]"
-                    print "Expected: " (i <= length(ar2) ? ar2[i] : "null")
-                    print "Received: " (i <= length(ar1) ? ar1[i] : "null")
-                    exit
-                }
-            }
-        }
-        END {
-            if (FNR < expected_line_count) {
-                print "[" FNR + 1, 1 "]\nExpected: " expected_lines[FNR + 1] "\nReceived: null"
-                exit
-            }
-        }
-    ' <(echo -e "$expected_data") out2)
+        IFS=' ' read -r -a expected_columns <<< "$expected_line"
+        IFS=' ' read -r -a actual_columns <<< "$actual_line"
 
-    if [ -n "$mismatch" ]; then
-        echo -e "Wrong answer! $mismatch\n"
+        for (( k=0; k<${#expected_columns[@]} || k<${#actual_columns[@]}; k++ )); do
+            if [ "${expected_columns[k]}" != "${actual_columns[k]}" ]; then
+                echo -e "${red}Wrong answer! ${nc}${blue}[$((j + 1)) $((k + 1))]${nc}"
+                echo -e "${green}Expected: ${expected_columns[k]:-null}${nc}"
+                echo -e "${red}Received: ${actual_columns[k]:-null}${nc}\n"
+                mismatch=true
+                break
+            fi
+        done
+        [ "$mismatch" = true ] && break
+    done
+
+    if [ "$mismatch" = true ]; then
         all_passed=false
         failed_tests+=("$test_num")
     fi
@@ -116,10 +137,10 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
 done
 
 if [ "$all_passed" = true ]; then
-    echo "Pretests passed! ($((test_num - 1)))"
+    echo -e "${green}Pretests passed! ($((test_num - 1)))${nc}"
 else
-    echo "Failed tests: ${failed_tests[*]}"
+    echo -e "${magenta}Failed tests: ${failed_tests[*]}${nc}"
 fi
 
 max_time=$((max_time > 5 ? max_time - 5 : max_time))
-echo -e "Time taken: ${max_time} ms"
+echo -e "${cyan}Time taken: ${max_time} ms${nc}"

@@ -33,15 +33,17 @@ const ll M = 1e9 + 7, N = 2e5 + 5;
 void test() {
     ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0;
     cout << 1 << '\n'; // For testcase input
-    n = ran(1, 2000);
-    for (i = 0; i < n; ++i) {
-        cout << ran(0, 1);
-    }
-    cout << '\n';
-    k = ran(1, 2000); cout << k << '\n';
-    for (i = 0; i < k; ++i) {
-        cout << ran(1, n) << ' ' << ran(0, 1) << '\n';
-    }
+    n = ran(1, 150);
+    cout << n << ' ';
+    // for (i = 0; i < n; ++i) {
+    //     cout << ran(0, 1);
+    // }
+    // cout << '\n';
+    k = ran(0, 150); cout << k << ' ';
+    k = ran(0, 150); cout << k << '\n';
+    // for (i = 0; i < k; ++i) {
+    //     cout << ran(1, n) << ' ' << ran(0, 1) << '\n';
+    // }
     // set<ll> st;
     // while (st.size() != n) {
     //     a = ran(1, 30);
