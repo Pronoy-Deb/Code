@@ -4,7 +4,7 @@
 fileName="$1"
 
 red='\033[1;91m'
-green='\033[1;92m'
+green='\033[1;32m'
 blue='\033[1;94m'
 magenta='\033[1;95m'
 cyan='\033[1;96m'
@@ -84,7 +84,7 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
 
     actual_output=$(<out2)
 
-    echo -e "${magenta}Received Output $test_num:${nc}"
+    echo -e "${cyan}Received Output $test_num:${nc}"
     cat out2
     echo ""
     IFS=$'\n' read -d '' -r -a actual_lines <<< "$actual_output"
@@ -143,4 +143,4 @@ else
 fi
 
 max_time=$((max_time > 5 ? max_time - 5 : max_time))
-echo -e "${cyan}Time taken: ${max_time} ms${nc}"
+echo -e "${blue}Time taken: ${max_time} ms${nc}"

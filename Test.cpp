@@ -1,59 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-struct Query {
-	int l, r, idx;
-};
-
-int main() {
-	int n;
+#ifdef LOCAL
+#include "def.h"
+#else
+#define ck(...)
+#endif
+#define ll long long
+#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
+#define ps(b) cout << (b ? "YES" : "NO") << '\n'
+const ll M = 1e9 + 7, N = 2e5 + 5;
+long long ar[N], nfg[N], n;
+void pre() {
+    // set<pair<int, int>> st;
+	map<int, vector<int>> mp;
+	for (int i = 0; i < n; ++i) {
+		mp[]
+	}
+    // stack<long long> sk;
+    // for (int i = n - 1; i >= 0; --i) {
+    //     while(!sk.empty() && ar[i] >= ar[sk.top()]) {
+    //         // nfg[sk.top()] = i;
+	// 		sk.pop();
+    //     }
+    //     if (!sk.empty()) nfg[i] = sk.top();
+	// 	else nfg[i] = -1;
+    //     sk.push(i);
+    // }
+    // while (!sk.empty()) {
+    //     nfg[sk.top()] = -1; sk.pop();
+    // }
+}
+void test(int tc) {
+	ll p = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
 	cin >> n;
-	vector<int> v(n);
-	for (int i = 0; i < n; i++) { cin >> v[i]; }
+	for (i = 0; i < n; ++i) { cin >> ar[i]; }
+	pre();
+	pn(nfg, n);
+	// cout << '\n';
+}
 
-	int q;
-	cin >> q;
-	vector<Query> queries;
-	for (int i = 0; i < q; i++) {
-		int x, y;
-		cin >> x >> y;
-		queries.push_back({--x, --y, i});
-	}
-
-	int block_size = (int)sqrt(n);
-	auto mo_cmp = [&](Query a, Query b) {
-		int block_a = a.l / block_size;
-		int block_b = b.l / block_size;
-		if (block_a == block_b) { return a.r < b.r; }
-		return block_a < block_b;
-	};
-	sort(queries.begin(), queries.end(), mo_cmp);
-
-	int different_values = 0;
-	vector<int> values(VALMAX);
-	auto remove = [&](int idx) {
-		values[v[idx]]--;
-		if (values[v[idx]] == 0) { different_values--; }
-	};
-	auto add = [&](int idx) {
-		values[v[idx]]++;
-		if (values[v[idx]] == 1) { different_values++; }
-	};
-
-	int mo_left = -1;
-	int mo_right = -1;
-	vector<int> ans(q);
-	for (int i = 0; i < q; i++) {
-		int left = queries[i].l;
-		int right = queries[i].r;
-
-		while (mo_left < left) { remove(mo_left++); }
-		while (mo_left > left) { add(--mo_left); }
-		while (mo_right < right) { add(++mo_right); }
-		while (mo_right > right) { remove(mo_right--); }
-
-		ans[queries[i].idx] = different_values;
-	}
-
-	for (int i = 0; i < q; i++) { cout << ans[i] << '\n'; }
+signed main() {
+	cin.tie(0)->sync_with_stdio(0); cin.exceptions(ios::failbit | ios::badbit);
+	int tc = 0, t = 1;
+	cin >> t;
+	while (tc < t) test(++tc);
+	return 0;
 }

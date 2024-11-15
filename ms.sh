@@ -1,14 +1,11 @@
 #!/bin/bash
 # Command to run: bash ms.sh number_of_tests
 
-# BLACK='\033[1;90m'
 red='\033[1;91m'
-green='\033[1;92m'
-# yellow='\033[1;93m'
+green='\033[1;32m'
 blue='\033[1;94m'
 magenta='\033[1;95m'
 cyan='\033[1;96m'
-# white='\033[1;97m'
 nc='\033[0m' # No Color
 
 g++ -O2 -std=c++23 Generator.cpp -o gen
@@ -46,9 +43,9 @@ for i in $(seq 1 "$1") ; do
         # cat out1
         echo -e "${red}Received Output:${nc}"
         cat out2
-        echo -e "\n${cyan}Time taken: ${max_time} ms${nc}"
+        echo -e "\n${blue}Time taken: ${max_time} ms${nc}"
         exit 1
-    else echo -e "P${green}assed test $i / $1${nc}"
+    else echo -e "${green}Passed test $i / $1${nc}"
     fi
 done
-echo -e "\n${green}Pretests passed!${nc}\n${cyan}Time taken: ${max_time} ms${nc}"
+echo -e "\n${green}Pretests passed!${nc}\n${blue}Time taken: ${max_time} ms${nc}"

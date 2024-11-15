@@ -2,18 +2,18 @@
 // Complexity: Constructing the tre: O(n), Update & Query: O(log(n))
 
 long long tre[N << 1], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
+inline long long op(long long x, long long y) { return x + y; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
 void up(int in, long long val) {
-    for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = com(tre[in], tre[in ^ 1]);
+    for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = op(tre[in], tre[in ^ 1]);
 }
 long long get(int l, int r) {
     long long res = 0;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
+        if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
     return res;
 }
@@ -21,10 +21,10 @@ long long get(int l, int r) {
 // WITH lazy Propagation: O(n)
 
 long long tre[N << 1], lz[N], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
+inline op(long long x, long long y) { return x + y; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
-    for (int i = n - 1; i > 0; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]);
+    for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
 void apply(int in, long long val, int k) {
     tre[in] += val * k; if (in < n) lz[in] += val;
@@ -43,7 +43,7 @@ void rebuild(int l, int r) {
     int k = 2;
     for (l += n, r += n - 1; l > 1; k <<= 1) {
         l >>= 1, r >>= 1;
-        for (int i = r; i >= l; --i) tre[i] = com(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
+        for (int i = r; i >= l; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
     }
 }
 void add(int l, int r, long long val) {
@@ -56,7 +56,7 @@ void add(int l, int r, long long val) {
 long long get(int l, int r) {
     push(l, l + 1); push(r, ++r); long long res = 0;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-        if (l & 1) res = com(res, tre[l++]); if (r & 1) res = com(res, tre[--r]);
+        if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
     return res;
 }
@@ -64,11 +64,11 @@ long long get(int l, int r) {
 // OR,
 
 long long tre[N << 2], lz[N << 2], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
+long long op(long long x, long long y) { return x + y; }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    make(lc, s, m); make(rc, m + 1, e); tre[nd] = com(tre[lc], tre[rc]);
+    make(lc, s, m); make(rc, m + 1, e); tre[nd] = op(tre[lc], tre[rc]);
 }
 void propagate(int nd, int s, int e) {
     if (lz[nd]) {
@@ -82,18 +82,18 @@ void add(int l, int r, long long val, int nd = 1, int s = 0, int e = n - 1) {
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     if (s >= l && e <= r) { lz[nd] += val; propagate(nd, s, e); return; }
     add(l, r, val, lc, s, m); add(l, r, val, rc, m + 1, e);
-    tre[nd] = com(tre[lc], tre[rc]);
+    tre[nd] = op(tre[lc], tre[rc]);
 }
 long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     propagate(nd, s, e); if (s > e || s > r || e < l) return 0;
     if (s >= l && e <= r) return tre[nd];
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    return com(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
+    return op(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
 }
 void reset() { for (int i = 0; i < (n << 2) + 5; ++i) tre[i] = lz[i] = 0; }
 
 // Persistent Segment Tree:
-// Problem: https://www.spoj.com/problems/MKTHNUM/
+// Problem: https://www.spoj.op/problems/MKTHNUM/
 
 struct node {
     long long l = 0, r = 0, val = 0;
@@ -136,7 +136,7 @@ long long get(int pre, int cur, int k, int s = 1, int e = n) {
     }
 
 // Persistent Segment Tree with Lazy Propagation:
-// https://www.codechef.com/problems/SUBINVER
+// https://www.codechef.op/problems/SUBINVER
 
 template <const int32_t MOD>
 struct modint {
@@ -394,15 +394,15 @@ struct treap {
         }
         t->pull();
     }
-    node *com(node *l, node *r) {
+    node *op(node *l, node *r) {
         if (!l || !r)
             return l ? l : r;
         if (l->key < r->key) {
-            l->r = com(l->r, r);
+            l->r = op(l->r, r);
             l->pull();
             return l;
         }
-        r->l = com(l, r->l);
+        r->l = op(l, r->l);
         r->pull();
         return r;
     }
@@ -436,7 +436,7 @@ struct treap {
         else {
             node *l, *r;
             split(root, pos, l, r);
-            root = com(com(l, new node(pos, val)), r);
+            root = op(op(l, new node(pos, val)), r);
         }
     }
     long long get(node *t, int st, int en) {
@@ -546,13 +546,13 @@ int32_t main() {
 
 // Segment Tree Beats:
 // https://judge.yosupo.jp/problem/range_chmin_chmax_add_range_sum
-// https://codeforces.com/problemset/problem/438/D
+// https://codeforces.op/problemset/problem/438/D
 
 long long ar[N], n;
 struct Node {
     long long sum, mx1, mx2, mxc, mn1, mn2, mnc, lz;
 } tre[N << 2];
-void com(int nd) {
+void op(int nd) {
     int lc = nd << 1, rc = lc | 1;
     tre[nd].sum = tre[lc].sum + tre[rc].sum;
     if (tre[lc].mx1 == tre[rc].mx1) {
@@ -598,7 +598,7 @@ void make(int nd = 1, int s = 0, int e = n - 1) {
     	tre[nd].mx2 = LLONG_MIN; tre[nd].mn2 = LLONG_MAX; return;
     }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    make(lc, s, m); make(rc, m + 1, e); com(nd);
+    make(lc, s, m); make(rc, m + 1, e); op(nd);
 }
 void push_add(int nd, int s, int e, long long v) {
     if (v == 0) return;
@@ -636,19 +636,19 @@ void stmn(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l || v >= tre[nd].mx1) return;
     if (l <= s && e <= r && v > tre[nd].mx2) { push_max(nd, v, s == e); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    stmn(l, r, v, lc, s, m); stmn(l, r, v, rc, m + 1, e); com(nd);
+    stmn(l, r, v, lc, s, m); stmn(l, r, v, rc, m + 1, e); op(nd);
 }
 void stmx(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l || v <= tre[nd].mn1) return;
     if (l <= s && e <= r && v < tre[nd].mn2) { push_min(nd, v, s == e); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); com(nd);
+    stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); op(nd);
 }
 void add(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return;
     if (l <= s && e <= r) { push_add(nd, s, e, v); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    add(l, r, v, lc, s, m); add(l, r, v, rc, m + 1, e); com(nd);
+    add(l, r, v, lc, s, m); add(l, r, v, rc, m + 1, e); op(nd);
 }
 long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return 0; if (l <= s && e <= r) return tre[nd].sum;
@@ -696,11 +696,11 @@ struct STM {
         return cur;
     }
     // merge segment tre a and b
-    int com(int a, int b) {
+    int op(int a, int b) {
         if (!a || !b)
             return a ^ b;
-        tre[a].l = com(tre[a].l, tre[b].l);
-        tre[a].r = com(tre[a].r, tre[b].r);
+        tre[a].l = op(tre[a].l, tre[b].l);
+        tre[a].r = op(tre[a].r, tre[b].r);
         tre[a].sz += tre[b].sz;
         save_memory(b);
         return a;
@@ -753,11 +753,11 @@ void split(int l, int r) {
     ty[r + 1] = ty[l];
 }
 // merge adjacent substr a and b to a (ty[a] should be edited manually)
-void com(int a, int b) {
+void op(int a, int b) {
     if (a == b)
         return;
     cur.erase(b);
-    root[a] = t.com(root[a], root[b]);
+    root[a] = t.op(root[a], root[b]);
     rb[a] = rb[b];
 }
 // query for ar[k] on substr (l, ...)
@@ -799,7 +799,7 @@ int main() {
                 break;
         }
         for (int i = 0; i < v.size(); ++i)
-            com(nw, v[i]);
+            op(nw, v[i]);
         ty[nw] = type;
     }
     int i;
@@ -809,8 +809,8 @@ int main() {
     printf("%d\n", get(l, i));
     return 0;
 }
-// https://codeforces.com/blog/entry/49446
-// http://www.lydsy.com:808/JudgeOnline/problem.php?id=4552
+// https://codeforces.op/blog/entry/49446
+// http://www.lydsy.op:808/JudgeOnline/problem.php?id=4552
 
 /*
 The problem is maintaing a permutation of 1~n,
@@ -962,4 +962,4 @@ int32_t main() {
     return 0;
 }
 
-// https://www.codechef.com/problems/RVRSE
+// https://www.codechef.op/problems/RVRSE

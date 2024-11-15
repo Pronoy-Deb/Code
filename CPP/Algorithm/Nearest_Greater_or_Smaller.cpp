@@ -1,27 +1,48 @@
 // Complexity: O(n)
-// Next Greater Element:
+// Index of Next Nearest Greater Element:
 
-long long ar[N], ng[N], n;
+long long ar[N], nng[N], n;
 void pre() {
     stack<long long> sk;
     for (int i = 0; i < n; ++i) {
         while(!sk.empty() && ar[i] > ar[sk.top()]) {
-            ng[sk.top()] = i; sk.pop();
+            nng[sk.top()] = i; sk.pop();
         }
         sk.emplace(i);
     }
     while (!sk.empty()) {
-        ng[sk.top()] = -1; sk.pop();
+        nng[sk.top()] = -1; sk.pop();
     }
 }
+
+// Index of Next Nearest Smaller Element:
+
+long long ar[N], nns[N], n;
+void pre() {
+    stack<long long> sk;
+    for (int i = 0; i < n; ++i) {
+        while(!sk.empty() && ar[i] < ar[sk.top()]) {
+            nns[sk.top()] = i; sk.pop();
+        }
+        sk.emplace(i);
+    }
+    while (!sk.empty()) {
+        nng[sk.top()] = -1; sk.pop();
+    }
+}
+
+// Index of Next Farthest Greater Element:
+
+
 
 // Operation:
     cin >> n;
     for (i = 0; i < n; ++i) { cin >> ar[i]; }
     pre();
-    for (i = 0; i < n; ++i) cout << (ng[i] == -1 ? -1 : ar[ng[i]]) << ' ';
+    for (i = 0; i < n; ++i) cout << (nng[i] == -1 ? -1 : ar[nng[i]]) << ' ';
 
-// Previous Smaller Element:
+
+// Index of Previous Nearest Smaller Element:
 
 long long ar[N], ps[N], n;
 void pre() {

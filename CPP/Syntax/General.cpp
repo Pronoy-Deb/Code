@@ -1,6 +1,13 @@
 // Note:
     1. No of triangles that can be formed without intersection in an n-armed polygon: n - 2
 
+    -> Compression:
+        unordered_map<int, int> mp;
+        for (i = 0; i < n; ++i){
+            if (!mp[ar[i]]) mp[ar[i]] = ++c;
+            pos[i] = mp[ar[i]];
+        }
+
     -> To take input till EOF is found:
         C++: while(cin >> n) cout << n << '\n';
         C: while(scanf("%d", &n) != EOF) printf("%d\n", n);

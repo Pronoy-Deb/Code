@@ -1,14 +1,11 @@
 #!/bin/bash
 #Command: bash ck.sh Number_of_Tests
 
-# BLACK='\033[1;90m'
 red='\033[1;91m'
-green='\033[1;92m'
-# yellow='\033[1;93m'
+green='\033[1;32m'
 blue='\033[1;94m'
 magenta='\033[1;95m'
 cyan='\033[1;96m'
-# white='\033[1;97m'
 nc='\033[0m' # No Color
 
 g++ -O2 -std=c++23 Generator.cpp -o gen
@@ -26,13 +23,13 @@ for i in $(seq 1 "$1") ; do
 
     if [ $exit_status -eq 124 ]; then
         echo -e "${red}Time Limit Exceeded!${nc}"
-        echo -e "${magenta}Sample Input:${nc}"
+        echo -e "${cyan}Sample Input:${nc}"
         cat inp
         echo -e "\n${cyan}Time taken: ${elapsed} ms${nc}"
         exit 1
     elif [ $exit_status -ne 0 ]; then
         echo -e "\n${red}Runtime error!${nc}"
-        echo -e "${magenta}Sample Input:${nc}"
+        echo -e "${cyan}Sample Input:${nc}"
         cat inp
         exit 1
     fi

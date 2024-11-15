@@ -1,1 +1,1 @@
-{"name":"Local: Generator","url":"/media/pronoy/Backup/CP/Code/Generator.cpp","tests":[{"id":1728415184509,"input":"","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Code/Generator.cpp","group":"local","local":true}
+{"name":"Local: Generator","url":"/media/pronoy/Backup/CP/Code/Generator.cpp","tests":[{"id":1728415184509,"input":"1\n5\n","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/media/pronoy/Backup/CP/Code/Generator.cpp","group":"local","local":true}
