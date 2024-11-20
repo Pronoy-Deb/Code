@@ -14,6 +14,7 @@ g++ -O2 -std=c++23 Checker.cpp -o ckr
 # g++ -O2 -std=c++23 BruteForce.cpp -o bf
 
 max_time=0
+passed_test=0
 
 for i in $(seq 1 "$1") ; do
     ./gen > inp
@@ -45,7 +46,10 @@ for i in $(seq 1 "$1") ; do
         cat out2
         echo -e "\n${blue}Time taken: ${max_time} ms${nc}"
         exit 1
-    else echo -e "${green}Passed test $i / $1${nc}"
+    else
+        echo -e "${green}Passed test $i / $1${nc}"
+        passed_test=$((passed_test + 1))
     fi
 done
-echo -e "\n${green}Pretests passed!${nc}\n${blue}Time taken: ${max_time} ms${nc}"
+
+echo -e "\n${green}Pretests passed! (${passed_test})${nc}\n${cyan}Time taken: ${max_time} ms${nc}"

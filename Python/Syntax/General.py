@@ -17,6 +17,10 @@
         a, b, c = map(int, input().split())
         OR, a, b, c = [int(i) for i in input().split()]
 
+    # Setting the precision of floating point numbers:
+        print(round(3.14159, 2))
+    OR, print("{:.2f}".format(3.14159))
+
     # Read Until EOF
     import sys
     for line in sys.stdin:

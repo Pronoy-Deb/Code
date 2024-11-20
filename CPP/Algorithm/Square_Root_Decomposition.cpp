@@ -62,21 +62,21 @@ void mo() {
 }
 
 // Operation:
-cin >> n >> q;
-for (i = 0; i < n; ++i) {
-    cin >> ar[i];
-}
-for (i = 0; i < q; ++i) {
-    cin >> a >> b;
-    qr[i] = {a - 1, b - 1, i};
-}
-mo();
-for (i = 0; i < q; ++i) cout << ans[i] << '\n';
+    cin >> n >> q;
+    for (i = 0; i < n; ++i) {
+        cin >> ar[i];
+    }
+    for (i = 0; i < q; ++i) {
+        cin >> a >> b;
+        qr[i] = {a - 1, b - 1, i};
+    }
+    mo();
+    for (i = 0; i < q; ++i) cout << ans[i] << '\n';
 
 // OR,
 
 long long ar[N], cnt[N], ans[N], cur;
-void remove(long long id) {
+void rem(long long id) {
 }
 void add(long long id) {
 }
@@ -88,25 +88,24 @@ struct Query {
 };
 
 // Operation:
-cin >> n >> q;
-for (i = 1; i <= n; ++i) cin >> ar[i];
-vector<Query> Q(q);
-for (i = 0; i < q; ++i) {
-    cin >> Q[i].l >> Q[i].r;
-    Q[i].id = i;
-}
-sort(Q.begin(), Q.end());
-long long l = 1, r = 0;
-for (i = 0; i < q; ++i) {
-    while (l > Q[i].l) add(--l);
-    while (r < Q[i].r) add(++r);
-    while (l < Q[i].l) remove(l++);
-    while (r > Q[i].r) remove(r--);
-    ans[Q[i].id] = cur;
-}
-for (i = 0; i < q; ++i) cout << ans[i] << ' ';
+    cin >> n >> q;
+    for (i = 1; i <= n; ++i) cin >> ar[i];
+    vector<Query> Q(q);
+    for (i = 0; i < q; ++i) {
+        cin >> Q[i].l >> Q[i].r;
+        Q[i].id = i;
+    }
+    sort(Q.begin(), Q.end()); long long l = 1, r = 0;
+    for (i = 0; i < q; ++i) {
+        while (l > Q[i].l) add(--l);
+        while (r < Q[i].r) add(++r);
+        while (l < Q[i].l) rem(l++);
+        while (r > Q[i].r) rem(r--);
+        ans[Q[i].id] = cur;
+    }
+    for (i = 0; i < q; ++i) cout << ans[i] << ' ';
 
-    // Square Root Decomposition with Reverse Updates:
+// Square Root Decomposition with Reverse Updates:
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -179,12 +178,12 @@ int split(int i) {
         if (cl <= i && i <= cr) {
             if (i == cl) {
                 return it - blocks.begin();
-            } else {
+            }
+            else {
                 if (t[id].rev) {
                     t[id].perform_reverse();
                 }
-                int k = i - cl;
-                int cur = ++T;
+                int k = i - cl, cur = ++T;
                 if (t[id].assigned != -1) {
                     t[cur] = Block(cr - cl + 1 - k, t[id].assigned);
                 } else {

@@ -10,7 +10,6 @@ magenta='\033[1;95m'
 cyan='\033[1;96m'
 nc='\033[0m' # No Color
 
-g++ -O2 -std=c++23 -DLOCAL -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter "$fileName" -o l
 if [ $? -ne 0 ]; then
     echo -e "\n${red}Compilation error!${nc}"
     exit 1

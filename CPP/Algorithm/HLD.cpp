@@ -1,46 +1,117 @@
-// Complexity: O(logn) per get
+// Complexity: O(logn) per query
+https://cses.fi/problemset/task/1138/
 
 vector<int> gp[N];
-long long dep[N], par[N], pos[N], val[N], head[N], heavy[N], cnt, n;
-long long combine(long long l, long long r) { return max(l, r); }
+long long sz[N], P[N], dep[N], tre[N << 1], id[N], tp[N], val[N], n;
+inline long long op(long long l, long long r) { return (l + r); }
+void up(int idx, long long val) {
+	tre[idx += n] = val; idx >>= 1;
+	while (idx) {
+        tre[idx] = op(tre[idx << 1], tre[(idx << 1) | 1]); idx >>= 1;
+    }
+}
+long long get(int lo, int hi) {
+	long long ra = 0, rb = 0;
+	for (lo += n, hi += n + 1; lo < hi; lo >>= 1, hi >>= 1) {
+		if (lo & 1) ra = op(ra, tre[lo++]);
+		if (hi & 1) rb = op(rb, tre[--hi]);
+	}
+	return op(ra, rb);
+}
+int dfs_sz(int cur = 1, int par = 1) {
+	sz[cur] = 1; P[cur] = par;
+	for (auto &chi : gp[cur]) {
+		if (chi == par) continue; dep[chi] = dep[cur] + 1;
+		P[chi] = cur; sz[cur] += dfs_sz(chi, cur);
+	}
+	return sz[cur];
+}
+int ct = 0;
+void dfs_hld(int cur = 1, int par = 1, int top = 1) {
+	id[cur] = ++ct; tp[cur] = top;
+	up(id[cur], val[cur]); int h_chi = -1, h_sz = -1;
+	for (auto &chi : gp[cur]) {
+		if (chi == par) continue;
+		if (sz[chi] > h_sz) {
+			h_sz = sz[chi]; h_chi = chi;
+		}
+	}
+	if (h_chi == -1) return; dfs_hld(h_chi, cur, top);
+	for (auto &chi : gp[cur]) {
+		if (chi == par || chi == h_chi) continue;
+		dfs_hld(chi, cur, chi);
+	}
+}
+long long path(int x, int y) {
+	long long ret = 0;
+	while (tp[x] != tp[y]) {
+		if (dep[tp[x]] < dep[tp[y]]) swap(x, y);
+		ret = op(ret, get(id[tp[x]], id[x])); x = P[tp[x]];
+	}
+	if (dep[x] > dep[y]) swap(x, y);
+	return op(ret, get(id[x], id[y]));
+}
+
+// Operation:
+    cin >> n >> q;
+	for (i = 1; i <= n; ++i) cin >> val[i];
+	for (i = 2; i <= n; ++i) {
+        int u, v; cin >> u >> v;
+		gp[u].push_back(v); gp[v].push_back(u);
+	}
+	dfs_sz(); dfs_hld();
+	while (q--) {
+        int tp; cin >> tp;
+		if (tp == 1) {
+			long long s, x; cin >> s >> x;
+			val[s] = x; up(id[s], val[s]);
+		}
+        else {
+            int u = 1, v; cin >> v;
+			cout << path(u, v) << ' ';
+            cout << '\n';
+		}
+	}
+
+// OR,
+
+vector<int> gp[N];
+long long dep[N], par[N], pos[N], val[N], head[N], heavy[N], cnt;
+inline long long op(long long l, long long r) { return (l + r); }
 struct ST {
-    vector<long long> tre, lz;
+    vector<long long> stre, lz;
     ST() {};
-    ST(long long sz) {
-        n = sz; tre.resize(n << 2, 0); lz.resize(n << 2, 0);
+    ST(int n) {
+        stre.resize(n << 2, 0); lz.resize(n << 2, 0);
     }
     void propagate(int u, int st, int en) {
-        if (!lz[u]) return;
-        tre[u] = lz[u];
+        if (!lz[u]) return; stre[u] = lz[u];
         if (st != en) {
-            lz[(lc)] = lz[u]; lz[rc] = lz[u];
+            lz[u << 1] = lz[u]; lz[u << 1 | 1] = lz[u];
         }
         lz[u] = 0;
     }
     void up(int u, int st, int en, int l, int r, long long x) {
-        propagate(u, st, en);
-        if (r < st || en < l) return;
+        propagate(u, st, en); if (r < st || en < l) return;
         if (l <= st && en <= r) {
             lz[u] += x; propagate(u, st, en); return;
         }
-        int mid = (st + en) >> 1, lc = u << 1, rc = lc + 1;
+        int mid = (st + en) >> 1, lc = u << 1, rc = lc | 1;
         up(lc, st, mid, l, r, x); up(rc, mid + 1, en, l, r, x);
-        tre[u] = combine(tre[lc], tre[rc]);
+        stre[u] = op(stre[lc], stre[rc]);
     }
     long long get(int u, int st, int en, int l, int r) {
-        propagate(u, st, en);
-        if (r < st || en < l) return 0;
-        if (l <= st && en <= r) return tre[u];
-        int mid = (st + en) >> 1, lc = u << 1, rc = lc + 1;
-        return combine(get(lc, st, mid, l, r), get(rc, mid + 1, en, l, r));
+        propagate(u, st, en); if (r < st || en < l) return 0;
+        if (l <= st && en <= r) return stre[u];
+        int mid = (st + en) >> 1, lc = u << 1, rc = lc | 1;
+        return op(get(lc, st, mid, l, r), get(rc, mid + 1, en, l, r));
     }
-} tree;
-long long dfs(int u, int p) {
-    long long sz = 1, mxsz = 0;
-    dep[u] = dep[p] + 1;
+} tre;
+int dfs(int u, int p) {
+    int sz = 1, mxsz = 0; dep[u] = dep[p] + 1;
     for (auto &v : gp[u]) {
         if (v == p) continue; par[v] = u;
-        long long subsz = dfs(v, u);
+        int subsz = dfs(v, u);
         if (subsz > mxsz) heavy[u] = v, mxsz = subsz;
         sz += subsz;
     }
@@ -54,44 +125,39 @@ void dcom(int u, int h) {
         if (heavy[u] != v) dcom(v, v);
     }
 }
-long long get(long long u, long long v) {
+long long get(int u, int v) {
     long long ret = 0;
     for (; head[u] != head[v]; v = par[head[v]]) {
         if (dep[head[u]] > dep[head[v]]) swap(u, v);
-        ret = max(ret, tree.get(1, 1, cnt, pos[head[v]], pos[v]));
+        ret = op(ret, tre.get(1, 1, cnt, pos[head[v]], pos[v]));
     }
     if (dep[u] > dep[v]) swap(u, v);
-    // for edge query
-    // if (u != v) ret = combine(ret, get(1, 1, cnt, pos[u] + 1, pos[v]));
-    // for node query
-    ret = combine(ret, tree.get(1, 1, cnt, pos[u], pos[v]));
+    // if (u != v) ret = op(ret, get(1, 1, cnt, pos[u] + 1, pos[v])); // for edge query
+    ret = op(ret, tre.get(1, 1, cnt, pos[u], pos[v])); // for node query
     return ret;
 }
 void up(int u, int v, long long x) {
     for (; head[u] != head[v]; v = par[head[v]]) {
         if (dep[head[u]] > dep[head[v]]) swap(u, v);
-        tree.up(1, 1, cnt, pos[head[v]], pos[v], x);
+        tre.up(1, 1, cnt, pos[head[v]], pos[v], x);
     }
     if (dep[u] > dep[v]) swap(u, v);
-    /*update on edge
-      if (u != v) up(1, 1, cnt, pos[u] + 1, pos[v], x); */
-    // update on node
-    tree.up(1, 1, cnt, pos[u], pos[v], x);
+    // if (u != v) up(1, 1, cnt, pos[u] + 1, pos[v], x); // update on edge
+    tre.up(1, 1, cnt, pos[u], pos[v], x); // update on node
 }
-void pre(int root = 1) {
+void pre(int n, int root = 1) {
     for (int i = 1; i <= n; ++i) heavy[i] = -1;
-    cnt = 0, dfs(root, 0); dcom(root, root);
+    cnt = 0; dfs(root, 0); dcom(root, root);
 }
 
 // Operation:
     cin >> n >> q;
     for (i = 1; i <= n; ++i) cin >> val[i];
     for (i = 1; i < n; ++i) {
-        int u, v;  cin >> u >> v;
+        int u, v; cin >> u >> v;
         gp[u].push_back(v); gp[v].push_back(u);
     }
-    pre(); // decomsing tree
-    tree = ST(n);
+    pre(n); tre = ST(n);
     for (i = 1; i <= n; ++i) up(i, i, val[i]);
     while (q--) {
         int tp; cin >> tp;
@@ -99,16 +165,88 @@ void pre(int root = 1) {
             long long s, x; cin >> s >> x; up(s, s, x);
         }
         else {
-            int u, v; cin >> u >> v;
-            cout << get(u, v) << " ";
+            int u = 1, v; cin >> v;
+            cout << get(u, v) << '\n';
         }
     }
-    for (i = 1; i <= n; ++i) gp[i].clear();
+    // for (i = 1; i <= n; ++i) gp[i].clear();
 
-// OR,
+https://cses.fi/problemset/task/2134
+
+vector<int> gp[N];
+long long sz[N], P[N], dep[N], tre[N << 1], id[N], tp[N], val[N], n;
+inline long long op(long long l, long long r) { return max(l, r); }
+void up(int idx, long long val) {
+	tre[idx += n] = val; idx >>= 1;
+	while (idx) {
+        tre[idx] = op(tre[idx << 1], tre[(idx << 1) | 1]); idx >>= 1;
+    }
+}
+long long get(int lo, int hi) {
+	long long ra = 0, rb = 0;
+	for (lo += n, hi += n + 1; lo < hi; lo >>= 1, hi >>= 1) {
+		if (lo & 1) ra = op(ra, tre[lo++]);
+		if (hi & 1) rb = op(rb, tre[--hi]);
+	}
+	return op(ra, rb);
+}
+int dfs_sz(int cur = 1, int par = 1) {
+	sz[cur] = 1; P[cur] = par;
+	for (auto &chi : gp[cur]) {
+		if (chi == par) continue; dep[chi] = dep[cur] + 1;
+		P[chi] = cur; sz[cur] += dfs_sz(chi, cur);
+	}
+	return sz[cur];
+}
+int ct = 0;
+void dfs_hld(int cur = 1, int par = 1, int top = 1) {
+	id[cur] = ++ct; tp[cur] = top;
+	up(id[cur], val[cur]); int h_chi = -1, h_sz = -1;
+	for (auto &chi : gp[cur]) {
+		if (chi == par) continue;
+		if (sz[chi] > h_sz) {
+			h_sz = sz[chi]; h_chi = chi;
+		}
+	}
+	if (h_chi == -1) return; dfs_hld(h_chi, cur, top);
+	for (auto &chi : gp[cur]) {
+		if (chi == par || chi == h_chi) continue;
+		dfs_hld(chi, cur, chi);
+	}
+}
+long long path(int x, int y) {
+	long long ret = 0;
+	while (tp[x] != tp[y]) {
+		if (dep[tp[x]] < dep[tp[y]]) swap(x, y);
+		ret = op(ret, get(id[tp[x]], id[x])); x = P[tp[x]];
+	}
+	if (dep[x] > dep[y]) swap(x, y);
+	return op(ret, get(id[x], id[y]));
+}
+
+// Operation:
+    cin >> n >> q;
+	for (i = 1; i <= n; ++i) cin >> val[i];
+	for (i = 2; i <= n; ++i) {
+        int u, v; cin >> u >> v;
+		gp[u].push_back(v); gp[v].push_back(u);
+	}
+	dfs_sz(); dfs_hld();
+	while (q--) {
+        int tp; cin >> tp;
+		if (tp == 1) {
+			long long s, x; cin >> s >> x;
+			val[s] = x; up(id[s], val[s]);
+		}
+        else {
+            int u, v; cin >> u >> v;
+			cout << path(u, v) << ' ';
+		}
+	}
+
+https://www.hackerrank.op/challenges/subtrees-and-paths/problem
 
 const int N = 1e5 + 9, LG = 18, inf = 1e9 + 9;
-
 struct ST {
     #define lc (n << 1)
     #define rc ((n << 1) | 1)
@@ -124,7 +262,7 @@ struct ST {
         }
         lz[n] = 0;
     }
-    inline int combine(int a, int b) {
+    inline int op(int a, int b) {
         return max(a, b); // merge left and right queries
     }
     inline void pull(int n) {
@@ -150,10 +288,9 @@ struct ST {
         push(n, b, e); if (i > e || b > j) return -inf;
         if (i <= b && e <= j) return tre[n];
         int mid = (b + e) >> 1;
-        return combine(get(lc, b, mid, i, j), get(rc, mid + 1, e, i, j));
+        return op(get(lc, b, mid, i, j), get(rc, mid + 1, e, i, j));
     }
 } t;
-
 vector<int> g[N]; int par[N][LG + 1], dep[N], sz[N];
 void dfs(int u, int p = 0) {
     par[u][0] = p; dep[u] = dep[p] + 1; sz[u] = 1;
@@ -184,9 +321,9 @@ int kth(int u, int k) {
     }
     return u;
 }
-int T, head[N], st[N], en[N];
+int T, head[N], tre[N], en[N];
 void dfs_hld(int u) {
-    st[u] = ++T;
+    tre[u] = ++T;
     for (auto &v : g[u]) {
         head[v] = (v == g[u][0] ? head[u] : v); dfs_hld(v);
     }
@@ -196,10 +333,10 @@ int n;
 int query_up(int u, int v) {
     int ans = -inf;
     while (head[u] != head[v]) {
-        ans = max(ans, t.get(1, 1, n, st[head[u]], st[u]));
+        ans = max(ans, t.get(1, 1, n, tre[head[u]], tre[u]));
         u = par[head[u]][0];
     }
-    ans = max(ans, t.get(1, 1, n, st[v], st[u]));
+    ans = max(ans, t.get(1, 1, n, tre[v], tre[u]));
     return ans;
 }
 int get(int u, int v) {
@@ -219,8 +356,6 @@ int get(int u, int v) {
     while (q--) {
         string ty; int u, v;
         cin >> ty >> u >> v;
-        if (ty == "add") t.up(1, 1, n, st[u], en[u], v);
+        if (ty == "add") t.up(1, 1, n, tre[u], en[u], v);
         else cout << get(u, v) << '\n';
     }
-    
-// https://www.hackerrank.com/challenges/subtrees-and-paths/problem
