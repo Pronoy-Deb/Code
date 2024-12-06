@@ -2,18 +2,14 @@
 // Use: Solves the equation: ax + by = gcd(a, b) and determines gcd(a, b), x and y
 // Note: The equation ax + by = gcd(a, b) has a solution if and only if gcd(a, b) divides c (c is the gcd of a and b) and the equation is known as linear diophantine equation
 
-long long ee(auto a, auto b, auto &x, auto &y)
-{
-	if (!a)
-	{
-		x = 0;
-		y = 1;
-		return b;
-	}
+long long ee(long long a, long long b, auto &x, auto &y) {
+	if (!a) { x = 0; y = 1; return b; }
 	long long x1, y1, gcd = ee(b % a, a, x1, y1);
-	x = y1 - (b / a) * x1;
-	y = x1;
-	return gcd;
+	x = y1 - (b / a) * x1; y = x1; return gcd;
+}
+long long inv(long long a, long long m) {
+	long long x, y, g = ee(a, m, x, y);
+	if (g != 1) return -1; return (x % m + m) % m;
 }
 
 // Operation:

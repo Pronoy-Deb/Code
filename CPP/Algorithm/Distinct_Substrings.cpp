@@ -4,7 +4,7 @@
 string s; long long n;
 struct suff { long long in, rnk[2]; };
 auto cmp(struct suff a, struct suff b) { return (a.rnk[0] == b.rnk[0]) ? (a.rnk[1] < b.rnk[1]) : (a.rnk[0] < b.rnk[0]); }
-auto dsub() {
+long long dsub() {
 	struct suff sfx[n];
 	for (int i = 0; i < n; ++i) {
 		sfx[i].in = i; sfx[i].rnk[0] = s[i] - 'a';

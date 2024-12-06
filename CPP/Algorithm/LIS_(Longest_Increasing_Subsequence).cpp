@@ -12,7 +12,7 @@ int lis() {
             ans[low] = ar[i];
         }
     }
-    return ans.size();
+    return (int)ans.size();
 }
 
 // Complexity: O(n^2)  // For all of the following codes

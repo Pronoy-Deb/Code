@@ -14,9 +14,9 @@ void merge(int u, int v) {
     if (u != v) gp[n].push_back(v);
     ++n;
 }
-// void build() {
-//   for (int i = 0; i < m; ++i) merge(U[i], V[i]);
-// }
+void build() {
+  for (int i = 0; i < m; ++i) merge(U[i], V[i]);
+}
 
 https://www.codechef.com/problems/TULIPS
 #include <bits/stdc++.h>

@@ -40,9 +40,9 @@ long long get(int l, int r) {
 
 // With Range Compression:
 https://codeforces.com/contest/863/problem/E
-// const long long N = 4 * 2e5 + 5;
-long long l[N], r[N], n;
-long long com() {   
+// const long long N = 2e5 + 5;
+long long l[N << 2], r[N << 2], n;
+long long com() {
     set<long long> st;
 	for (int i = 0; i < n; ++i) {
         st.insert(l[i]); st.insert(l[i] + 1);

@@ -1,8 +1,7 @@
 // Complexity: O(log(min(a, b)))
 // Note: Used to determine whether there is an integer solution (x, y) to the equation ax + by = c. For example: 2x + 5y = 1 -> sol: (3, -1) or (-2, 1)
 
-long long lde(auto a, auto b, auto c)
-{
+long long lde(long long a, long long b, long long c) {
 	return !(c % gcd(a, b));
 }
 // Linear Diophantine Equation Three Variables with Nonnegative Solutions:

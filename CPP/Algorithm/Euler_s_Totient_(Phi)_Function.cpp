@@ -6,20 +6,13 @@
 // n * (1 - 1/a) * (1 - 1/b) * (1 - 1/c) * .......; a,b,c = Prime factors of n
 // Ex: Prime factors of 5 -> 5 & 6 -> 2, 3
 
-long long phi[N];
-bool sv[N];
-void etf()
-{
-    for (int i = 2; i < N; i += 2)
-        phi[i] = (i >> 1);
-    for (int i = 3; i < N; i += 2)
-    {
-        if (!sv[i])
-        {
-            for (int j = i; j < N; j += i)
-            {
-                sv[j] = true;
-                phi[j] = ((phi[j] ? phi[j] : j) * (i - 1)) / i;
+long long phi[N]; bitset<N> sv;
+void etf() {
+    for (int i = 2; i < N; i += 2) phi[i] = (i >> 1);
+    for (int i = 3; i < N; i += 2) {
+        if (!sv[i]) {
+            for (int j = i; j < N; j += i) {
+                sv[j] = true; phi[j] = ((phi[j] ? phi[j] : j) * (i - 1)) / i;
             }
         }
     }

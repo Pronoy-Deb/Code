@@ -77,18 +77,15 @@ ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.value; }
 
 using mint = modint<mod>;
 
-struct combi
-{
+struct combi {
     int n;
     vector<mint> facts, finvs, invs;
-    combi(int _n) : n(_n), facts(_n), finvs(_n), invs(_n)
-    {
+    combi(int _n) : n(_n), facts(_n), finvs(_n), invs(_n) {
         facts[0] = finvs[0] = 1;
         invs[1] = 1;
         for (int i = 2; i < n; i++)
             invs[i] = invs[mod % i] * (-mod / i);
-        for (int i = 1; i < n; i++)
-        {
+        for (int i = 1; i < n; i++) {
             facts[i] = facts[i - 1] * i;
             finvs[i] = finvs[i - 1] * invs[i];
         }
@@ -102,12 +99,9 @@ combi C(N);
 
 // returns nCr modulo mod where mod is a prime
 // Complexity: log(n)
-mint lucas(ll n, ll r)
-{
-    if (r > n)
-        return 0;
-    if (n < mod)
-        return C.ncr(n, r);
+mint lucas(ll n, ll r) {
+    if (r > n) return 0;
+    if (n < mod) return C.ncr(n, r);
     return lucas(n / mod, r / mod) * lucas(n % mod, r % mod);
 }
 

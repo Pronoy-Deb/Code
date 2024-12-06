@@ -1,9 +1,57 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// Number of iterations for testing
+const int it = 100;
+
+int32_t main() {
+    // Compile the solutions and generator
+    string correct_compile = "g++ -std=c++17 -O2 -o correct correct.cpp";
+    string wrong_compile = "g++ -std=c++17 -O2 -o wrong wrong.cpp";
+    string generator_compile = "g++ -std=c++17 -O2 -o generator generator.cpp";
+
+    system(correct_compile.c_str());
+    system(wrong_compile.c_str());
+    system(generator_compile.c_str());
+
+    // Timer for execution
+    auto start_time = clock();
+    for (int t = 1; t <= it; t++) {
+        cerr << "Running test case #" << t << "...\n";
+        string generate_case = "./generator > input.txt";
+        system(generate_case.c_str());
+        string run_correct = "./correct < input.txt > correct_solution.txt";
+        system(run_correct.c_str());
+        string run_wrong = "./wrong < input.txt > wrong_solution.txt";
+        system(run_wrong.c_str());
+        ifstream correct_file("correct_solution.txt");
+        ifstream wrong_file("wrong_solution.txt");
+        string ex((istreambuf_iterator<char>(correct_file)), istreambuf_iterator<char>());
+        string fo((istreambuf_iterator<char>(wrong_file)), istreambuf_iterator<char>());
+        correct_file.close();
+        wrong_file.close();
+        if (ex != fo) {
+            cout << "MISMATCH FOUND in test case #" << t << "!\n";
+            cerr << "MISMATCH FOUND in test case #" << t << "!\n";
+            cout << "Check 'input.txt', 'correct_solution.txt', and 'wrong_solution.txt' for details.\n";
+            cerr << "Time taken = " << 1.0 * (clock() - start_time) / CLOCKS_PER_SEC << " seconds\n";
+            return 1; // Exit with error
+        }
+    }
+    cout << "No mismatches found in " << it << " test cases!\n";
+    cerr << "Total time taken = " << 1.0 * (clock() - start_time) / CLOCKS_PER_SEC << " seconds\n";
+    return 0; // Exit successfully
+}
+
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
 // the following script is for unix systems, for windows please change accordingly
 
-const int ITER = 100; // select the number of iterations
+const int it = 100; // select the number of iterations
 
 // populate and save the correct, wrong and generator files
 int32_t main()
@@ -16,7 +64,7 @@ int32_t main()
     system(generator.c_str()); // compiling the generator
 
     auto st = clock();
-    for (int t = 1; t <= ITER; t++)
+    for (int t = 1; t <= it; t++)
     {
         cerr << "Trying for the " << t << "-th time :((\n";
 
@@ -32,21 +80,21 @@ int32_t main()
 
         ifstream correct_file;
         correct_file.open("correct_solution.txt"); // opening correct solution file
-        string correct_output = "", line;
+        string ex = "", line;
         while (getline(correct_file, line, '.'))
         { // reading every line including spaces and newlines
-            correct_output += line;
+            ex += line;
         }
 
         ifstream wrong_file;
         wrong_file.open("wrong_solution.txt"); // opening wrong solution file
-        string wrong_output = "";
+        string fo = "";
         while (getline(wrong_file, line, '.'))
         { // reading every line including spaces and newlines
-            wrong_output += line;
+            fo += line;
         }
 
-        if (correct_output != wrong_output)
+        if (ex != fo)
         {
             cout << "MISMATCH FOUND while running test case " << t << "\n\n";
             cerr << "MISMATCH FOUND while running test case " << t << "\n\n";

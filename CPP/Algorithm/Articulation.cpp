@@ -1,65 +1,41 @@
 // Articulation Points:
 // Complexity: O()
 
-long long tin[N], low[N], timer;
-bool vis[N], is_cut[N];
-vector<long long> gp[N];
-void dfs(long long v, long long p = -1)
-{
-	vis[v] = true;
-	tin[v] = low[v] = timer++;
-	long long children = 0;
-	for (auto &to : gp[v])
-	{
-		if (to == p)
-			continue;
-		if (vis[to])
-			low[v] = min(low[v], tin[to]);
-		else
-		{
-			dfs(to, v);
-			low[v] = min(low[v], low[to]);
-			if (low[to] >= tin[v] && p != -1)
-				is_cut[v] = true;
-			++children;
+ll tin[N], low[N], timer; bool vis[N], is_cut[N];
+vector<ll> gp[N];
+void dfs(ll v, ll p = -1) {
+	vis[v] = true; tin[v] = low[v] = timer++; ll cld = 0;
+	for (auto &to : gp[v]) {
+		if (to == p) continue;
+		if (vis[to]) low[v] = min(low[v], tin[to]);
+		else {
+			dfs(to, v); low[v] = min(low[v], low[to]);
+			if (low[to] >= tin[v] && p != -1) is_cut[v] = true;
+			++cld;
 		}
 	}
-	if (p == -1 && children > 1)
-		is_cut[v] = true;
+	if (p == -1 && cld > 1) is_cut[v] = true;
 }
-void cutpoint(long long n)
-{
+void cutpoint(ll n) {
 	timer = 0;
-	for (int i = 0; i <= n; ++i)
-	{
-		vis[i] = is_cut[i] = false;
-		tin[i] = low[i] == -1;
+	for (int i = 0; i <= n; ++i) {
+		vis[i] = is_cut[i] = false; tin[i] = low[i] == -1;
 	}
-	for (int i = 0; i < n; ++i)
-	{
-		if (!vis[i])
-			dfs(i);
+	for (int i = 0; i < n; ++i) {
+		if (!vis[i]) dfs(i);
 	}
 }
 
 // Operation:
-cin >> n >> m;
-for (i = 0; i <= n; ++i)
-{
-	gp[i].clear();
-}
-for (i = 1; i <= m; ++i)
-{
-	int u, v;
-	cin >> u >> v;
-	gp[u].push_back(v);
-	gp[v].push_back(u);
-}
-cutpoint(n);
-long long ans = 0;
-for (i = 1; i <= n; ++i)
-	ans += is_cut[i];
-cout << ans << "\n";
+	cin >> n >> m;
+	for (i = 1; i <= m; ++i) {
+		int u, v; cin >> u >> v;
+		gp[u].push_back(v); gp[v].push_back(u);
+	}
+	cutpoint(n); ll ans = 0;
+	for (i = 1; i <= n; ++i) ans += is_cut[i];
+	cout << ans << "\n";
+	for (i = 0; i <= n; ++i) gp[i].clear();
 
 // Problem: https://lightoj.com/problem/ant-hills
 

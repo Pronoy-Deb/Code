@@ -1,6 +1,6 @@
 // Complexity: O(n*(log(log(n))))
 
-pair<long long, long long> lh[N]; bool sv[N];
+pair<long long, long long> lh[N]; bitset<N> sv;
 void pre() {
     lh[2].first = lh[2].second = 2;
     for (int i = 4; i < N; i += 2) {

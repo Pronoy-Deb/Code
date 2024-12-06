@@ -93,8 +93,7 @@ void print(int i, int j) {
     cin >> s >> s1;
     n = s.size(); m = s1.size();
     memset(dp, -1, sizeof dp);
-    lcs(0, 0);
-    print(0, 0);
+    lcs(0, 0); print(0, 0);
 
 // All Substring Longest Common Subsequence:
 

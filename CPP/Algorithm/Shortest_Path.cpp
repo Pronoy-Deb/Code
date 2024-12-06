@@ -70,8 +70,7 @@ void dij(int src) {
     while (!st.empty()) {
         auto [d, u] = *st.begin();
         st.erase(st.begin());
-        if (++cnt[u] <= k and u == n)
-            cout << d << ' ';
+        if (++cnt[u] <= k and u == n) cout << d << ' ';
         if (cnt[u] <= k) {
             for (auto &[v, w] : gp[u])
                 st.emplace(d + w, v);
@@ -460,7 +459,7 @@ bool bmf(auto src, auto &gp, auto &dis) {
     for (i = 0; i < vr; ++i)  // Vertex distance from Source Vertex
         cout << dis[i] << '\n';
 
-// OR, Problem: https://cses.fi/problemset/task/1197
+https://cses.fi/problemset/task/1197
 
     cin >> n >> m;
     vector<tuple<int, int, int>> gp;

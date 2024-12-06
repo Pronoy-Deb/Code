@@ -1,8 +1,7 @@
-// WITHOUT lazy Propagation:
-// Complexity: Constructing the tre: O(n), Update & Query: O(log(n))
+// WITHOUT lazy Propagation: Build: O(n), Update & Query: O(log(n))
 
 long long tre[N << 1], ar[N], n;
-inline long long op(long long x, long long y) { return x + y; }
+inline long long op(long long l, long long r) { return l + r; }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
@@ -18,15 +17,37 @@ long long get(int l, int r) {
     return res;
 }
 
-// WITH lazy Propagation: O(n)
+// OR,
+
+long long tre[N << 2], ar[N], n;
+inline long long op(long long l, long long r) { return (l + r); }
+void make(int nd = 1, int s = 0, int e = n - 1) {
+    if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    make(lc, s, m); make(rc, m + 1, e); tre[nd] = op(tre[lc], tre[rc]);
+}
+void up(int in, long long val, int nd = 1, int s = 0, int e = n - 1) {
+    if (s == e) { tre[nd] = val; return; }
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    if (in <= m) up(in, val, lc, s, m); else up(in, val, rc, m + 1, e);
+    tre[nd] = op(tre[lc], tre[rc]);
+}
+long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
+    if (s > e || s > r || e < l) return 0;
+    if (s >= l && e <= r) return tre[nd];
+    int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
+    return op(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
+}
+
+// WITH lazy Propagation: Build: O(n), Increment / Query: O(logn)
 
 long long tre[N << 1], lz[N], ar[N], n;
-inline op(long long x, long long y) { return x + y; }
+inline long long op(long long x, long long y) { return (x + y); }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
-void apply(int in, long long val, int k) {
+inline void apply(int in, long long val, int k) {
     tre[in] += val * k; if (in < n) lz[in] += val;
 }
 void push(int l, int r) {
@@ -46,7 +67,8 @@ void rebuild(int l, int r) {
         for (int i = r; i >= l; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
     }
 }
-void add(int l, int r, long long val) {
+void inc(int l, int r, long long val) {
+    if (l < 0 || r >= n) return;
     push(l, l + 1); push(r, ++r); int l0 = l, r0 = r, k = 1;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1, k <<= 1) {
         if (l & 1) apply(l++, val, k); if (r & 1) apply(--r, val, k);
@@ -54,7 +76,8 @@ void add(int l, int r, long long val) {
     rebuild(l0, l0 + 1); rebuild(r0 - 1, r0);
 }
 long long get(int l, int r) {
-    push(l, l + 1); push(r, ++r); long long res = 0;
+    long long res = 0; if (l < 0 || r >= n) return res;
+    push(l, l + 1); push(r, ++r);
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
         if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
@@ -64,7 +87,7 @@ long long get(int l, int r) {
 // OR,
 
 long long tre[N << 2], lz[N << 2], ar[N], n;
-long long op(long long x, long long y) { return x + y; }
+inline long long op(long long l, long long r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -77,11 +100,11 @@ void propagate(int nd, int s, int e) {
         lz[nd] = 0;
     }
 }
-void add(int l, int r, long long val, int nd = 1, int s = 0, int e = n - 1) {
+void inc(int l, int r, long long val, int nd = 1, int s = 0, int e = n - 1) {
     propagate(nd, s, e); if (s > e || s > r || e < l) return;
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     if (s >= l && e <= r) { lz[nd] += val; propagate(nd, s, e); return; }
-    add(l, r, val, lc, s, m); add(l, r, val, rc, m + 1, e);
+    inc(l, r, val, lc, s, m); inc(l, r, val, rc, m + 1, e);
     tre[nd] = op(tre[lc], tre[rc]);
 }
 long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
@@ -92,8 +115,53 @@ long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 }
 void reset() { for (int i = 0; i < (n << 2) + 5; ++i) tre[i] = lz[i] = 0; }
 
+https://cses.fi/problemset/task/1735
+
+long long lzi[N << 2], lza[N << 2], tre[N << 2], ar[N], n;
+inline long long op(long long l, long long r) { return (l + r); }
+inline void pgi(int i, long long v, int s, int e) {
+    lzi[i] += v; tre[i] += (e - s + 1) * v;
+}
+inline void pga(int i, long long v, int s, int e) {
+    lza[i] = v; lzi[i] = 0; tre[i] = (e - s + 1) * v;
+}
+void push(int i, int s, int e) {
+    int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
+    if (lza[i]) {
+        pga(lc, lza[i], s, m); pga(rc, lza[i], m + 1, e); lza[i] = 0;
+    }
+    if (lzi[i]) {
+        pgi(lc, lzi[i], s, m); pgi(rc, lzi[i], m + 1, e); lzi[i] = 0;
+    }
+}
+void make(int i = 1, int s = 1, int e = n) {
+    if (s >= e) { if (s == e) tre[i] = ar[s]; return; }
+    int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
+    make(lc, s, m); make(rc, m + 1, e); tre[i] = op(tre[lc], tre[rc]);
+}
+void inc(int l, int r, long long v, int i = 1, int s = 1, int e = n) {
+    if (s > e || l > e || r < s) return;
+    if (l <= s && e <= r) { pgi(i, v, s, e); return; }
+    push(i, s, e); int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
+    inc(l, r, v, lc, s, m); inc(l, r, v, rc, m + 1, e);
+    tre[i] = op(tre[lc], tre[rc]);
+}
+void asn(int l, int r, long long v, int i = 1, int s = 1, int e = n) {
+    if (s > e || l > e || r < s) return;
+    if (l <= s && e <= r) { pga(i, v, s, e); return; }
+    push(i, s, e); int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
+    asn(l, r, v, lc, s, m); asn(l, r, v, rc, m + 1, e);
+    tre[i] = op(tre[lc], tre[rc]);
+}
+long long get(int l, int r, int i = 1, int s = 1, int e = n) {
+    if (s > e || l > e || r < s) return 0;
+    if (l <= s && e <= r) return tre[i];
+    push(i, s, e); int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
+    return op(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
+}
+
 // Persistent Segment Tree:
-// Problem: https://www.spoj.op/problems/MKTHNUM/
+https://www.spoj.op/problems/MKTHNUM/
 
 struct node {
     long long l = 0, r = 0, val = 0;
@@ -136,7 +204,7 @@ long long get(int pre, int cur, int k, int s = 1, int e = n) {
     }
 
 // Persistent Segment Tree with Lazy Propagation:
-// https://www.codechef.op/problems/SUBINVER
+https://www.codechef.op/problems/SUBINVER
 
 template <const int32_t MOD>
 struct modint {
@@ -297,9 +365,8 @@ long long get(int X, int xs, int xe, int x1, int x2, int y1, int y2) {
         }
     }
 
-
 // Dynamic Segment Tree:
-// Problem: https://cses.fi/problemset/task/1144
+https://cses.fi/problemset/task/1144
 
 class ST {
 public:
@@ -307,12 +374,12 @@ public:
     ST(int n) {
         sz = n; tre.resize((n << 2), 0);
     }
-    void add(int nd, int s, int e, int sz, int val) {
+    void inc(int nd, int s, int e, int sz, int val) {
         if (s == e) tre[nd] += val;
         else {
             int mid = (s + e) >> 1, lc = (nd << 1), rc = lc + 1;
-            if (sz <= mid) add(lc, s, mid, sz, val);
-            else add(rc, mid + 1, e, sz, val);
+            if (sz <= mid) inc(lc, s, mid, sz, val);
+            else inc(rc, mid + 1, e, sz, val);
             tre[nd] = tre[lc] + tre[rc];
         }
     }
@@ -338,12 +405,12 @@ public:
     }
     int sz = 0; for (auto& e : mp) e.second = ++sz;
     ST tre(sz);
-    for (int i = 0; i < n; ++i) tre.add(1, 1, sz, mp[sal[i]], 1);
+    for (int i = 0; i < n; ++i) tre.inc(1, 1, sz, mp[sal[i]], 1);
     for (auto& e : query) {
         char tp = e.first; int a = e.second.first, b = e.second.second;
         if (tp == '!') {
-            tre.add(1, 1, sz, mp[sal[--a]], -1);
-            tre.add(1, 1, sz, mp[b], 1); sal[a] = b;
+            tre.inc(1, 1, sz, mp[sal[--a]], -1);
+            tre.inc(1, 1, sz, mp[b], 1); sal[a] = b;
         }
         else cout << tre.get(1, 1, sz, mp[a], mp[b]) << '\n';
     }
@@ -644,11 +711,11 @@ void stmx(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); op(nd);
 }
-void add(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+void inc(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return;
     if (l <= s && e <= r) { push_add(nd, s, e, v); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
-    add(l, r, v, lc, s, m); add(l, r, v, rc, m + 1, e); op(nd);
+    inc(l, r, v, lc, s, m); inc(l, r, v, rc, m + 1, e); op(nd);
 }
 long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return 0; if (l <= s && e <= r) return tre[nd].sum;
@@ -775,7 +842,6 @@ int main() {
         cur.insert(i);
         rb[i] = i;
     }
-
     while (q--) {
         // sort range [l, r]
         // type: 0 - inc  1 - dec
@@ -847,7 +913,6 @@ template <int32_t MOD> modint<MOD> operator*(int32_t val, modint<MOD> n) { retur
 template <int32_t MOD> istream &operator>>(istream &in, modint<MOD> &n) { return in >> n.val; }
 template <int32_t MOD> ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.val; }
 using mint = modint<M>;
-
 struct ST {
     struct Int { // arithmetic progression a, a + d, a + 2 * d, ...
         mint a = 0, d = 0;

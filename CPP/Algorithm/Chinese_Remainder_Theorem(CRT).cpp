@@ -3,26 +3,19 @@
 // Note: If val[i] are not pairwise coprime, then: x % lcm(val[i]) = rem[i] for all i
 
 long long val[N], rem[N], n;
-long long inv(auto a, auto m)
-{
-	if (m == 1)
-		return 0;
+long long inv(auto a, auto m) {
+	if (m == 1) return 0;
 	long long m0 = m, x0 = 0, x1 = 1;
-	while (a > 1)
-	{
+	while (a > 1) {
 		long long q = a / m, t = m;
-		m = a % m, a = t;
-		t = x0;
-		x0 = x1 - q * x0;
-		x1 = t;
+		m = a % m, a = t; t = x0;
+		x0 = x1 - q * x0; x1 = t;
 	}
 	return (x1 < 0 ? x1 + m0 : x1);
 }
-long long minv(auto pro)
-{
+long long minv(auto pro) {
 	long long res = 0;
-	for (int i = 0; i < n; ++i)
-	{
+	for (int i = 0; i < n; ++i) {
 		long long pp = pro / val[i];
 		res += rem[i] * inv(pp, val[i]) * pp;
 	}
@@ -30,16 +23,13 @@ long long minv(auto pro)
 }
 
 // Operation:
-cin >> n;
-long long pro = 1;
-for (i = 0; i < n; ++i)
-{
-	cin >> val[i];
-	pro *= val[i];
-}
-for (i = 0; i < n; ++i)
-	cin >> rem[i];
-cout << minv(pro);
+	cin >> n;
+	long long pro = 1;
+	for (i = 0; i < n; ++i) {
+		cin >> val[i]; pro *= val[i];
+	}
+	for (i = 0; i < n; ++i) cin >> rem[i];
+	cout << minv(pro);
 
 // OR,
 

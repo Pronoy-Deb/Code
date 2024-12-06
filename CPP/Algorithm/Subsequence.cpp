@@ -1,7 +1,7 @@
-            // Subsequence Generation:
-            // Note: Number of subsequences of a string : 2^n - 1
-            // Bitmasking Approach:
-            // Complexity: O(2^n)  // n = inp.size()
+// Subsequence Generation:
+// Note: Number of subsequences of a string : 2^n - 1
+// Bitmasking Approach:
+// Complexity: O(2^n)  // n = inp.size()
 
 vector<string> res;
 void sseq(auto &inp) {
@@ -32,7 +32,7 @@ auto sseq(auto &inp, auto &sub, auto i) {
 
 Calling: string inp = "abc", sub; sseq(inp, sub, 0);
 
-        // Number of Subsequences having Product at least K:
+// Number of Subsequences having Product at least K:
 
 #include<bits/stdc++.h>
 using namespace std;

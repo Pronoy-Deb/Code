@@ -1,63 +1,38 @@
 // Determinant:
 
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 3e5 + 9;
-
 const double eps = 1e-9;
-int Gauss(vector<vector<double>> a)
-{
+int gauss(vector<vector<double>> a) {
     int n = (int)a.size(), m = (int)a[0].size();
     double det = 1;
     int rank = 0;
-    for (int col = 0, row = 0; col < m && row < n; ++col)
-    {
+    for (int col = 0, row = 0; col < m && row < n; ++col) {
         int mx = row;
-        for (int i = row; i < n; i++)
-            if (fabs(a[i][col]) > fabs(a[mx][col]))
-                mx = i;
-        if (fabs(a[mx][col]) < eps)
-        {
-            det = 0;
-            continue;
-        }
-        for (int i = col; i < m; i++)
-            swap(a[row][i], a[mx][i]);
-        if (row != mx)
-            det = -det;
-        det *= a[row][col];
-        for (int i = 0; i < n; i++)
-        {
-            if (i != row && fabs(a[i][col]) > eps)
-            {
+        for (int i = row; i < n; ++i)
+            if (fabs(a[i][col]) > fabs(a[mx][col])) mx = i;
+        if (fabs(a[mx][col]) < eps) { det = 0; continue; }
+        for (int i = col; i < m; ++i) swap(a[row][i], a[mx][i]);
+        if (row != mx) det = -det; det *= a[row][col];
+        for (int i = 0; i < n; ++i) {
+            if (i != row && fabs(a[i][col]) > eps) {
                 double c = a[i][col] / a[row][col];
-                for (int j = col; j < m; j++)
-                    a[i][j] -= a[row][j] * c;
+                for (int j = col; j < m; ++j) a[i][j] -= a[row][j] * c;
             }
         }
-        ++row;
-        ++rank;
+        ++row; ++rank;
     }
     return det;
 }
-int main()
-{
-    int n, m;
+
+// Operation:
     cin >> n >> m;
     vector<vector<double>> v(n);
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
-            double x;
-            cin >> x;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            double x; cin >> x;
             v[i].push_back(x);
         }
     }
-    cout << Gauss(v) << '\n';
-    return 0;
-}
+    cout << gauss(v) << '\n';
 
 // Determinant of Permutant Matrix:
 
@@ -275,22 +250,22 @@ int32_t main()
     while (cin >> n >> x)
     {
         vector<int> a(n), b(n);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             cin >> a[i];
         }
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             cin >> b[i];
         }
         int ans = 0;
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             ans += 1LL * a[i] * b[i] % mod;
             ans %= mod;
         }
         int p = x;
-        for (int i = 0; i + 1 < n; i++)
+        for (int i = 0; i + 1 < n; ++i)
         {
             ans = 1LL * ans * x % mod;
             p = 1LL * p * x % mod;
@@ -388,7 +363,7 @@ vector<mint> BerlekampMassey(vector<mint> S)
     vector<mint> C(n), B(n), T;
     C[0] = B[0] = 1;
     mint b = 1;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; ++i)
     {
         ++m;
         mint d = S[i];
@@ -433,7 +408,7 @@ struct Mat
     inline void make_unit()
     {
         assert(n == m);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < n; j++)
                 a[i][j] = i == j;
@@ -443,7 +418,7 @@ struct Mat
     {
         assert(n == b.n && m == b.m);
         Mat ans = Mat(n, m);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < m; j++)
             {
@@ -456,7 +431,7 @@ struct Mat
     {
         assert(n == b.n && m == b.m);
         Mat ans = Mat(n, m);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < m; j++)
             {
@@ -469,7 +444,7 @@ struct Mat
     {
         assert(m == b.n);
         Mat ans = Mat(n, b.m);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int k = 0; k < m; k++)
             {
@@ -484,7 +459,7 @@ struct Mat
     inline Mat operator*(int k)
     {
         Mat ans = *this;
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < m; j++)
             {
@@ -515,7 +490,7 @@ struct Mat
     void print()
     {
         cout << "Matrix: \n";
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < m; j++)
                 cout << a[i][j] << ' ';
@@ -541,13 +516,13 @@ struct Elem
 vector<mint> MatrixRecurrence(int n, vector<Elem> M)
 {
     vector<mint> rd1, rd2;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; ++i)
     {
         rd1.push_back(1 + rnd() % (mod - 1));
         rd2.push_back(1 + rnd() % (mod - 1));
     }
     vector<mint> v;
-    for (int i = 0; i < 2 * n + 2; i++)
+    for (int i = 0; i < 2 * n + 2; ++i)
     {
         mint tmp = 0;
         for (int j = 0; j < n; j++)
@@ -565,7 +540,7 @@ vector<mint> MatrixRecurrence(int n, vector<Elem> M)
 mint Determinant(int n, vector<Elem> M)
 {
     vector<mint> rd;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; ++i)
         rd.push_back(1 + rnd() % (mod - 1));
     for (auto &e : M)
         e.v *= rd[e.y];
@@ -581,7 +556,7 @@ void verify_matrix_recurrence(int n, Mat a, vector<Elem> M)
     // cout << "Original "; a.print();
     auto p = MatrixRecurrence(n, M);
     // for (auto x: p) cout << x << ' '; cout << '\n';
-    for (int i = p.size(); i <= p.size() + 1; i++)
+    for (int i = p.size(); i <= p.size() + 1; ++i)
     {
         auto PW = (a.pow(i));
         Mat ans(n, n);
@@ -601,7 +576,7 @@ int main()
     cin >> n >> k;
     vector<Elem> M;
     Mat a(n, n);
-    for (int i = 0; i < k; i++)
+    for (int i = 0; i < k; ++i)
     {
         int x, y, z;
         cin >> x >> y >> z;
@@ -622,7 +597,7 @@ using namespace std;
 const int N = 3e5 + 9;
 
 // O(n^3 logn)
-int Gauss(vector<vector<int>> a, const int mod)
+int gauss(vector<vector<int>> a, const int mod)
 {
     int n = (int)a.size();
     if (n != a[0].size())
@@ -631,16 +606,16 @@ int Gauss(vector<vector<int>> a, const int mod)
     for (int col = 0, row = 0; col < n && row < n; ++col)
     {
         int mx = row;
-        for (int i = row; i < n; i++)
+        for (int i = row; i < n; ++i)
             if (a[i][col] > a[mx][col])
                 mx = i;
         if (a[mx][col] == 0)
             return 0;
-        for (int i = col; i < n; i++)
+        for (int i = col; i < n; ++i)
             swap(a[row][i], a[mx][i]);
         if (row != mx)
             det = det == 0 ? 0 : mod - det;
-        for (int i = row + 1; i < n; i++)
+        for (int i = row + 1; i < n; ++i)
         {
             while (a[row][col])
             {
@@ -669,7 +644,7 @@ int32_t main()
     while (cin >> n >> mod)
     {
         vector<vector<int>> a(n, vector<int>(n, 0));
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < n; j++)
             {
@@ -681,7 +656,7 @@ int32_t main()
                 a[i][j] = k;
             }
         }
-        cout << Gauss(a, mod) << '\n';
+        cout << gauss(a, mod) << '\n';
     }
     return 0;
 }
@@ -709,7 +684,7 @@ int power(long long n, long long k)
     }
     return ans;
 }
-int Gauss(vector<vector<int>> a)
+int gauss(vector<vector<int>> a)
 {
     int n = a.size(), m = (int)a[0].size();
     int free_var = 0;
@@ -732,7 +707,7 @@ int Gauss(vector<vector<int>> a)
             det = det == 0 ? 0 : mod - det;
         det = 1LL * det * a[row][col] % mod;
         int inv = power(a[row][col], mod - 2);
-        for (int i = 0; i < n && inv; i++)
+        for (int i = 0; i < n && inv; ++i)
         {
             if (i != row && a[i][col])
             {
@@ -755,9 +730,9 @@ int32_t main()
     int n;
     cin >> n;
     vector<vector<int>> a(n, vector<int>(n));
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; ++i)
         for (int j = 0; j < n; j++)
             cin >> a[i][j];
-    cout << Gauss(a) << '\n';
+    cout << gauss(a) << '\n';
     return 0;
 }

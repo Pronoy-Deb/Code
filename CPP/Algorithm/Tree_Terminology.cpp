@@ -1,9 +1,9 @@
 // Complexity: O(n)
 
-vector<long long> tre[N]; long long par[N], lvl[N], streSz[N];
-auto dfs(auto u, auto p) {
+vector<int> tre[N]; int par[N], lvl[N], streSz[N];
+auto dfs(int u, int p) {
     par[u] = p; streSz[u] = 1;
-    for (auto &v : tre[u]) {
+    for (auto v : tre[u]) {
         if (v != p) {
             lvl[v] = lvl[u] + 1;
             dfs(v, u); streSz[u] += streSz[v];

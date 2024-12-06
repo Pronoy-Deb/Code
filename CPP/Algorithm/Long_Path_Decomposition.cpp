@@ -1,3 +1,5 @@
+// https://codeforces.com/contest/526/problem/G
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -154,4 +156,3 @@ int32_t main()
     }
     return 0;
 }
-// https://codeforces.com/contest/526/problem/G

@@ -1,23 +1,14 @@
 // Complexity: O(n)
 // Application: Used to determine the number of palindromes in a string.
 
-auto man(auto &s)
-{
-    string t = "$#";
-    for (auto &c : s)
-        t += c + string("#");
-    t += '^';
-    int n = t.size(), l = 0, r = 0;
-    vector<int> p(n);
-    for (int i = 0; i < n; ++i)
-    {
+auto man(auto &s) {
+    string t = "$#"; for (auto &c : s) t += c + string("#");
+    t += '^'; int n = t.size(), l = 0, r = 0; vector<int> p(n);
+    for (int i = 0; i < n; ++i) {
         p[i] = max(0, min(r - i, p[l + (r - i)]));
-        while (t[i - p[i]] == t[i + p[i]])
-            ++p[i];
-        if (i + p[i] > r)
-        {
-            l = i - p[i];
-            r = i + p[i];
+        while (t[i - p[i]] == t[i + p[i]]) ++p[i];
+        if (i + p[i] > r) {
+            l = i - p[i]; r = i + p[i];
         }
     }
     return p;

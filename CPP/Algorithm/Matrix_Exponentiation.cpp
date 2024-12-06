@@ -74,13 +74,10 @@ void print(auto A[][N], auto dim) {
 }
 
 // Operation:
-long long dim;
-cin >> dim >> n;
-for (i = 1; i <= dim; ++i)
-    for (j = 1; j <= dim; ++j)
-        cin >> ar[i][j];
-power(ar, dim, n);
-print(ar, dim);
+    long long dim; cin >> dim >> n;
+    for (i = 1; i <= dim; ++i)
+        for (j = 1; j <= dim; ++j) cin >> ar[i][j];
+    power(ar, dim, n); print(ar, dim);
 
 // OR,
 

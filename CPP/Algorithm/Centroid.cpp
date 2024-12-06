@@ -1,89 +1,69 @@
-// Centroids:
+// Determining Centroid(s):
+https://cses.fi/problemset/task/2079
 
-#include<bits/stdc++.h>
-using namespace std;
-
-const int N = 1e5 + 9;
-vector<int> g[N];
-int sz[N];
-void dfs(int u, int p = 0) {
+vector<int> gp[N]; int sz[N];
+void dfs(int u = 1, int p = 0) {
 	sz[u] = 1;
-	for (auto v: g[u]) {
+	for (auto v : gp[u]) {
 		if (v ^ p) {
-			dfs(v, u);
-			sz[u] += sz[v];
+			dfs(v, u); sz[u] += sz[v];
 		}
 	}
 }
-vector<int> get_centroids(int n) {
-	int u = 1;
-	dfs(u);
+vector<int> cen(int n) {
+	dfs(); int u = 1;
 	while (1) {
 		int tmp = -1;
-		for (auto v: g[u]) {
+		for (auto v : gp[u]) {
 			if (sz[v] > sz[u]) continue;
-			if (2 * sz[v] >= n) tmp = v;
+			if ((sz[v] << 1) >= n) tmp = v;
 		}
-		if (tmp == -1) break;
-		u = tmp;
+		if (tmp == -1) break; u = tmp;
 	}
 	dfs(u);
-	for (auto v: g[u]) {
-		if (2 * sz[v] == n) {
-			return {u, v};
-		}
+	for (auto v : gp[u]) {
+		if ((sz[v] << 1) == n) return {u, v};
 	}
 	return {u};
 }
-int32_t main() {
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	int t; cin >> t;
-	while (t--) {
-		int n; cin >> n;
-		for (int i = 1; i < n; i++) {
-		    int u, v; cin >> u >> v;
-		    g[u].push_back(v);
-		    g[v].push_back(u);
-		}
-		auto v = get_centroids(n);
-		for (auto i: v) cout << i << ' '; cout << '\n';
-		for (int i = 1; i <= n; i++) g[i].clear();
-	}
-  return 0;
-}
-// similar problem: https://cses.fi/problemset/task/2079
+
+// Operation:
+    cin >> n;
+    for (i = 1; i < n; ++i) {
+        int u, v; cin >> u >> v;
+        gp[u].push_back(v); gp[v].push_back(u);
+    }
+    auto v = cen(n);
+    cout << v.front();
 
 // Centroid Decomposition:
-// Problem: https://cses.fi/problemset/task/2080/
+https://cses.fi/problemset/task/2080/
 
-vector<int> gp[N];
-long long n, k, ans = 0, sz[N], cnt[N]{1}, mxdep; bool vis[N];
-int dfs(int u, int p = 0) {
+vector<int> gp[N]; bitset<N> vis;
+long long n, k, ans, sz[N], cnt[N]{1}, mxDep;
+int subSize(int u, int p) {
     sz[u] = 1;
-    for (auto &i : gp[u]) if (!vis[i] && i != p) sz[u] += dfs(i, u);
+    for (auto i : gp[u]) if (!vis[i] && i != p) sz[u] += subSize(i, u);
     return sz[u];
 }
 int centroid(int u, int p, int mx) {
-    for (auto &v : gp[u])
-        if (!vis[v] && v != p && (sz[v] << 1) > mx) return centroid(v, u, mx);
+    for (auto &v : gp[u]) if (!vis[v] && v != p && (sz[v] << 1) > mx) return centroid(v, u, mx);
     return u;
 }
 void go(int u, int p, int dep, bool fil) {
-    if (dep > k) return;
-    if (dep > mxdep) mxdep = dep;
-    if (fil) cnt[dep]++; else ans += cnt[k - dep];
+    if (dep > k) return; if (dep > mxDep) mxDep = dep;
+    if (fil) ++cnt[dep]; else ans += cnt[k - dep];
     for (auto &v : gp[u]) if (!vis[v] && v != p) go(v, u, dep + 1, fil);
 }
-void dcom(int u) {
-    int mx = dfs(u, u), c = centroid(u, u, mx);
-    vis[c] = true, mxdep = 0;
+void dcom(int u = 1) {
+    int mx = subSize(u, u), c = centroid(u, u, mx);
+    vis[c] = true, mxDep = 0;
     for (auto &i : gp[c]) {
         if (!vis[i]) {
             go(i, c, 1, false); go(i, c, 1, true);
         }
     }
-    fill(cnt + 1, cnt + mxdep + 1, 0);
+    fill(cnt + 1, cnt + mxDep + 1, 0);
     for (auto &v : gp[c]) if (!vis[v]) dcom(v);
 }
 
@@ -93,76 +73,114 @@ void dcom(int u) {
         int u, v; cin >> u >> v;
         gp[u].push_back(v); gp[v].push_back(u);
     }
-    dcom(1);
-    cout << ans;
+    dcom(); cout << ans;
 
-// OR,
-vector<int> g[N]; int sz[N], tot = 0, done[N], cenpar[N];
-void calc_sz(int u, int p) {
-    ++tot; sz[u] = 1;
-    for (auto &v : g[u]) {
-        if(v == p || done[v]) continue;
-        calc_sz(v, u); sz[u] += sz[v];
+https://cses.fi/problemset/task/2081
+
+vector<int> gp[N]; bitset<N> vis;
+long long k1, k2, ans, sz[N], cnt[N]{1}, ct[N], mxDep, subDep, n;
+int subSize(int u, int p) {
+    sz[u] = 1;
+    for (auto i : gp[u]) if (!vis[i] && i != p) sz[u] += subSize(i, u);
+    return sz[u];
+}
+int centroid(int u, int p, int size) {
+    for (auto v : gp[u]) if (!vis[v] && v != p && (sz[v] << 1) > size) return centroid(v, u, size);
+    return u;
+}
+void go(int u, int p, long long dep = 1) {
+    if (dep > k2) return; subDep = max(subDep, dep); ++ct[dep];
+    for (auto &v : gp[u]) if (!vis[v] && v != p) go(v, u, dep + 1);
+}
+void dcom(int u = 1) {
+    int size = subSize(u, u), c = centroid(u, u, size);
+    vis[c] = true, mxDep = 0; long long tot = (k1 == 1);
+    for (auto i : gp[c]) {
+        if (!vis[i]) {
+            subDep = 0; go(i, c); long long sum = tot;
+            for (int d = 1; d <= subDep; ++d) {
+                ans += sum * ct[d]; int d1 = k2 - d, d2 = k1 - d - 1;
+                if (d1 >= 0) sum -= cnt[d1];
+                if (d2 >= 0) sum += cnt[d2];
+            }
+            for (int d = k1 - 1, l = min(k2 - 1, subDep); d <= l; ++d) tot += ct[d];
+            for (int d = 1; d <= subDep; ++d) cnt[d] += ct[d];
+            mxDep = max(mxDep, subDep); fill(ct, ct + subDep + 1, 0);
+        }
+    }
+    fill(cnt + 1, cnt + mxDep + 1, 0);
+    for (auto v : gp[c]) if (!vis[v]) dcom(v);
+}
+
+// Operation:
+    cin >> n >> k1 >> k2;
+    for (i = 1; i < n; ++i) {
+        int u, v; cin >> u >> v;
+        gp[u].push_back(v); gp[v].push_back(u);
+    }
+    dcom(); cout << ans;
+
+https://codeforces.com/contest/321/problem/C
+
+vector<int> gp[N]; bitset<N> vis; int sz[N], cPar[N], dep[N], siz;
+void subSize(int u, int p) {
+    ++siz; sz[u] = 1;
+    for (auto v : gp[u]) {
+        if (v == p || vis[v]) continue; subSize(v, u); sz[u] += sz[v];
     }
 }
-int find_cen(int u, int p) {
-    for (auto &v : g[u]) {
-        if(v == p || done[v]) continue;
-        else if(sz[v] > (tot >> 1)) return find_cen(v, u);
+int centroid(int u, int p) {
+    for (auto v : gp[u]) {
+        if (v == p || vis[v]) continue;
+        if (sz[v] > (siz >> 1)) return centroid(v, u);
     }
     return u;
 }
-void dcom(int u, int pre) {
-    calc_sz(u, pre); int cen = find_cen(u, pre);
-    cenpar[cen] = pre; done[cen] = 1;
-    for(auto &v : g[cen]) {
-        if(v == pre || done[v]) continue;
-        dcom(v, cen);
+void dcom(int u = 1, int p = 0) {
+    siz = 0; subSize(u, p); int c = centroid(u, p); cPar[c] = p; vis[c] = 1;
+    for (auto v : gp[c]) {
+        if (v == p || vis[v]) continue; dcom(v, c);
     }
 }
-int dep[N];
 void dfs(int u, int p = 0) {
-    for(auto &v : g[u]) {
-        if(v == p) continue;
-        dep[v] = dep[u] + 1; dfs(v, u);
+    for (auto v : gp[u]) {
+        if (v == p) continue; dep[v] = dep[u] + 1; dfs(v, u);
     }
 }
 
 // Operation:
     cin >> n;
-    for(i = 1; i < n; ++i) {
+    for (i = 1; i < n; ++i) {
         int u, v; cin >> u >> v;
-        g[u].push_back(v); g[v].push_back(u);
+        gp[u].push_back(v); gp[v].push_back(u);
     }
-    dcom(1);
-    for(i = 1; i <= n; ++i) g[i].clear();
+    dcom();
+    for (i = 1; i <= n; ++i) gp[i].clear();
     int rt = 1;
-    for(i = 1; i <= n; ++i) {
-        g[cenpar[i]].push_back(i);
-        g[i].push_back(cenpar[i]);
-        if (cenpar[i] == 0) rt = i;
+    for (i = 1; i <= n; ++i) {
+        gp[cPar[i]].push_back(i); gp[i].push_back(cPar[i]);
+        if (cPar[i] == 0) rt = i;
     }
     dfs(rt);
-    for(i = 1; i <= n; ++i) cout << char(dep[i] + 'A') << ' ';
+    for (i = 1; i <= n; ++i) cout << char(dep[i] + 'A') << ' ';
 
-// Problem: https://codeforces.com/contest/321/problem/C
+// Persistent Centroid Decompostion:
+https://codeforces.com/contest/757/problem/G
 
-// Centroid Decompostion Persistent:
 const int N = 2e5 + 9, M = (N << 1) + N * 19 * 2;
-
-vector<pair<int, int>> g[N << 1], G[N];
+vector<pair<int, int>> gp[N << 1], gp[N];
 inline void add(int u, int v, int w) {
-    g[u].push_back({v, w});
+    gp[u].push_back({v, w});
 }
 int T;
 void binarize(int u, int p = 0) {
     int last = 0, tmp = 0;
-    for (auto &[v, w] : G[u]) {
+    for (auto &[v, w] : gp[u]) {
         if (v == p) continue;
         if (++tmp == 1) {
             add(u, v, w); add(v, u, w); last = u;
         }
-        else if (tmp == ((int) G[u].size()) - (u != 1)) {
+        else if (tmp == ((int) gp[u].size()) - (u != 1)) {
             add(last, v, w); add(v, last, w);
         }
         else {
@@ -170,20 +188,20 @@ void binarize(int u, int p = 0) {
             last = T; add(T, v, w); add(v, T, w);
         }
     }
-    for (auto &[v, w] : G[u]) {
+    for (auto &[v, w] : gp[u]) {
         if (v == p) continue; binarize(v, u);
     }
 }
 int sz[N << 1], tot, done[N << 1], cenpar[N << 1];
 void calc_sz(int u, int p) {
     ++tot; sz[u] = 1;
-    for (auto &[v, w] : g[u]) {
+    for (auto &[v, w] : gp[u]) {
         if(v == p || done[v]) continue;
         calc_sz(v, u); sz[u] += sz[v];
     }
 }
 int find_cen(int u, int p) {
-    for (auto &[v, w] : g[u]) {
+    for (auto &[v, w] : gp[u]) {
         if(v == p || done[v]) continue;
         else if(sz[v] > (tot >> 1)) return find_cen(v, u);
     }
@@ -192,7 +210,7 @@ int find_cen(int u, int p) {
 long long d[20][N << 1];
 void yo(int u, int p, long long nw, int l) {
     d[l][u] = nw;
-    for(auto &[v, w] : g[u]) {
+    for(auto &[v, w] : gp[u]) {
         if (v == p || done[v]) continue;
         yo(v, u, nw + w, l);
     }
@@ -207,7 +225,7 @@ int dcom(int u, int p = 0, int l = 0) {
     cenpar[cen] = p; done[cen] = 1;
     u = cen; st[u] = ++DT; t[u].id = u;
     t[u].level = l; yo(u, p, 0, l);
-    for (auto &[v, w] : g[u]) {
+    for (auto &[v, w] : gp[u]) {
         if(v == p || done[v]) continue;
         int x = dcom(v, u, l + 1);
         t[u].ct.push_back(x);
@@ -247,7 +265,7 @@ int ar[N], rt[N];
     for(int i = 1; i <= n; ++i) cin >> ar[i];
     for (int i = 1; i < n; ++i) {
         int u, v, w; cin >> u >> v >> w;
-        G[u].push_back({v, w}); G[v].push_back({u, w});
+        gp[u].push_back({v, w}); gp[v].push_back({u, w});
     }
     T = n; binarize(1); rt[0] = dcom(1);
     for(int i = 1; i <= n; ++i) rt[i] = up(rt[i - 1], a[i]);
@@ -268,8 +286,6 @@ int ar[N], rt[N];
         swap(a[x], a[x + 1]);
         }
     }
-
-//https://codeforces.com/contest/757/problem/G
 
 // Centroid Decomposition Tree:
 

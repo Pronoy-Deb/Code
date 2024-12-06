@@ -17,12 +17,10 @@ using namespace std;
 const ll M = 1e9 + 7, N = 2e5 + 5;
 ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0, inp[N], ar[N]; string s;
 
-auto check(ifstream &fin) {
-    // Read the Output
-    fin >> m;
-    // for (i = 0; i < n; ++i) fin >> ar[i];
-
-    return true;
+bool check(ifstream &in) {
+    // Read Output from output file
+    in >> n;
+    // return true;
 }
 
 signed main() {
@@ -32,7 +30,7 @@ signed main() {
     ifstream op("out2", ifstream::in);
     // Read Input from Generator.cpp
     int tc; fin >> tc; // For testcase
-    fin >> n;
+    // fin >> n;
     // for (i = 0; i < n; ++i) fin >> inp[i];
     return (check(op) ? 0 : -1);
     // return (check(bf) == check(op) ? 0 : -1);

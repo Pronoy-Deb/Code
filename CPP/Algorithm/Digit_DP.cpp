@@ -59,7 +59,7 @@ long long n, k, dp[N][N];
 long long rec(int in, int rem) {
     if (in == n) return !rem;
     auto &res = dp[in][rem];
-    if (~res) return res; ```res = 0;
+    if (~res) return res; res = 0;
     for (int i = 0; i <= 9; ++i) {
         if (!i and !in) continue;
         res = (res + rec(in + 1, (rem * 10 + i) % k)) % M;
@@ -79,7 +79,7 @@ long long dp[N][2];
 long long rec(int in, bool less) {
     if (in == s.size()) return 0;
     auto &res = dp[in][less];
-    if (~res) return res; ```res = 0;
+    if (~res) return res; res = 0;
     int d = s[in] - '0', last = less ? 9 : d;
     for (int i = 0; i <= last; ++i)
         res = max(res, i + rec(in + 1, less | i < d));
@@ -98,7 +98,7 @@ long long dp[N][2][2][3];
 long long rec(int in, bool less, int rem2, int rem3) {
     if (in == s.size()) return (!rem2) ^ (!rem3);
     auto &res = dp[in][less][rem2][rem3];
-    if (~res) return res; ```res = 0;
+    if (~res) return res; res = 0;
     int d = s[in] - '0', last = less ? 9 : d;
     for (int i = 0; i <= last; ++i)
         res = (res + rec(in + 1, less | i < d, (rem2 * 10 + i) % 2, (rem3 * 10 + i) % 3)) % M;
@@ -173,7 +173,7 @@ long long rec(int in, bool less, int mask, bool L0) {
     cout << (((b - a + M) % M) + !mask) % M;
 
 
-                                // YKW:
+// YKW:
 
 #include<bits/stdc++.h>
 using namespace std;

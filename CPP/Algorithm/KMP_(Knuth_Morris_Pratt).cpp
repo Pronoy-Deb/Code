@@ -3,27 +3,17 @@
 // vector<long long> ind;
 
 long long pi[N]; // N = p.size()
-long long kmp(auto &str, auto &pat)
-{
+long long kmp(auto &str, auto &pat) {
     long long now = pi[0] = -1, pl = pat.size();
-    for (int i = 1; i < pl; ++i)
-    {
-        while (now != -1 && pat[now + 1] != pat[i])
-            now = pi[now];
-        if (pat[now + 1] == pat[i])
-            ++now;
-        pi[i] = now;
+    for (int i = 1; i < pl; ++i) {
+        while (now != -1 && pat[now + 1] != pat[i]) now = pi[now];
+        if (pat[now + 1] == pat[i]) ++now; pi[i] = now;
     }
-    long long ans = 0, sl = str.size();
-    now = -1;
-    for (int i = 0; i < sl; ++i)
-    {
-        while (now != -1 && pat[now + 1] != str[i])
-            now = pi[now];
-        if (pat[now + 1] == str[i])
-            ++now;
-        if (now == pl - 1)
-            ++ans;
+    long long ans = 0, sl = str.size(); now = -1;
+    for (int i = 0; i < sl; ++i) {
+        while (now != -1 && pat[now + 1] != str[i]) now = pi[now];
+        if (pat[now + 1] == str[i]) ++now;
+        if (now == pl - 1) ++ans;
         // if(now == pl-1) ind.emplace_back(i-pl+1);  // To determine the indices
     }
     return ans;

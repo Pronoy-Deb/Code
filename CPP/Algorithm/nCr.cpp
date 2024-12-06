@@ -4,11 +4,9 @@
 // Complexity: O(r)
 
 long long ncr(long long n, long long r) {
-	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
-	long double ans = 1;
-	for (int i = 1; i <= r; ++i) {
-		ans = ans * (n - r + i) / i;
-	}
+	if (r > n) return 0; if (!r || n == r) return 1;
+	if (r == 1) return n; long double ans = 1;
+	for (int i = 1; i <= r; ++i) ans *= (n - r + i) / i;
 	return (long long)(ans + 0.01);
 }
 

@@ -1,11 +1,10 @@
-/*  -Wavelet Tree-
- *  INF : maximum value in the array
+/*  -Wavelet tree-
+ *  M : maximum value in the array
  *  valaues can be negetive as well
- *  Use appropirate maximum & minimum value (INF, -INF)
+ *  Use appropirate maximum & minimum value (M, -M)
  *  The array changes after applying init
  */
 
-const long long N = 3e5 + 9, INF = 1e9 + 9;
 
 struct wltre {
     long long lo, hi;
@@ -68,14 +67,13 @@ struct wltre {
     ~wltre() { delete l, delete r; }
 };
 
-long long a[N];
-wltre Tree;
+long long ar[N]; wltre tre;
 
 // Operation:
     cin >> n >> q;
-    for (i = 1; i <= n; ++i) cin >> a[i];
-    Tree.init(a + 1, a + n + 1, -INF, INF);
+    for (i = 1; i <= n; ++i) cin >> ar[i];
+    tre.init(ar + 1, ar + n + 1, -M, M);
     while (q--) {
         int l, r, k; cin >> l >> r >> k;
-        cout << Tree.kth(l + 1 , r , k + 1) << "\n";
+        cout << tre.kth(l + 1 , r , k + 1) << "\n";
     }

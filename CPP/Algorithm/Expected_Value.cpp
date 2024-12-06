@@ -15,3 +15,24 @@ long double ev(long long n, int k) {
         val += i * (bex(i / k, n) - bex((i - 1) / k, n));
     return val;
 }
+
+https://atcoder.jp/contests/abc382/tasks/abc382_e
+
+int P[N], n;
+auto pre() {
+    vector<long double> prob(n + 1); prob[0] = 1.0;
+    for (int i = 0; i < n; ++i) {
+        long double p = P[i] / 100.0;
+        for (int k = n; k >= 1; --k) prob[k] = prob[k] * (1 - p) + prob[k - 1] * p;
+        prob[0] *= (1 - p);
+    }
+    return prob;
+}
+long double ex(int X) {
+    vector<long double> prob = pre(), dp(X + 1, 1.0); dp[0] = 0.0;
+    for (int x = 1; x <= X; ++x) {
+        for (int k = 1; k <= n && k <= x; ++k) dp[x] += prob[k] * dp[x - k];
+        dp[x] /= (1 - prob[0]);
+    }
+    return dp[X];
+}

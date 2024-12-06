@@ -1,5 +1,4 @@
 // Complexity: O(log(n)) for each operation.
-// taken from: https://www.programiz.com/dsa/binary-search-tree
 
 struct node {
     int key; struct node *left, *right;
@@ -31,8 +30,8 @@ struct node *insert(struct node *node, int key) {
 struct node *minValueNode(struct node *node) {
     struct node *current = node;
     // Find the leftmost leaf
-    while (current && current->left != NULL)
-    return current = current->left;
+    while (current && current->left != NULL) current = current->left;
+    return current;
 }
 // Deleting a node
 struct node *deleteNode(struct node *root, int key) {
@@ -88,11 +87,11 @@ struct node *deleteNode(struct node *root, int key) {
 	cin >> n >> k; //root of the tree
 	set<int> st; map<int, int> l, r; // l contains the left child of the node, r contains right child of the node
 	st.insert(k);
-	for(i = 1; i < n; ++i) {
+	for (i = 1; i < n; ++i) {
 		cin >> k;
 		auto it = st.upper_bound(k);
 		if(it != st.end() && l.find(*it) == l.end()) l[*it] = k;
 		else --it, r[*it] = k;
 		st.insert(k);
 	}
-	for(i = 1; i <= n; ++i) cout << l[i] << ' ' << r[i] << '\n';
+	for (i = 1; i <= n; ++i) cout << l[i] << ' ' << r[i] << '\n';

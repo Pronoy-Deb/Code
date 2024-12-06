@@ -19,50 +19,53 @@ Syntax:
 
     Sorting array in Ascending Order:
         sort(ar, ar + n);
-    
+
     Sorting array in Descending Order:
         sort(ar, ar + n, greater());
-    
+
     Assigning All Elements as ele of a 1-D array:
         ar[size]{};  // assigns 0 at every index
         or, memset(ar, 0 / -1, sizeof ar);
-        or, fill(ar, ar + n, ele); 
+        or, fill(ar, ar + n, ele);
 
     Assigning All Elements as ele of a 2-D Array:
         ar[r][c]{};  // Works only for assigning 0
         or, fill(&ar[0][0], &ar[0][0] + (r*c), ele);
         or, fill(&ar[0][0], &ar[0][0] + (sizeof(ar)/sizeof(ar[0][0])), ele);
         or, memset(ar, -1, sizeof(ar)); // Works only for 0 and -1
-    
+
     Mamimum Element in an Array:
         *max_element(ar, ar + n);
-    
+
     Index of the Maximum Element in an Array:
         max_element(ar, ar + n) - ar;
-    
+
     Minimum Element in an Array:
         *min_element(ar, ar + n);
-    
+
     Index of the Minimum Element in an Array:
         min_element(ar, ar + n) - ar;
-    
+
     Index of any element of an Array:
         find(ar, ar + n, ele) - ar;
-    
+
     Counting the Frequency of an Element in an Array:
         count(ar, ar + n, 1) //Counting the number of 1s
-    
+
     Checking the Euality of Two Arrays arr & ar:
         if(equal(ar, ar + n, arr))
-    
+
     Copying n Elements of an Array arr to Another Array ar:
         copy(arr, arr + n, ar);
-    
+
     Finding out the length of an array:
         n = sizeof(ar) / sizeof(ar[0]);
-    
+
     Summation of Elements of an Array:
         accumulate(ar, ar + n, 0LL);
+
+    Rotating the Elements of an Array:
+        rotate(ar, ar + 3, ar + n);
 
     To Shuffle the Elements of an Array:
         random_shuffle(ar, ar + n);
@@ -75,7 +78,7 @@ Syntax:
 
     REVERSING an array:
         reverse(ar, ar + n);
-    
+
     Checking whether an array is sorted in ASCENDING order:
         is_sorted(ar, ar + n);
 
@@ -90,10 +93,10 @@ Syntax:
 
     Use of all_of() function:
         all_of(ar, ar + n, [](int a){return a>0;})  // Returns 0/1
-    
+
     Use of any_of() function:
         any_of(ar, ar + n, [](int a){return a>0;})  // Returns 0/1
-    
+
     Use of none_of() function:
         none_of(ar, ar + n, [](int a){return a>0;})  // Returns 0/1
 

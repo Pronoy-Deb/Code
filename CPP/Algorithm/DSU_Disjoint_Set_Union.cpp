@@ -26,8 +26,8 @@ int len(int a) { return sz[get(a)]; }
     while (k--) {
         int u, v; cin >> u >> v; uni(u, v);
     }
-                  int cc = 0;
-                  for (i = 1; i <= n; ++i) {
+    int cc = 0;
+    for (i = 1; i <= n; ++i) {
         if (get(i) == i) ++cc;
     }
     cout << cc;

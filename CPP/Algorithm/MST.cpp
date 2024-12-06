@@ -18,11 +18,9 @@ long long mst() {
     long long cost = 0;
     for (auto &[f, s] : gp) {
         long long a = get(s.first), b = get(s.second);
-        if (a == b)
-            continue; // Checking whether making cycle
+        if (a == b) continue; // Checking whether making cycle
         cv.emplace_back(s.first, s.second);
-        if (sz[a] < sz[b])
-            swap(a, b); // Union by size
+        if (sz[a] < sz[b]) swap(a, b); // Union by size
         par[b] = a;
         sz[a] += sz[b];
         cost += f;
@@ -38,8 +36,7 @@ long long mst() {
         gp.push_back({wt, {v1, v2}});
     }
     cout << mst() << '\n';
-    for (auto &[f, s] : cv)
-        cout << f << ' ' << s << '\n';
+    for (auto &[f, s] : cv) cout << f << ' ' << s << '\n';
 
 // OR,
 
@@ -110,25 +107,19 @@ long long par[N], vr;
 long long mst() {
     priority_queue<pair<long long, long long>, vector<pair<long long, long long>>, greater<>> pq;
     long long src = 1, key[vr + 5], cost = 0;
-    bool vis[vr + 5]{};
-    pq.emplace(0, src);
+    bool vis[vr + 5]{}; pq.emplace(0, src);
     memset(par, -1, sizeof par);
     fill(key, key + vr + 5, LLONG_MAX);
     key[src] = 0;
     while (!pq.empty()) {
-        long long u = pq.top().second;
-        pq.pop();
-        if (vis[u])
-            continue;
+        long long u = pq.top().second; pq.pop();
+        if (vis[u]) continue;
         vis[u] = true;
         for (auto &[f, s] : gp[u]) {
             if (!vis[f] && key[f] > s) {
                 pq.emplace(key[f], f);
-                if (key[f] != LLONG_MAX)
-                    cost -= key[f];
-                key[f] = s;
-                cost += s;
-                par[f] = u;
+                if (key[f] != LLONG_MAX) cost -= key[f];
+                key[f] = s; cost += s; par[f] = u;
             }
         }
     }
@@ -136,19 +127,15 @@ long long mst() {
 }
 
 // Operation:
-long long eg;
-cin >> vr >> eg;
-for (i = 0; i < eg; ++i) {
-    long long u, v, w;
-    cin >> u >> v >> w;
-    gp[u].emplace_back(v, w);
-    gp[v].emplace_back(u, w);
-}
-cout << mst() << '\n';
-for (i = 1; i <= vr; ++i) {
-    if (par[i] != -1)
-        cout << i << ' ' << par[i] << '\n';
-}
+    int eg; cin >> vr >> eg;
+    for (i = 0; i < eg; ++i) {
+        int u, v, w; cin >> u >> v >> w;
+        gp[u].emplace_back(v, w); gp[v].emplace_back(u, w);
+    }
+    cout << mst() << '\n';
+    for (i = 1; i <= vr; ++i) {
+        if (par[i] != -1) cout << i << ' ' << par[i] << '\n';
+    }
 
 // OR,
 

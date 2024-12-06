@@ -8,7 +8,7 @@ Note: 1) Use less_equal<> instead of less<> to use it like a multiset
 #include<ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 
-template<class T> using ost = tree<T, null_type, greater_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<class T> using ost = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 Declaration: ost<long long> st;
 
@@ -43,7 +43,7 @@ typedef tree<int, null_type, greater_equal<int>, rb_tree_tag, tree_order_statist
     st.erase(st.upper_bound(ar[j]));
     OR, st.erase(st.find_by_order(st.order_of_key(2)));
 
-    // Finding the second element in the set (random access using index)
+    // Finding the 2-nd element in the set (random access using index)
     cout << *st.find_by_order(1);
 
     // Number of elements strictly less than k = 4

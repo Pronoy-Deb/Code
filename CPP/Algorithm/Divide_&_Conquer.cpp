@@ -41,7 +41,7 @@ void compute(long long l, long long r, long long optl, long long optr) {
 
 // Problem: https://szkopul.edu.pl/problemset/problem/ovRIpLFK3IhyFPjnVXeZtGxH/site/?key=statement
 
-                                // OR,
+// OR,
 
 #include<bits/stdc++.h>
 using namespace std;

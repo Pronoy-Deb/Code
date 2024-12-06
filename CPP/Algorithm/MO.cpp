@@ -65,7 +65,6 @@ void mo(int q) {
 https://codeforces.com/contest/86/problem/D
 
 const int B = 450;
-
 long long sum, cnt[N], ar[N], ans[N];
 struct query {
     int l, r, id;
