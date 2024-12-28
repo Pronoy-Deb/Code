@@ -1,7 +1,8 @@
 // Note:
 
 // Your answer will be considered correct if the absolute or relative error from the true answer is at most 10−6
-
+// JetBrains Coupon Code: NDM6U-KELCN-F6FP3-ZA8QN-Y7MZM
+// License ID: 2DCUTT9GMU
 
     1. No of triangles that can be formed without intersection in an n-armed polygon: n - 2
 

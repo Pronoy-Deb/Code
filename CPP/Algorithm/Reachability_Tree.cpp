@@ -15,7 +15,7 @@ void merge(int u, int v) {
     ++n;
 }
 void build() {
-  for (int i = 0; i < m; ++i) merge(U[i], V[i]);
+    for (int i = 0; i < m; ++i) merge(U[i], V[i]);
 }
 
 https://www.codechef.com/problems/TULIPS

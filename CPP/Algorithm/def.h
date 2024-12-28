@@ -102,6 +102,17 @@ struct is_queue : false_type {};
 template <typename T, typename Container>
 struct is_queue<queue<T, Container>> : true_type {};
 
+template <typename T>
+struct is_string : false_type {};
+
+template <>
+struct is_string<string> : true_type {};
+
+// Printing strings
+void string_impl(auto *x, string &y) {
+    cerr << x << " = \"" << y << "\"\n";
+}
+
 // Printing stacks
 template <typename T>
 void stack_impl(auto *x, stack<T> y) {
@@ -111,7 +122,8 @@ void stack_impl(auto *x, stack<T> y) {
         y.pop();
         if (!y.empty()) cerr << ", ";
     }
-    cerr << "]\n";}
+    cerr << "]\n";
+}
 
 // Printing queues
 template <typename T>
@@ -250,7 +262,9 @@ void r_impl(auto *x, T &&y, Ts &&...g) {
 
 // Modified ck_impl function
 void ck_impl(auto *x, auto &&y) {
-    if constexpr (is_stack<decay_t<decltype(y)>>::value) {
+    if constexpr (is_string<decay_t<decltype(y)>>::value) {
+        string_impl(x, forward<decltype(y)>(y));
+    } else if constexpr (is_stack<decay_t<decltype(y)>>::value) {
         stack_impl(x, forward<decltype(y)>(y));
     } else if constexpr (is_queue<decay_t<decltype(y)>>::value) {
         queue_impl(x, forward<decltype(y)>(y));
@@ -258,7 +272,7 @@ void ck_impl(auto *x, auto &&y) {
         r_impl(x, forward<decltype(y)>(y));
     } else if constexpr (is_pbds_tree_set<decay_t<decltype(y)>>::value || is_iterable<decay_t<decltype(y)>>::value || is_c_array<decay_t<decltype(y)>>::value) {
         e_impl(x, forward<decltype(y)>(y));
-    }  else if constexpr (is_map<decay_t<decltype(y)>>::value) {
+    } else if constexpr (is_map<decay_t<decltype(y)>>::value) {
         p_impl(x, forward<decltype(y)>(y));  // Handle regular maps
     } else {
         v_impl(x, forward<decltype(y)>(y));

@@ -1,25 +1,22 @@
 // Complexity: O(|p| + |s|)
 // Application: Used to find all occurrences of a pattern in a text in linear time
-// vector<long long> ind;
+lightoj.com/problem/substring-frequency
 
-long long pi[N]; // N = p.size()
-long long kmp(auto &str, auto &pat) {
-    long long now = pi[0] = -1, pl = pat.size();
+auto kmp(auto &str, auto &pat) {
+    int pl = pat.size(), sl = str.size(), sz = max(pl, sl) + 5, pi[sz], now = pi[0] = -1, match = 0;
     for (int i = 1; i < pl; ++i) {
         while (now != -1 && pat[now + 1] != pat[i]) now = pi[now];
         if (pat[now + 1] == pat[i]) ++now; pi[i] = now;
     }
-    long long ans = 0, sl = str.size(); now = -1;
+    now = -1; vector<int> ind;
     for (int i = 0; i < sl; ++i) {
         while (now != -1 && pat[now + 1] != str[i]) now = pi[now];
         if (pat[now + 1] == str[i]) ++now;
-        if (now == pl - 1) ++ans;
-        // if(now == pl-1) ind.emplace_back(i-pl+1);  // To determine the indices
+        // match += (now == pl - 1);
+        if(now == pl - 1) ind.emplace_back(i - pl + 1);  // To determine the indices
     }
-    return ans;
+    return ind;
 }
-
-// Problem: lightoj.com/problem/substring-frequency
 
 // OR,
 
@@ -81,3 +78,56 @@ int32_t main()
     cout << '\n';
     return 0;
 }
+
+// Hashing Approach:
+
+const ll M = 9223372036854775783ll, N = 1e6 + 5;
+__int128_t cfh(auto &s, int base = 31) {
+    __int128_t sz = s.size(), tmp = 0, pow = 1;
+    for (int i = 0; i < sz; ++i) {
+        tmp = (tmp + ((s[i] - 'a') * pow) % M) % M;
+        pow = (pow * base) % M;
+    }
+    return tmp;
+}
+__int128_t mmi(__int128_t base) {
+    base %= M; __int128_t ans = 1, pow = M - 2;
+    while (pow) {
+        if (pow & 1) ans = (ans * base) % M;
+        base = (base * base) % M; pow >>= 1;
+    }
+    return ans;
+}
+__int128_t hs[N], pw[N], inv[N]; int m; string r;
+void pre(__int128_t p = 31) {
+    pw[0] = inv[0] = 1; __int128_t inv_p = mmi(p);
+	for (int i = 1; i < N; ++i) {
+        pw[i] = (pw[i - 1] * p) % M;
+        inv[i] = (inv[i - 1] * inv_p) % M;
+	}
+}
+void pre1(__int128_t p = 31) {
+    for (int i = 0; i < m; ++i)
+        hs[i + 1] = (hs[i] + (pw[i] * (r[i] - 'a')) % M) % M;
+}
+
+void test(int32_t tc) {
+    ll n, c; cin >> n >> m >> c;
+    vector<ll> ar(m); for (int i = 0; i < m; ++i) { cin >> ar[i]; }
+    string s; cin >> s;
+    transform(s.begin(), s.end(), s.begin(), ::tolower);
+    ll sz = s.size(), hsh = cfh(s); bool ok = 0;
+    while (n--) {
+        cin >> r; transform(r.begin(), r.end(), r.begin(), ::tolower); pre1();
+        ll tot = 0;
+        for (int i = sz; !ok and i <= m; ++i) {
+            ll hash = ((hs[i] - hs[i - sz] + M) % M * inv[i - sz]) % M;
+            if (hash == hsh and tot < c) tot += ar[i - sz];
+            if (tot >= c) ok = 1;
+        }
+    }
+    cout << "Case " << tc << ": " << (ok? "Yes" : "No") << '\n';
+}
+
+// Operation:
+    pre();

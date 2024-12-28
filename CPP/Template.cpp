@@ -6,19 +6,18 @@ using namespace std;
 #define ck(...)
 #endif
 #define ll long long
-#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
+#define pe(c) for (auto e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
 const ll M = 1e9 + 7, N = 2e5 + 5;
 
 void test(int32_t tc) {
-    ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-    cin >> n;
-    vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
+    ll n; cin >> n;
+    vector<ll> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
     
     cout << '\n';
 }
 
-signed main() {
+int32_t main() {
     cin.tie(0)->sync_with_stdio(0); cin.exceptions(ios::failbit | ios::badbit);
     int32_t tc = 0, tt = 1;
     cin >> tt;

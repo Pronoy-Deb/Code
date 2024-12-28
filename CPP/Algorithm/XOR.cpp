@@ -67,6 +67,30 @@ void reset(int n) { for (int i = 0; i <= n; ++i) trie[i][0] = trie[i][1] = 0; }
     }
     cout << mx;
 
+// Maximum XOR Subsequence: O(n)
+
+// NOT CORRECTED YET
+
+// long long mxxor(auto &v) {
+//     int n = v.size(), ind = 0;
+//     for (int i = 31; i >= 0; --i) {
+//         long long mx = LLONG_MIN, mxind = ind;
+//         for (int j = ind; j < n; ++j) {
+//             if (v[j] & (1 << i) && v[j] > mx) {
+//                 mxind = j; mx = v[j];
+//             }
+//         }
+//         if (mx == LLONG_MIN) continue;
+//         swap(v[ind], v[mxind]); mxind = ind;
+//         for (int j = 0; j < n; ++j) {
+//             if (v[j] & (1 << i) && j != mxind) v[j] ^= mx;
+//         }
+//         ++ind;
+//     }
+//     long long ans = 0; for (int i = 0; i < n; ++i) ans ^= v[i];
+//     return ans;
+// }
+
 // XOR Segment Tree:
 https://codeforces.com/contest/1654/problem/F
 

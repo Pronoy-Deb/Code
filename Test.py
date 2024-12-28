@@ -1,19 +1,37 @@
-# Code to calculate the time taken by a ball to hit the ground and the velocity of the ball when it hits the ground
+from os import read, write, fstat; from sys import stdin, stdout, setrecursionlimit; from io import BytesIO, IOBase; setrecursionlimit(300000); BS = 8192
+class FastIO(IOBase):
+    nl = 0
+    def __init__(self, file): self._file = file; self._fd = file.fileno(); self.buffer = BytesIO(); self.writable = "x" in file.mode or "r" not in file.mode; self.write = self.buffer.write if self.writable else None
+    def read(self):
+        while True:
+            b = read(self._fd, max(fstat(self._fd).st_size, BS))
+            if not b: break
+            ptr = self.buffer.tell(); self.buffer.seek(0, 2), self.buffer.write(b), self.buffer.seek(ptr)
+        self.nl = 0; return self.buffer.read()
+    def readline(self):
+        while not self.nl: b = read(self._fd, max(fstat(self._fd).st_size, BS)); self.nl = b.count(b"\n") + (not b); ptr = self.buffer.tell(); self.buffer.seek(0, 2), self.buffer.write(b), self.buffer.seek(ptr)
+        self.nl -= 1; return self.buffer.readline()
+    def flush(self):
+        if self.writable: write(self._fd, self.buffer.getvalue()); self.buffer.truncate(0), self.buffer.seek(0)
+class IOWrapper(IOBase):
+    def __init__(self, file): self.buffer = FastIO(file); self.flush = self.buffer.flush; self.writable = self.buffer.writable; self.write = lambda s: self.buffer.write(s.encode("ascii")); self.read = lambda: self.buffer.read().decode("ascii"); self.readline = lambda: self.buffer.readline().decode("ascii")
+stdin, stdout = IOWrapper(stdin), IOWrapper(stdout); input = lambda: stdin.readline().rstrip("\r\n")
+def ck(*A): from inspect import currentframe as cf; from sys import stderr; frame = cf().f_back; name = {id(v): k for k, v in frame.f_locals.items()}; [print(f"{name.get(id(var), 'val')} = " + (f"[{', '.join(map(str, var))}]" if isinstance(var, list) else f"{{{', '.join(f'{k}: {v}' for k, v in var.items())}}}" if isinstance(var, dict) else f"{{{', '.join(map(str, var))}}}" if isinstance(var, set) else f"({', '.join(map(str, var))})" if isinstance(var, tuple) else str(var)), file=stderr) for var in A]
+def ps(b): print("YES" if b else "NO")
+M, N = int(1e9) + 7, int(2e5) + 5
+from math import log10
+def test(tc):
+    n = 111111111111111111111111
+    print(n%9)
 
-h = int(input("Enter the height from which the ball is dropped:"))
-u, g = 0, 9.8
-t = (2 * h / g) ** 0.5
-v = g * t
-print("The time taken by the ball to hit the ground is:", round(t, 2), "seconds")
-print("The velocity of the ball when it hits the ground is:", round(v, 2), "m/s")
+    # n = int(input())
+    # ls = list(map(int, input().split()))
+    # a = int(2e18 + 7) * int(3e18 + 7)
+    # print(a)
+    # print(a % int(4e17))
+    # print(int(log10(a)) + 1)
 
-# Code to print the time, velocity, and distance of the ball for different time intervals
-
-print("\nTime(s)\tHeight(m)\tVelocity(m/s)")
-t, h = 0.0, 100.0
-while h > 0:
-    v = g * t
-    print(round(t, 2), "\t", round(h, 2), "\t", round(v, 2))
-    t += 0.5
-    h = 100 - 0.5 * g * t ** 2
-print(4.52, "\t", 0.0, "\t", 44.27)
+if __name__ == "__main__":
+    t = tc = 1
+    # tc = int(input())
+    while t <= tc: test(t); t += 1

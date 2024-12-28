@@ -1,11 +1,11 @@
 // Complexity: O(|s|)
 // -> base = 29: Immediate prime number after 26
-// const long long M = 3037000493;
 // Palindrome checking using Hashing:
 
-long long fh[N], bh[N], pw[N], n; string s;
-long long mmi(long long base) {
-    base %= M; long long ans = 1, pow = M - 2;
+const ll M = 9223372036854775783ll;
+__int128_t fh[N], bh[N], pw[N], n; string s;
+__int128_t bex(__int128_t base) {
+    base %= M; __int128_t ans = 1, pow = M - 2;
     while (pow) {
         if (pow & 1) ans = (ans * base) % M;
         base = (base * base) % M; pow >>= 1;
@@ -23,36 +23,51 @@ void pre(int p = 31) {
         bh[j] = (bh[j - 1] + (s[i] * pw[j - 1]) % M) % M;
 }
 bool pal(int l, int r) {
-    long long L = ((fh[r + 1] - fh[l] + M) % M * mmi(pw[l])) % M;
-    long long R = ((bh[n - l] - bh[n - r - 1] + M) % M * mmi(pw[n - r - 1])) % M;
+    long long L = ((fh[r + 1] - fh[l] + M) % M * bex(pw[l])) % M;
+    long long R = ((bh[n - l] - bh[n - r - 1] + M) % M * bex(pw[n - r - 1])) % M;
     return (L == R);
 }
 
 // Cumulative Forward Hashing:
-// const long long M = 1e15 + 37;
 
-long long hs[N], pw[N], n; string s;
+const long long M = 9223372036854775783ll;
+__int128_t bex(__int128_t base, __int128_t pow = M - 2) {
+    base %= M; __int128_t ans = 1;
+    while (pow) {
+        if (pow & 1) ans = (ans * base) % M;
+        base = (base * base) % M; pow >>= 1;
+    }
+    return ans;
+}
+__int128_t hs[N], pw[N], inv[N], n; string s;
 void pre(int p = 31) {
-    pw[0] = 1;
+    pw[0] = inv[0] = 1; __int128_t pinv = bex(p);
     for (int i = 0; i < n; ++i) {
         pw[i + 1] = (pw[i] * p) % M;
-        hs[i + 1] = (hs[i] + (s[i] * pw[i]) % M) % M;
+        hs[i + 1] = (hs[i] + ((pw[i] * (s[i] - 96)) % M)) % M;
+        inv[i + 1] = (inv[i] * pinv) % M;
     }
 }
 
 // OR,
 
-long long pre(auto &s, int base = 31) {
-    long long sz = s.size(), tmp = s[0] - 96;
-    for (int i = 1; i < sz; ++i) tmp = ((tmp * base) + (s[i] - 96)) % M;
+__int128_t cfh(auto &s, int base = 31) {
+    __int128_t sz = s.size(), tmp = 0, pow = 1;
+    for (int i = 0; i < sz; ++i) {
+        tmp = (tmp + ((s[i] - 96) * pow) % M) % M;
+        pow = (pow * base) % M;
+    }
     return tmp;
 }
 
 // Cumulative Backward Hashing:
 
-long long pre(auto &s, int base = 31) {
-    long long tmp = s.back() - 96;
-    for (int i = s.size() - 2; i >= 0; --i) tmp = ((tmp * base) + (s[i] - 96)) % M;
+__int128_t cfh(auto &s, int base = 31) {
+    __int128_t sz = s.size(), tmp = 0, pow = 1;
+    for (int i = sz - 1; i >= 0; --i) {
+        tmp = (tmp + ((s[i] - 96) * pow) % M) % M;
+        pow = (pow * base) % M;
+    }
     return tmp;
 }
 
@@ -63,12 +78,12 @@ for (i = 0; i < n; ++i)
 
 // String Double Hashing:
 
-long long hs[N], hs1[N], n; string s;
+__int128_t hs[N], hs1[N], n; string s;
 void pre(int base = 31) {
-    long long p = 1;
+    __int128_t p = 1;
     for (int i = 0; i < n; ++i) {
-        if (base == 29) hs[i + 1] = (hs[i] + (s[i] - 95) * p) % M;
-        else hs1[i + 1] = (hs1[i] + (s[i] - 95) * p) % M;
+        if (base == 29) hs[i + 1] = (hs[i] + (s[i] - 96) * p) % M;
+        else hs1[i + 1] = (hs1[i] + (s[i] - 96) * p) % M;
         p = (p * base) % M;
     }
 }
@@ -76,7 +91,7 @@ void pre(int base = 31) {
 // Operation:
     cin >> n >> s;
     fhs(29); fhs();
-    set<pair<long long, long long>> st;
+    set<pair<long long, long>> st;
     for (i = length_skipped; i <= n; ++i)
         st.emplace((hs[i - length_skipped] + ((((hs[n] - hs[i] + M))) * 853745547) % M) % M, (hs1[i - length_skipped] + ((((hs1[n] - hs1[i] + M))) * 746097820) % M) % M);
 
@@ -91,8 +106,8 @@ using namespace std;
 
 const int N = 1e6 + 9;
 
-int bex(long long n, long long k, const int m) {
-    n %= m; long long ans = 1 % m;
+int bex(__int128_t n, __int128_t k, const int m) {
+    n %= m; __int128_t ans = 1 % m;
     if (n < 0) n += m;
     while (k) {
         if (k & 1) ans = ans * n % m;
@@ -204,7 +219,7 @@ struct Hashing
         {
             for (int j = 0; j < m; j++)
             {
-                hs[i + 1][j + 1] = s[i][j] - 'a' + 1;
+                hs[i + 1][j + 1] = s[i][j] - 96;
             }
         }
         for (int i = 0; i <= n; i++)
@@ -276,8 +291,8 @@ int32_t main()
 // String Hashing with Updates and Reverse:
 // https://codeforces.com/group/qcIqFPYhVr/contest/203881/problem/W
 
-int bex(long long n, long long k, const int m) {
-    n %= m; long long ans = 1;
+int bex(__int128_t n, __int128_t k, const int m) {
+    n %= m; __int128_t ans = 1;
     if (n < 0) n += m;
     while (k) {
         if (k & 1) ans = ans * n % m;
@@ -290,10 +305,10 @@ const T MOD = {127657753, 987654319};
 const T p = {137, 277};
 T operator+(T a, int x) { return {(a[0] + x) % MOD[0], (a[1] + x) % MOD[1]}; }
 T operator-(T a, int x) { return {(a[0] - x + MOD[0]) % MOD[0], (a[1] - x + MOD[1]) % MOD[1]}; }
-T operator*(T a, int x) { return {(int)((long long)a[0] * x % MOD[0]), (int)((long long)a[1] * x % MOD[1])}; }
+T operator*(T a, int x) { return {(int)((__int128_t)a[0] * x % MOD[0]), (int)((__int128_t)a[1] * x % MOD[1])}; }
 T operator+(T a, T x) { return {(a[0] + x[0]) % MOD[0], (a[1] + x[1]) % MOD[1]}; }
 T operator-(T a, T x) { return {(a[0] - x[0] + MOD[0]) % MOD[0], (a[1] - x[1] + MOD[1]) % MOD[1]}; }
-T operator*(T a, T x) { return {(int)((long long)a[0] * x[0] % MOD[0]), (int)((long long)a[1] * x[1] % MOD[1])}; }
+T operator*(T a, T x) { return {(int)((__int128_t)a[0] * x[0] % MOD[0]), (int)((__int128_t)a[1] * x[1] % MOD[1])}; }
 ostream &operator<<(ostream &os, T hash) { return os << "(" << hash[0] << ", " << hash[1] << ")"; }
 
 T pw[N], ipw[N];

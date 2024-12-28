@@ -1,52 +1,25 @@
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef LOCAL
-#include "def.h"
-#else
-#define ck(...)
-#endif
-#define ll long long
-#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
-#define ps(b) cout << (b ? "YES" : "NO") << '\n'
-const ll M = 1e9 + 7, N = 2e5 + 5;
+#include<bits/stdc++.h>
+// Function to check if a number is prime
+bool isPrime(long long n) {
+    if (n < 2) return false;
+    if (n % 2 == 0 && n != 2) return false;
+    for (long long i = 3; i <= sqrt(n); i += 2) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
 
-auto NFG(auto &ar) {
-    int n = ar.size(); vector<int> nfg(n, -1);
-	map<int, stack<int>> mp;
-	for (int i = 0; i < n; ++i) mp[ar[i]].push(i);
-	for (int i = n - 1; i >= 0; --i) {
-		if (mp.empty()) break;
-        auto it = mp.begin();
-        while (it != mp.end()) {
-            auto &[f, s] = *it;
-            if (f >= ar[i]) break;
-            while (!s.empty()) {
-                nfg[s.top()] = i; s.pop();
-            }
-            if (s.empty()) it = mp.erase(it);
-            else ++it;
-        }
-        if (nfg[i] == -1) {
-            int sz = mp[ar[i]].size();
-            if (sz > 0) mp[ar[i]].pop();
-            if (sz == 1) mp.erase(ar[i]);
+int main() {
+    long long limit = LLONG_MAX; // 2^32
+    long long largestPrime = 0;
+
+    for (long long n = limit; n >= 2; --n) {
+        if (isPrime(n)) {
+            largestPrime = n;
+            break;
         }
     }
-    return nfg;
-}
-void test(int tc) {
-	ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0;
-	cin >> n;
-	vector<ll> ar(n); for (i = 0; i < n; ++i) { cin >> ar[i]; }
-	auto nfg = NFG(ar);
-	for (auto &e : nfg) cout << e << ' ';
-	cout << '\n';
-}
 
-signed main() {
-	cin.tie(0)->sync_with_stdio(0); cin.exceptions(ios::failbit | ios::badbit);
-	int tc = 0, tt = 1;
-	// cin >> tt;
-	while (tc++ < tt) test(tc);
-	return 0;
+    std::cout << "Largest prime whose square is less than 2^64: " << largestPrime << std::endl;
+    return 0;
 }

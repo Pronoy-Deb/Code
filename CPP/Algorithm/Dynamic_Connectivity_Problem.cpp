@@ -1,3 +1,5 @@
+// https://codeforces.com/gym/100551/problem/A
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -113,5 +115,3 @@ int main() {
         if (isquery[i]) cout << ans[i] << '\n';
     return 0;
 }
-
-// https://codeforces.com/gym/100551/problem/A

@@ -1,9 +1,9 @@
 // Complexity: O(|str| + |pat|)
 // Application: Used to find all occurrences of a pattern in a text in linear time
+lightoj.com/problem/substring-frequency
 
-vector<int> ind;
 auto z(auto &str, auto &pat) {
-    int pl = pat.size(); pat += '$' + str;
+	int pl = pat.size(); pat += '$' + str;
 	int tl = pat.size(), Z[tl], l = 0, r = 0;
 	for (int i = 1; i < tl; ++i) {
 		if (i > r) {
@@ -20,13 +20,13 @@ auto z(auto &str, auto &pat) {
 			}
 		}
 	}
-    // return count(Z, Z+tl, pl);  // To determine the number of occurrences
+    // return count(Z, Z + tl, pl);  // To determine the number of occurrences
+    vector<int> ind;
 	for (int i = 0; i < tl; ++i) {
-		if (Z[i] == pl) ind.emplace_back(i - pl - 1);
+		if (Z[i] == pl) ind.push_back(i - pl - 1);
 	}
+    return ind;
 }
-
-// Problem: lightoj.com/problem/substring-frequency
 
 // OR,
 

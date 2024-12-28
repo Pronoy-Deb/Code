@@ -1,4 +1,4 @@
-// Addition: O(max(n, m));
+// Addition: O(max(n, m))
 
 void sum(auto &s, auto &s1, auto &ans) {
     int sz = s.size() - 1, sz1 = s1.size() - 1, car = 0;
@@ -10,7 +10,7 @@ void sum(auto &s, auto &s1, auto &ans) {
     if (car) ans += (car + 48); reverse(ans.begin(), ans.end());
 }
 
-// Subtraction: O(n + m);
+// Subtraction: O(n + m)
 
 void sub(auto &s, auto &s1, auto &ans) {
     int sz = s.size() - 1, sz1 = s1.size() - 1; bool ok = false;
@@ -58,6 +58,20 @@ void qnt(auto &dividend, int divisor, auto &ans) {
 		tmp = (tmp % divisor) * 10 + dividend[++in] - 48;
 	}
     if (ans.empty()) ans += "0";
+}
+
+// Remainder: O(|num|)
+
+int rem(string &num, int mod) {
+    // string div;
+    int remainder = 0, sz = num.size();
+    for (int i = 0; i < sz; ++i) {
+        remainder = (remainder * 10) + (num[i] - '0');
+        // if (remainder >= mod) div += (remainder / mod) + '0';
+        // else if (!div.empty()) div += '0';
+        remainder %= mod;
+    }
+    return remainder;
 }
 
 // Binary Exponentiation: O(|ans| * log(pow))

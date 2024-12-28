@@ -10,7 +10,7 @@ magenta='\033[1;95m'
 cyan='\033[1;96m'
 nc='\033[0m' # No Color
 
-g++ -O2 -std=c++23 -DLOCAL -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter "$fileName" -o l
+g++ -O2 -std=c++23 -DLOCAL -Wall -Wextra -Wno-unused-parameter "$fileName" -o l
 if [ $? -ne 0 ]; then
     echo -e "\n${red}Compilation error!${nc}"
     exit 1
@@ -61,7 +61,7 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
     fi
 
     start_time=$(date +%s%3N)
-    echo -e "$input_data" | timeout 5s ./l > out2
+    echo -e "$input_data" | timeout 7s ./l > out2
     exit_status=$?
     end_time=$(date +%s%3N)
     elapsed=$((end_time - start_time))

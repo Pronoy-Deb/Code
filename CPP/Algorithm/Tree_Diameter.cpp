@@ -2,7 +2,7 @@ https://cses.fi/problemset/task/1131
 
 vector<int> tre[N]; int last, dmr;
 void dfs(int vr, int par = 0, int dep = 0) {
-    for(auto cld : tre[vr]) {
+    for (auto cld : tre[vr]) {
         if (cld == par) continue;
         if (dmr <= dep) {
             dmr = dep + 1; last = cld;
@@ -13,8 +13,8 @@ void dfs(int vr, int par = 0, int dep = 0) {
 
 // Operation:
     cin >> n;
-    for (i = 1; i < n; ++i) {
-        cin >> a >> b;
+    for (int i = 1; i < n; ++i) {
+        int a, b; cin >> a >> b;
         tre[a].push_back(b); tre[b].push_back(a);
     }
     dfs(1); dmr = 0; dfs(last); cout << dmr;

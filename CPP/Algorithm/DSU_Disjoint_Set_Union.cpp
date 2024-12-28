@@ -19,6 +19,13 @@ void uni(int a, int b) {
 }
 bool same(int a, int b) { return get(a) == get(b); }
 int len(int a) { return sz[get(a)]; }
+int cc(int n) {
+    int cc = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (get(i) == i) ++cc;
+    }
+    return cc;
+}
 
 // Operation: Determining the number of CONNECTED COMPONENTS after performing the union operation:
     cin >> n >> k;
@@ -26,12 +33,7 @@ int len(int a) { return sz[get(a)]; }
     while (k--) {
         int u, v; cin >> u >> v; uni(u, v);
     }
-    int cc = 0;
-    for (i = 1; i <= n; ++i) {
-        if (get(i) == i) ++cc;
-    }
-    cout << cc;
-
+    cout << cc() << '\n';
 
 // OR,
 
@@ -141,7 +143,7 @@ void dsu(int u = 1, int p = 1, bool keep = 1) {
 https://atcoder.jp/contests/abc328/tasks/abc328_f
 
 long long pot[N], par[N], inc; // numbers of inconsistencies
-void ini(int n) {
+void make(int n) {
     inc = 0;
     for (int i = 1; i <= n; ++i) {
         par[i] = i; pot[i] = 0;
@@ -161,7 +163,7 @@ void uni(int a, int b, int d) {
 }
 // Operation:
     cin >> n >> m;
-    ini(n);
+    make(n);
     for (i = 1; i <= m; ++i) {
         cin >> a >> b >> d; uni(a, b, d);
     }
@@ -173,7 +175,7 @@ https://cses.fi/problemset/task/2101
 https://codeforces.com/gym/100814/problem/C
 
 int par[N], Time[N], sz[N];
-void ini(int n) {
+void make(int n) {
  	for (int i = 1; i <= n; ++i) {
         par[i] = i; sz[i] = 1;
 	}
@@ -199,7 +201,7 @@ int time(int a, int b) { // minimum time when a & b are in the same set
 
 // Operation:
 	cin >> n >> m >> q;
-    ini(n);
+    make(n);
 	for (i = 1; i <= m; ++i) {
         cin >> a >> b; uni(a, b, i);
 	}
@@ -267,18 +269,18 @@ struct PersistentArray { // 0-indexed
         node *l, *r; T x;
     };
     int n = 1; vector<node *> root;
-    int ini(vector<T> v) {
+    int make(vector<T> v) {
         int sz = v.size(); while (n < sz) n <<= 1;
-        root.push_back(ini(0, n - 1, v)); return root.size() - 1;
+        root.push_back(make(0, n - 1, v)); return root.size() - 1;
     }
-    node *ini(int l, int r, vector<T> &v) {
+    node *make(int l, int r, vector<T> &v) {
         node *cur = new node();
         if (l == r) {
             if (l < v.size()) cur->x = v[l]; else cur->x = 0;
         }
         else {
             int lc = (l + r) >> 1, rc = lc + 1;
-            cur->l = ini(l, lc, v); cur->r = ini(rc, r, v);
+            cur->l = make(l, lc, v); cur->r = make(rc, r, v);
         }
         return cur;
     }
@@ -317,7 +319,7 @@ struct dsu {
     vector<int> c; int cur = 0; dsu() {}
     dsu(int n, int q) { // q -> maximum instances of DSU
         vector<int> p(n + 1); for (int i = 1; i <= n; ++i) p[i] = i;
-        par.ini(p); sz.ini(vector<int>(n + 1, 1)); c.resize(q + 1, n);
+        par.make(p); sz.make(vector<int>(n + 1, 1)); c.resize(q + 1, n);
         cur = 0; // initial DSU is the 0th one
     }
     int get(int r, int u) {
