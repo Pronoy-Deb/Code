@@ -34,9 +34,9 @@ ll ran(ll l, ll r) {
 const ll M = 1e9, N = 1e6;
 
 void test(int tc) {
-    ll n = ran(1, 10); cout << n << '\n';
+    ll n = ran(1, 30); cout << n << '\n';
     for (int i = 0; i < n; ++i) {
-        ll a = ran(1, 10); cout << a << ' ';
+        ll a = ran(0, 1); cout << a;
     }
     cout << '\n';
     // set<ll> st;
@@ -53,7 +53,7 @@ signed main() {
     cin.tie(0)->sync_with_stdio(0);
     // srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 0, tt = ran(1, 1);
-    // cout << tt << '\n'; // For testcase input
+    cout << tt << '\n'; // For testcase input
     while (tc++ < tt) test(tc);
     return 0;
 }

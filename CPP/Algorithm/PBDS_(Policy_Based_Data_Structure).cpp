@@ -2,29 +2,28 @@
 // insert, erase, size, order_of_key, find_by_order
 // 2) In multiset, lower_bound works as upper_bound and vice-versa
 // 3) Write after "using namespace std":
-// 4) Don't use .find() because it will always return .end()
+// 4) Don't use .find() for multiset, because it will always return .end()
 Note: 1) Use less_equal<> instead of less<> to use it like a multiset
 
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 
-template<class T> using ost = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<class T> using oset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-
-Declaration: ost<long long> st;
+// Declaration: oset<long long> st;
 
 // OR,
 
-typedef tree<long long, null_type, less<>, rb_tree_tag, tree_order_statistics_node_update> ost;
+typedef tree<long long, null_type, less<>, rb_tree_tag, tree_order_statistics_node_update> oset;
 
-Declaration: ost st;
+// Declaration: oset st;
 
 // For using as map:
 
-template <typename T, typename R> using omp = tree<T, R, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template <typename T, typename R> using omap = tree<T, R, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-Declaration: omp<int, int> mp;
+// Declaration: omap<int, int> mp;
 
 // For using as minheap:
 
@@ -60,13 +59,13 @@ using namespace __gnu_pbds;
 
 template<class T> using pref_trie = trie<T, null_type, trie_string_access_traits<>, pat_trie_tag, trie_prefix_search_node_update>;
 
-Declaration: pref_trie<string> base;
+// Declaration: pref_trie<string> base;
 
 // OR,
 
 typedef trie<string, null_type, trie_string_access_traits<>, pat_trie_tag, trie_prefix_search_node_update> pref_trie;
 
-Declaration: pref_trie base;
+// Declaration: pref_trie base;
 
 // Example:
     pref_trie<string> base; base.insert("sun");

@@ -33,6 +33,7 @@ vector<int> v = {5, 2, 4, 3, 1}, v1 = {4, 3, 2, 5, 1};
 cout << is_permutation(v.begin(), v.end(), begin(v1));
 
 // Permutation Tree:
+https://codeforces.com/gym/101620, Problem I
 
 const int N = 1e5 + 9, inf = 1e9 + 7, LG = 19;
 
@@ -257,8 +258,6 @@ while (q--) {
     cout << span[ptre[u][curl + 1]].first << ' ' << span[ptre[u][curr - 1]].second << '\n';
 }
 
-// https://codeforces.com/gym/101620, Problem I
-// https://codeforces.com/blog/entry/78898
 
 // Permutation Cycles:
 

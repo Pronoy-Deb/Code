@@ -1,7 +1,7 @@
 https://cses.fi/problemset/task/1640
 
+// #include <ext/pb_ds/tree_policy.hpp>
 #include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 
 const int rnd = chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -58,3 +58,30 @@ gp_hash_table<long long, long long, chash> tab;
         tab[ar[i]] = i + 1;
     }
     cout << "IMPOSSIBLE\n";
+
+// For usual unordered_map:
+
+struct chash {
+	// any random-ish large odd number will do
+	const uint64_t C = uint64_t(2e18 * PI) + 71;
+	// random 32-bit number
+	const uint32_t RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+	size_t operator()(uint64_t x) const {
+		return __builtin_bswap64((x ^ RANDOM) * C);
+	}
+};
+template <class K, class V> using cmap = unordered_map<K, V, chash>;
+// example usage: cmap<int, int>
+
+// gp_hash_table that supports resize() function:
+
+template <class K, class V>
+using ht = gp_hash_table<K, V, hash<K>, equal_to<K>, direct_mask_range_hashing<>, linear_probe_fn<>, hash_standard_resize_policy<hash_exponential_size_policy<>, hash_load_check_resize_trigger<>, true>>;
+
+// Operation:
+	ht<int, null_type> g;
+	g.resize(5);
+	cout << g.get_actual_size() << '\n';  // 8
+	cout << g.size() << '\n';             // 0
+// also,
+    ht<int, null_type> g({}, {}, {}, {}, {1 << 16}); // initialize with certain capacity, must be power of 2

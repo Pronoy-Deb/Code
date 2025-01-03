@@ -1,9 +1,8 @@
 // Complexity: O(n)
 // To determine the summation:
 
-long long ar[N], n;
-long long mss() {
-	long long mx = ar[0], res = 0;
+long long mss(auto &ar) {
+	long long n = ar.size(), mx = ar[0], res = 0;
 	for (int i = 0; i < n; ++i) {
 		res += ar[i]; mx = max(mx, res); res = max(res, 0ll);
 	}
@@ -11,9 +10,8 @@ long long mss() {
 }
 
 // To determine the indices of the range with the summation:
-long long ar[N], n;
-auto mss() {
-	long long mx = ar[0], res = 0, start = 0, end = 0, s = 0;
+auto mss(auto &ar) {
+	long long n = ar.size(), mx = ar[0], res = 0, start = 0, end = 0, s = 0;
 	for (int i = 0; i < n; ++i) {
 		res += ar[i];
 		if (mx < res) { mx = res; start = s; end = i; }

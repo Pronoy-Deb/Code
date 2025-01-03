@@ -1,5 +1,5 @@
 // Complexity: O(n)
-// Problem: https://codeforces.com/contest/816/problem/B
+https://codeforces.com/contest/816/problem/B
 
     cin >> n >> k >> q;
     vector<ll> ar(N);
@@ -16,9 +16,7 @@
         cout << cnt[b] - cnt[--a] << '\n';
     }
 
-
-// OR,
-// Problem: https://codeforces.com/contest/295/problem/A
+// OR, https://codeforces.com/contest/295/problem/A
 
     cin >> n >> m >> k;
     vector<ll> ar(n + 2), val(m + 2); vector<pair<ll, ll>> rng(m + 2);

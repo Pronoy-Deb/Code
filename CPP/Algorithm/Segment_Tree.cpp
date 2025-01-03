@@ -1,7 +1,7 @@
 // WITHOUT lazy Propagation: Build: O(n), Update & Query: O(log(n))
 
-long long tre[N << 1], ar[N], n;
-inline long long op(long long l, long long r) { return l + r; }
+long long n, ar[N], tre[N];
+inline auto op(const long long &l, const long long &r) { return (l + r); }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
@@ -19,8 +19,8 @@ long long get(int l, int r) {
 
 // OR,
 
-long long tre[N << 2], ar[N], n;
-inline long long op(long long l, long long r) { return (l + r); }
+long long n, ar[N], tre[N << 2];
+inline auto op(const long long &l, const long long &r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -41,8 +41,8 @@ long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 
 // WITH lazy Propagation: Build: O(n), Increment / Query: O(logn)
 
-long long tre[N << 1], lz[N], ar[N], n;
-inline long long op(long long x, long long y) { return (x + y); }
+long long n, ar[N], tre[N << 1], lz[N << 1];
+inline auto op(const long long &x, const long long &y) { return (x + y); }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
@@ -86,8 +86,8 @@ long long get(int l, int r) {
 
 // OR,
 
-long long tre[N << 2], lz[N << 2], ar[N], n;
-inline long long op(long long l, long long r) { return (l + r); }
+long long n, ar[N], tre[N << 2], lz[N << 2];
+inline auto op(const long long &l, const long long &r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -113,12 +113,11 @@ long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     return op(get(l, r, lc, s, m), get(l, r, rc, m + 1, e));
 }
-void reset() { for (int i = 0; i < (n << 2) + 5; ++i) tre[i] = lz[i] = 0; }
 
 https://cses.fi/problemset/task/1735
 
-long long lzi[N << 2], lza[N << 2], tre[N << 2], ar[N], n;
-inline long long op(long long l, long long r) { return (l + r); }
+long long n, ar[N], tre[N << 2], lzi[N << 2], lza[N << 2];
+inline auto op(const long long &l, const long long &r) { return (l + r); }
 inline void pgi(int i, long long v, int s, int e) {
     lzi[i] += v; tre[i] += (e - s + 1) * v;
 }
@@ -192,12 +191,12 @@ long long get(int pre, int cur, int k, int s = 1, int e = n) {
 }
 
 // Operation:
-    cin >> n >> q;
+    long long n, q; cin >> n >> q;
     long long ar[n + 5], root[n + 5]; map<long long, long long> mp, V;
-    for (i = 1; i <= n; ++i) cin >> ar[i], mp[ar[i]];
-    for (auto &x : mp) mp[x.first] = ++c, V[c] = x.first;
+    for (int i = 1; i <= n; ++i) cin >> ar[i], mp[ar[i]];
+    for (auto x : mp) mp[x.first] = ++c, V[c] = x.first;
     root[0] = make();
-    for (i = 1; i <= n; ++i) root[i] = up(root[i - 1], mp[ar[i]], 1);
+    for (int i = 1; i <= n; ++i) root[i] = up(root[i - 1], mp[ar[i]], 1);
     while (q--) {
         int l, r, k; cin >> l >> r >> k;
         cout << V[get(root[l - 1], root[r], k)] << '\n';

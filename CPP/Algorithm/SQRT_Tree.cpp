@@ -1,217 +1,112 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-/*Given an array a that contains n elements and the
+/*
+Given an array a that contains n elements and the
 operation op that satisfies associative property:
 (x op y) op z=x op (y op z) is true for any x, y, z.
 
 The following implementation of Sqrt Tree can perform the following operations:
 build in O(nloglogn),
-answer queries in O(1) and update an element in O(sqrt(n)).*/
+answer queries in O(1) and update an element in O(sqrt(n)).
+*/
+https://www.codechef.com/problems/SEGPROD
 
-#define SqrtTreeItem int // change for the type you want
-
-SqrtTreeItem op(const SqrtTreeItem &a, const SqrtTreeItem &b)
-{
-    return a + b; // just change this operation for different problems,no change is required inside the code
+int p;
+inline int op(const int &a, const int &b) { return (a * 1ll * b) % p; }
+inline int log2Up(int n) {
+    int res = 0; while ((1 << res) < n) ++res; return res;
 }
-
-inline int log2Up(int n)
-{
-    int res = 0;
-    while ((1 << res) < n)
-    {
-        res++;
-    }
-    return res;
-}
-// 0-indexed
-struct SqrtTree
-{
-    int n, llg, indexSz;
-    vector<SqrtTreeItem> v;
-    vector<int> clz, layers, onLayer;
-    vector<vector<SqrtTreeItem>> pref, suf, between;
-
-    inline void buildBlock(int layer, int l, int r)
-    {
+struct sqt {
+    int n, lg, SZ; vector<int> v, clz, layers, onL;
+    vector< vector<int> > pref, suf, b2in;
+    inline void makeblk(int layer, int l, int r) {
         pref[layer][l] = v[l];
-        for (int i = l + 1; i < r; i++)
-        {
-            pref[layer][i] = op(pref[layer][i - 1], v[i]);
-        }
+        for (int i = l + 1; i < r; ++i) pref[layer][i] = op(pref[layer][i - 1], v[i]);
         suf[layer][r - 1] = v[r - 1];
-        for (int i = r - 2; i >= l; i--)
-        {
-            suf[layer][i] = op(v[i], suf[layer][i + 1]);
-        }
+        for (int i = r - 2; i >= l; --i) suf[layer][i] = op(v[i], suf[layer][i + 1]);
     }
-
-    inline void buildBetween(int layer, int lBound, int rBound, int betweenOffs)
-    {
-        int bSzLog = (layers[layer] + 1) >> 1;
-        int bCntLog = layers[layer] >> 1;
-        int bSz = 1 << bSzLog;
-        int bCnt = (rBound - lBound + bSz - 1) >> bSzLog;
-        for (int i = 0; i < bCnt; i++)
-        {
-            SqrtTreeItem ans;
-            for (int j = i; j < bCnt; j++)
-            {
-                SqrtTreeItem add = suf[layer][lBound + (j << bSzLog)];
+    inline void makeb2in(int layer, int L, int R, int b2inof) {
+        int bsl = (layers[layer] + 1) >> 1;
+        int bcl = layers[layer] >> 1, bSz = 1 << bsl;
+        int bc = (R - L + bSz - 1) >> bsl;
+        for (int i = 0; i < bc; ++i) {
+            for (int j = i, ans; j < bc; ++j) {
+                int add = suf[layer][L + (j << bsl)];
                 ans = (i == j) ? add : op(ans, add);
-                between[layer - 1][betweenOffs + lBound + (i << bCntLog) + j] = ans;
+                b2in[layer-1][b2inof + L + (i << bcl) + j] = ans;
             }
         }
     }
-
-    inline void buildBetweenZero()
-    {
-        int bSzLog = (llg + 1) >> 1;
-        for (int i = 0; i < indexSz; i++)
-        {
-            v[n + i] = suf[0][i << bSzLog];
-        }
-        build(1, n, n + indexSz, (1 << llg) - n);
+    inline void makeb2in0() {
+        int bsl = (lg + 1) >> 1;
+        for (int i = 0; i < SZ; ++i) v[n+i] = suf[0][i << bsl];
+        make(1, n, n + SZ, (1 << lg) - n);
     }
-
-    inline void updateBetweenZero(int bid)
-    {
-        int bSzLog = (llg + 1) >> 1;
-        v[n + bid] = suf[0][bid << bSzLog];
-        update(1, n, n + indexSz, (1 << llg) - n, n + bid);
+    inline void upb2in0(int bid) {
+        int bsl = (lg + 1) >> 1; v[n + bid] = suf[0][bid << bsl];
+        up(1, n, n + SZ, (1 << lg) - n, n + bid);
     }
-
-    void build(int layer, int lBound, int rBound, int betweenOffs)
-    {
-        if (layer >= (int)layers.size())
-        {
-            return;
+    void make(int layer, int L, int R, int b2inof) {
+        if (layer >= (int)layers.size()) return;
+        int bSz = 1 << ((layers[layer]+1) >> 1);
+        for (int l = L; l < R; l += bSz) {
+            int r = min(l + bSz, R); makeblk(layer, l, r);
+            make(layer+1, l, r, b2inof);
         }
-        int bSz = 1 << ((layers[layer] + 1) >> 1);
-        for (int l = lBound; l < rBound; l += bSz)
-        {
-            int r = min(l + bSz, rBound);
-            buildBlock(layer, l, r);
-            build(layer + 1, l, r, betweenOffs);
-        }
-        if (layer == 0)
-        {
-            buildBetweenZero();
-        }
-        else
-        {
-            buildBetween(layer, lBound, rBound, betweenOffs);
-        }
+        if (!layer) makeb2in0();
+        else makeb2in(layer, L, R, b2inof);
     }
-
-    void update(int layer, int lBound, int rBound, int betweenOffs, int x)
-    {
-        if (layer >= (int)layers.size())
-        {
-            return;
-        }
-        int bSzLog = (layers[layer] + 1) >> 1;
-        int bSz = 1 << bSzLog;
-        int blockIdx = (x - lBound) >> bSzLog;
-        int l = lBound + (blockIdx << bSzLog);
-        int r = min(l + bSz, rBound);
-        buildBlock(layer, l, r);
-        if (layer == 0)
-        {
-            updateBetweenZero(blockIdx);
-        }
-        else
-        {
-            buildBetween(layer, lBound, rBound, betweenOffs);
-        }
-        update(layer + 1, l, r, betweenOffs, x);
+    void up(int layer, int L, int R, int b2inof, int x) {
+        if (layer >= (int)layers.size()) return;
+        int bsl = (layers[layer]+1) >> 1;
+        int bSz = 1 << bsl, bin = (x - L) >> bsl;
+        int l = L + (bin << bsl), r = min(l + bSz, R);
+        makeblk(layer, l, r); if (!layer) upb2in0(bin);
+        else makeb2in(layer, L, R, b2inof);
+        up(layer+1, l, r, b2inof, x);
     }
-
-    inline SqrtTreeItem query(int l, int r, int betweenOffs, int base)
-    {
-        if (l == r)
-        {
-            return v[l];
-        }
-        if (l + 1 == r)
-        {
-            return op(v[l], v[r]);
-        }
-        int layer = onLayer[clz[(l - base) ^ (r - base)]];
-        int bSzLog = (layers[layer] + 1) >> 1;
-        int bCntLog = layers[layer] >> 1;
-        int lBound = (((l - base) >> layers[layer]) << layers[layer]) + base;
-        int lBlock = ((l - lBound) >> bSzLog) + 1;
-        int rBlock = ((r - lBound) >> bSzLog) - 1;
-        SqrtTreeItem ans = suf[layer][l];
-        if (lBlock <= rBlock)
-        {
-            SqrtTreeItem add = (layer == 0) ? (
-                                                  query(n + lBlock, n + rBlock, (1 << llg) - n, n))
-                                            : (
-                                                  between[layer - 1][betweenOffs + lBound + (lBlock << bCntLog) + rBlock]);
+    inline int get(int l, int r, int b2inof = 0, int base = 0) {
+        if (l == r) return v[l];
+        if (l + 1 == r) return op(v[l], v[r]);
+        int layer = onL[clz[(l - base) ^ (r - base)]];
+        int bsl = (layers[layer]+1) >> 1, bcl = layers[layer] >> 1;
+        int L = (((l - base) >> layers[layer]) << layers[layer]) + base;
+        int lb = ((l - L) >> bsl) + 1, rb = ((r - L) >> bsl) - 1;
+        int ans = suf[layer][l];
+        if (lb <= rb) {
+            int add = (!layer) ? (get(n + lb, n + rb, (1 << lg) - n, n)) : (b2in[layer-1][b2inof + L + (lb << bcl) + rb]);
             ans = op(ans, add);
         }
-        ans = op(ans, pref[layer][r]);
-        return ans;
+        ans = op(ans, pref[layer][r]); return ans;
     }
-
-    inline SqrtTreeItem query(int l, int r)
-    {
-        return query(l, r, 0, 0);
+    inline void up(int x, const int &item) {
+        v[x] = item; up(0, 0, n, 0, x);
     }
-
-    inline void update(int x, const SqrtTreeItem &item)
-    {
-        v[x] = item;
-        update(0, 0, n, 0, x);
-    }
-
-    SqrtTree(const vector<SqrtTreeItem> &a)
-        : n((int)a.size()), llg(log2Up(n)), v(a), clz(1 << llg), onLayer(llg + 1)
-    {
-        clz[0] = 0;
-        for (int i = 1; i < (int)clz.size(); i++)
-        {
-            clz[i] = clz[i >> 1] + 1;
+    sqt(const auto &a) : n(a.size()), lg(log2Up(n)), v(a), clz(1 << lg), onL(lg + 1) {
+        clz[0] = 0; for (int i = 1, sz = clz.size(); i < sz; ++i) clz[i] = clz[i >> 1] + 1;
+        int tlg = lg;
+        while (tlg > 1) {
+            onL[tlg] = (int)layers.size();
+            layers.push_back(tlg); tlg = (tlg + 1) >> 1;
         }
-        int tllg = llg;
-        while (tllg > 1)
-        {
-            onLayer[tllg] = (int)layers.size();
-            layers.push_back(tllg);
-            tllg = (tllg + 1) >> 1;
-        }
-        for (int i = llg - 1; i >= 0; i--)
-        {
-            onLayer[i] = max(onLayer[i], onLayer[i + 1]);
-        }
-        int betweenLayers = max(0, (int)layers.size() - 1);
-        int bSzLog = (llg + 1) >> 1;
-        int bSz = 1 << bSzLog;
-        indexSz = (n + bSz - 1) >> bSzLog;
-        v.resize(n + indexSz);
-        pref.assign(layers.size(), vector<SqrtTreeItem>(n + indexSz));
-        suf.assign(layers.size(), vector<SqrtTreeItem>(n + indexSz));
-        between.assign(betweenLayers, vector<SqrtTreeItem>((1 << llg) + bSz));
-        build(0, 0, n, 0);
+        for (int i = lg - 1; i >= 0; --i) onL[i] = max(onL[i], onL[i + 1]);
+        int b2inL = max(0, (int)layers.size() - 1);
+        int bsl = (lg + 1) >> 1, bSz = 1 << bsl;
+        SZ = (n + bSz - 1) >> bsl; v.resize(n + SZ);
+        pref.assign(layers.size(), vector<int>(n + SZ));
+        suf.assign(layers.size(), vector<int>(n + SZ));
+        b2in.assign(b2inL, vector<int>((1 << lg) + bSz));
+        make(0, 0, n, 0);
     }
 };
-int main()
-{
-    int i, j, k, n, m, q, l, r;
-    cin >> n;
-    vector<int> v;
-    for (i = 0; i < n; i++)
-        cin >> k, v.push_back(k);
-    SqrtTree t = SqrtTree(v);
-    cin >> q;
-    while (q--)
-    {
-        cin >> l >> r;
-        --l, --r;
-        cout << t.query(l, r) << endl;
+
+// Operation:
+    int n, q; cin >> n >> p >> q;
+    vector<int> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
+    sqt t(ar); int sz = (q >> 6) + 2, x = 0, l = 0, r = 0;
+    int b[sz]; for (int i = 0; i < sz; ++i) cin >> b[i];
+    for (int i = 0; i < q; ++i) {
+        if (i % 64) l = (l + x) % n, r = (r + x) % n;
+        else l = (b[i >> 6] + x) % n, r = (b[(i >> 6) + 1] + x) % n;
+        if (l > r) swap(l, r);
+        x = (t.get(l, r) % p + 1) % p;
     }
-}
-// https://cp-algorithms.com/data_structures/sqrt-tree.html
+    cout << x << '\n';

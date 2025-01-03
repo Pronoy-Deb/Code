@@ -1,25 +1,27 @@
-#include<bits/stdc++.h>
-// Function to check if a number is prime
-bool isPrime(long long n) {
-    if (n < 2) return false;
-    if (n % 2 == 0 && n != 2) return false;
-    for (long long i = 3; i <= sqrt(n); i += 2) {
-        if (n % i == 0) return false;
-    }
-    return true;
+#include <bits/stdc++.h>
+using namespace std;
+#ifdef LOCAL
+#include "def.h"
+#else
+#define ck(...)
+#endif
+#define ll long long
+#define pe(c) for (auto e : c) cout << e << ' '; cout << '\n'
+#define ps(b) cout << (b ? "YES" : "NO") << '\n'
+const ll M = 1e9 + 7, N = 2e5 + 5;
+
+void test(int32_t tc) {
+    ll n; cin >> n;
+    // vector<ll> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
+    string s; cin >> s;
+    int c = count(s.begin(), s.end(), '0');
+    cout << (c == n or c == 0 ? n : 1) << '\n';
 }
 
-int main() {
-    long long limit = LLONG_MAX; // 2^32
-    long long largestPrime = 0;
-
-    for (long long n = limit; n >= 2; --n) {
-        if (isPrime(n)) {
-            largestPrime = n;
-            break;
-        }
-    }
-
-    std::cout << "Largest prime whose square is less than 2^64: " << largestPrime << std::endl;
+int32_t main() {
+    cin.tie(0)->sync_with_stdio(0); cin.exceptions(ios::failbit | ios::badbit);
+    int32_t tc = 0, tt = 1;
+    cin >> tt;
+    while (tc++ < tt) test(tc);
     return 0;
 }

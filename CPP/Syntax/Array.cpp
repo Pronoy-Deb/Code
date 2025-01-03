@@ -1,5 +1,5 @@
 Note:
-    1. Maximum Size of an Array: 5 * 10^5
+    1. Maximum Size of an Array: 10^6
     2. Maximum Size of a Boolean Array: 2 * 10^6
     3. Global array initializes with all elements as 0
 

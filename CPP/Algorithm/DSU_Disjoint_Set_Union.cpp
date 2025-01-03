@@ -1,98 +1,85 @@
 // Complexity: O(alpha(n))
 https://codeforces.com/contest/1857/problem/G
 
-int par[N], sz[N];
-void make(int n) {
-    for (int i = 1; i <= n; ++i) {
-        par[i] = i; sz[i] = 1;
+struct dsu {
+    vector<int> par, sz;
+    dsu(int n) : par(n + 5), sz(n + 5, 1) {
+        iota(par.begin(), par.end(), 0);
     }
-}
-int get(int i) {
-    return (par[i] == i ? i : par[i] = get(par[i]));
-}
-void uni(int a, int b) {
-    a = get(a); b = get(b);
-    if (a != b) {
-        if (sz[a] < sz[b]) swap(a, b);
-        par[b] = a; sz[a] += sz[b];
+    int get(int i) {
+        return (par[i] == i ? i : par[i] = get(par[i]));
     }
-}
-bool same(int a, int b) { return get(a) == get(b); }
-int len(int a) { return sz[get(a)]; }
-int cc(int n) {
-    int cc = 0;
-    for (int i = 1; i <= n; ++i) {
-        if (get(i) == i) ++cc;
+    void uni(int a, int b) {
+        a = get(a); b = get(b);
+        if (a != b) {
+            if (sz[a] < sz[b]) swap(a, b);
+            par[b] = a; sz[a] += sz[b];
+        }
     }
-    return cc;
-}
+    bool same(int a, int b) { return get(a) == get(b); }
+    int len(int a) { return sz[get(a)]; }
+    int cc(int n) {
+        int cc = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (get(i) == i) ++cc;
+        }
+        return cc;
+    }
+};
 
 // Operation: Determining the number of CONNECTED COMPONENTS after performing the union operation:
-    cin >> n >> k;
-    make(n);
+    long long n, k; cin >> n >> k;
+    dsu d(n);
     while (k--) {
-        int u, v; cin >> u >> v; uni(u, v);
+        int u, v; cin >> u >> v; d.uni(u, v);
     }
-    cout << cc() << '\n';
+    cout << d.cc() << '\n';
 
 // OR,
 
 struct dsu {
-    vector<int> par;
-    dsu(){};
-    dsu(int n) {
-        par.resize(n + 2); iota(par.begin(), par.end(), 0);
+    int c; vector<int> par, rnk, sz;
+    dsu(int n) : c(n), par(n + 5), rnk(n + 5), sz(n + 5, 1) {
+        iota(par.begin(), par.end(), 0);
     }
-    int get(int u) {
-        if (u == par[u]) return u;
-        return par[u] = get(par[u]);
+    int get(int i) {
+        return (par[i] == i ? i : (par[i] = get(par[i])));
     }
-    int uni(int u, int v) { par[get(u)] = get(v); }
-};
-
-// OR,
-
-struct DSU {
-vector<int> par, rnk, sz; int c;
-DSU(int n) : par(n + 1), rnk(n + 1, 0), sz(n + 1, 1), c(n) {
-    iota(par.begin(), par.end(), 0);
-}
-int get(int i) {
-    return (par[i] == i ? i : (par[i] = get(par[i])));
-}
-bool same(int i, int j) { return get(i) == get(j); }
-int len(int i) { return sz[get(i)]; }
-int cc() { return c; } // connected components
-int uni(int i, int j) {
-    if ((i = get(i)) == (j = get(j))) return -1;
-    else --c;
-    if (rnk[i] > rnk[j]) swap(i, j);
-    par[i] = j; sz[j] += sz[i];
-    if (rnk[i] == rnk[j]) rnk[j]++;
-    return j;
-}
+    bool same(int i, int j) { return get(i) == get(j); }
+    int len(int i) { return sz[get(i)]; }
+    int cc() { return c; } // connected components
+    int uni(int i, int j) {
+        if ((i = get(i)) == (j = get(j))) return -1;
+        else --c;
+        if (rnk[i] > rnk[j]) swap(i, j);
+        par[i] = j; sz[j] += sz[i];
+        if (rnk[i] == rnk[j]) rnk[j]++;
+        return j;
+    }
 };
 
 // Moving & Erasing Operation with Summation & Length:
 https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&category=0&problem=3138&mosmsg=Submission+received+with+ID+29844967
 
-long long sz[N << 1], tot[N << 1];
-void make(int n) {
-    for (int i = 1; i <= n; ++i) { sz[i] = n + i; sz[i + n] = -1; tot[i + n] = i; }
-}
-int get(int x) { return sz[x] < 0 ? x : sz[x] = get(sz[x]); }
-bool del(int x) { return sz[x] == -1; }
-void uni(int x, int y) {
-    auto X = get(x), Y = get(y); if (del(x) || del(y) || X == Y) return;
-    if (sz[X] > sz[Y]) swap(X, Y); sz[X] += sz[Y]; sz[Y] = X; tot[X] += tot[Y];
-}
-void move(int x, int y) { // move x to the set that contains y
-    auto X = get(x), Y = get(y); if (del(x) || del(y) || X == Y) return;
-    ++sz[X]; --sz[Y]; tot[X] -= x; tot[Y] += x; sz[x] = Y;
-}
-void rem(int x) { if (del(x)) return; ++sz[get(x)]; sz[x] = -1; }
-int len(int x) { return -sz[get(x)]; }
-long long sum(int x) { return tot[get(x)]; } // summation of elements in a set
+struct dsu {
+    vector<long long> sz, tot;
+    dsu(int n) : sz((n << 1) + 5), tot((n << 1) + 5) {
+        for (int i = 1; i <= n; ++i) { sz[i] = n + i; sz[i + n] = -1; tot[i + n] = i; }
+    }
+    int get(int x) { return sz[x] < 0 ? x : sz[x] = get(sz[x]); }
+    inline bool del(int x) { return sz[x] == -1; }
+    void uni(int x, int y) {
+        auto X = get(x), Y = get(y); if (del(x) || del(y) || X == Y) return;
+        if (sz[X] > sz[Y]) swap(X, Y); sz[X] += sz[Y]; sz[Y] = X; tot[X] += tot[Y];
+    }
+    void move(int x, int y) { // move x to the set that contains y
+        auto X = get(x), Y = get(y); if (del(x) || del(y) || X == Y) return;
+        ++sz[X]; --sz[Y]; tot[X] -= x; tot[Y] += x; sz[x] = Y;
+    }
+    void rem(int x) { if (del(x)) return; ++sz[get(x)]; sz[x] = -1; }
+    int len(int x) { return -sz[get(x)]; }
+    long long sum(int x) { return tot[get(x)]; } // summation of elements in the set containing x
+};
 
 // DSU on Tree: O(n*logn)
 https://cses.fi/problemset/task/1139

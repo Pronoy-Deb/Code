@@ -2,18 +2,18 @@
 
 const int L = 21;
 long long tab[N][L], ar[N], n;
-long long com(long long x, long long y) { return x + y; }
+inline auto op(long long &x, long long &y) { return x + y; }
 void make() {
 	for (int i = 1; i <= n; ++i) tab[i][0] = ar[i];
 	for (int k = 1; k < L; ++k) {
 		for (int i = 1; i + (1 << k) - 1 <= n; ++i)
-			tab[i][k] = com(tab[i][k - 1], tab[i + (1 << (k - 1))][k - 1]);
+			tab[i][k] = op(tab[i][k - 1], tab[i + (1 << (k - 1))][k - 1]);
 	}
 }
-int get(int l, int r) {
+long long get(int l, int r) {
     if (l > r) return -1;
 	int k = 31 - __builtin_clz(r - l + 1);
-	return com(tab[l][k], tab[r - (1 << k) + 1][k]);
+	return op(tab[l][k], tab[r - (1 << k) + 1][k]);
 }
 
 // Disjoint Sparse Table: O(n*logn) preprocessing, O(1) query
