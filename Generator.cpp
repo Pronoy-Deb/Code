@@ -34,9 +34,10 @@ ll ran(ll l, ll r) {
 const ll M = 1e9, N = 1e6;
 
 void test(int tc) {
-    ll n = ran(1, 30); cout << n << '\n';
+    ll n = ran(1, 20); cout << n << ' ';
+    ll k = ran(1, n); cout << k << '\n';
     for (int i = 0; i < n; ++i) {
-        ll a = ran(0, 1); cout << a;
+        ll a = ran(0, 5); cout << a << ' ';
     }
     cout << '\n';
     // set<ll> st;

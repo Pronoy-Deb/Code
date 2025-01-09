@@ -48,7 +48,7 @@
     -> Maximum squared number that fits in integer:
         31623 * 31623 = 1000014129 > 1e9
 
-    -> sqrt(), sqrtl(), cbrt() and pow() function returns double type value
+    -> sqrtl(), sqrtl(), cbrtl() and powl() function returns double type value
 
     -> The minimum integer = INT_MIN, The maximum integer = INT_MAX
 
@@ -57,11 +57,6 @@
 
     -> ASCII Values of Characters:
         0-9 : 48-57, A-Z : 65-90, a-z : 97-122
-
-    -> Maximum Numbers:
-        int = 10^9, long long = 10^18, unsigned long long = 10^20
-
-    -> min() & max() functions take data of same type
 
     -> Value of PI:
         const double pi = M_PI;

@@ -105,13 +105,19 @@
         Division: (n >>= k)  // for(int i = 1; i <= k; ++i) n /= 2;
 
     To SET n bits from right to left till i (LSB) of a number:
-        num |= ((1 << i) - 1);
+        n |= ((1 << i) - 1);
 
     To SET n bits from left to right till i (MSB) of a number:
-        num |= (~((1 << (N - i)) - 1));  // N = Number of total bits
+        n |= (~((1 << (N - i)) - 1));  // N = Number of total bits
 
     To UNSET n bits from right to left till i (LSB) of a number:
-        num &= (~((1 << i) - 1));
+        n &= (~((1 << i) - 1));
 
     To UNSET n bits from left to right till i (MSB) of a number:
-        num &= ((1 << (N - i)) - 1);  // N = Number of total bits
+        n &= ((1 << (N - i)) - 1);  // N = Number of total bits
+
+    To only set the MSB:
+        n &= (1ll << (int)log2(n));
+
+    To only set the LSB:
+        n &= (1ll << __builtin_ctzll(n));

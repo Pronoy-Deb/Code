@@ -1,6 +1,5 @@
 https://cses.fi/problemset/task/1640
 
-// #include <ext/pb_ds/tree_policy.hpp>
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
 
@@ -27,8 +26,8 @@ struct chash {
 		return x ^ (x >> 31);
 	}
 	size_t operator()(pair<uint64_t, uint64_t> x) const {
-		static const uint64_t FIXED_RANDOM = chrono::high_resolution_clock::now().time_since_epoch().count();
-		return splitmix64(x.first + FIXED_RANDOM) ^ (splitmix64(x.second + FIXED_RANDOM) >> 1);
+		static const uint64_t FR = chrono::high_resolution_clock::now().time_since_epoch().count();
+		return splitmix64(x.first + FR) ^ (splitmix64(x.second + FR) >> 1);
 	}
 };
 
@@ -42,8 +41,8 @@ struct chash {
         return x ^ (x >> 31);
     }
     size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::high_resolution_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
+        static const uint64_t FR = chrono::high_resolution_clock::now().time_since_epoch().count();
+        return splitmix64(x + FR);
     }
 };
 gp_hash_table<long long, long long, chash> tab;
@@ -62,16 +61,12 @@ gp_hash_table<long long, long long, chash> tab;
 // For usual unordered_map:
 
 struct chash {
-	// any random-ish large odd number will do
-	const uint64_t C = uint64_t(2e18 * PI) + 71;
-	// random 32-bit number
-	const uint32_t RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+	const uint64_t C = uint64_t(2e18) + 71, R = chrono::high_resolution_clock::now().time_since_epoch().count();
 	size_t operator()(uint64_t x) const {
-		return __builtin_bswap64((x ^ RANDOM) * C);
+		return __builtin_bswap64((x ^ R) * C);
 	}
 };
-template <class K, class V> using cmap = unordered_map<K, V, chash>;
-// example usage: cmap<int, int>
+// example usage: unordered_map<int, int, chash> mp;
 
 // gp_hash_table that supports resize() function:
 

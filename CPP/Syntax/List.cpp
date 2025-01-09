@@ -14,6 +14,7 @@ Adding elements in the list:
 Deleting elements from the list:
     ls.pop_back(ele); // deleting from the back
     ls.pop_front(ele); // deleting from the front
+    ls.remove(ele); // deleting by value
 
 Reversing a list:
     ls.reverse();
@@ -26,4 +27,4 @@ Inserting:
     advance(it, 3);
     ls.insert(it, 100);
     OR, ls.emplace(it, 100);
-    
+

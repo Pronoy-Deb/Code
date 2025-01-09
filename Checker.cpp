@@ -19,8 +19,9 @@ ll n = 0, m = 0, a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, q = 0, inp[N],
 
 bool check(ifstream &in) {
     // Read Output from output file
-    in >> n;
-    // return true;
+    in >> a >> b >> c;
+    cout << (a ^ b) + (a ^ c) + (b ^ c) << '\n';
+    return false;
 }
 
 signed main() {
@@ -29,7 +30,7 @@ signed main() {
     // ifstream bf("out1", ifstream::in);
     ifstream op("out2", ifstream::in);
     // Read Input from Generator.cpp
-    int tc; fin >> tc; // For testcase
+    // int tc; fin >> tc; // For testcase
     // fin >> n;
     // for (i = 0; i < n; ++i) fin >> inp[i];
     return (check(op) ? 0 : -1);

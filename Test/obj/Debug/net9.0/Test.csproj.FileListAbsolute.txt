@@ -1,0 +1,15 @@
+/media/pronoy/Backup/CP/Code/Test/bin/Debug/net9.0/Test
+/media/pronoy/Backup/CP/Code/Test/bin/Debug/net9.0/Test.deps.json
+/media/pronoy/Backup/CP/Code/Test/bin/Debug/net9.0/Test.runtimeconfig.json
+/media/pronoy/Backup/CP/Code/Test/bin/Debug/net9.0/Test.dll
+/media/pronoy/Backup/CP/Code/Test/bin/Debug/net9.0/Test.pdb
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.GeneratedMSBuildEditorConfig.editorconfig
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.AssemblyInfoInputs.cache
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.AssemblyInfo.cs
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.csproj.CoreCompileInputs.cache
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.sourcelink.json
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.dll
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/refint/Test.dll
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.pdb
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/Test.genruntimeconfig.cache
+/media/pronoy/Backup/CP/Code/Test/obj/Debug/net9.0/ref/Test.dll

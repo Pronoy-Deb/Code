@@ -1,0 +1,15 @@
+/media/pronoy/Backup/CP/Code/Extras/Program_bin/.cphcsrun
+/media/pronoy/Backup/CP/Code/Extras/Program_bin/.cphcsrun.deps.json
+/media/pronoy/Backup/CP/Code/Extras/Program_bin/.cphcsrun.runtimeconfig.json
+/media/pronoy/Backup/CP/Code/Extras/Program_bin/.cphcsrun.dll
+/media/pronoy/Backup/CP/Code/Extras/Program_bin/.cphcsrun.pdb
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.GeneratedMSBuildEditorConfig.editorconfig
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.AssemblyInfoInputs.cache
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.AssemblyInfo.cs
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.csproj.CoreCompileInputs.cache
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.sourcelink.json
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.dll
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/refint/.cphcsrun.dll
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.pdb
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/.cphcsrun.genruntimeconfig.cache
+/media/pronoy/Backup/CP/Code/Test/.cphcsrun/obj/Release/net9.0/ref/.cphcsrun.dll

@@ -10,12 +10,18 @@ using namespace std;
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
 const ll M = 1e9 + 7, N = 2e5 + 5;
 
+inline unsigned long long onmsb(unsigned long long n) {
+    return n ? (1ull << (bit_width(n) - 1)) : 0;
+}
 void test(int32_t tc) {
-    ll n; cin >> n;
-    // vector<ll> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
-    string s; cin >> s;
-    int c = count(s.begin(), s.end(), '0');
-    cout << (c == n or c == 0 ? n : 1) << '\n';
+	ll l, r; cin >> l >> r;
+    ll a = onmsb(r), d = log2(a);
+    ll b = 0;
+    for (int i = 0; i < d; ++i) b |= (1LL << i);
+    ll c = 0;
+    for (int i = 0; c < l or !c; ++i) c |= (1LL << i);
+    cout << a << ' ' << b << ' ' << c;
+    cout << '\n';
 }
 
 int32_t main() {

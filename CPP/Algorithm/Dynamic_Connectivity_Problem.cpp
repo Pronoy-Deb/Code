@@ -1,4 +1,4 @@
-// https://codeforces.com/gym/100551/problem/A
+https://codeforces.com/gym/100551/problem/A
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -18,8 +18,7 @@ struct persistent_dsu {
         comp = 0; memset(par, -1, sizeof(par)); memset(depth, 0, sizeof(depth));
     }
     int root(int x) {
-        if (x == par[x]) return x;
-        return root(par[x]);
+        if (x == par[x]) return x; return root(par[x]);
     }
     void init(int n) {
         comp = n;
@@ -27,9 +26,7 @@ struct persistent_dsu {
             par[i] = i; depth[i] = 1;
         }
     }
-    bool connected(int x, int y) {
-        return root(x) == root(y);
-    }
+    bool connected(int x, int y) { return root(x) == root(y); }
     void unite(int x, int y) {
         int rx = root(x), ry = root(y);
         if (rx == ry) {
@@ -42,7 +39,7 @@ struct persistent_dsu {
         }
         --comp; sk.push(state(rx, depth[rx], ry, depth[ry]));
     }
-    /// how many last added edges you want to erase
+    // how many last added edges you want to erase
     void backtrack(int c) {
         while (!sk.empty() && c) {
             if (sk.top().u == -1) {
@@ -60,11 +57,11 @@ persistent_dsu d; vector<pair<int, int>> alive[N << 2];
 void up(int n, int b, int e, int i, int j, pair<int, int> &p) {
     if (b > j || e < i) return;
     if (b >= i && e <= j) {
-        alive[n].push_back(p); /// this edge was alive in this time range
+        alive[n].push_back(p); // this edge was alive in this time range
         return;
     }
-    int l = (n << 1), r = l + 1, mid = b + e >> 1;
-    up(l, b, mid, i, j, p); up(r, mid + 1, e, i, j, p);
+    int l = (n << 1), r = l | 1, m = b + e >> 1;
+    up(l, b, m, i, j, p); up(r, m + 1, e, i, j, p);
 }
 int ans[N];
 void query(int n, int b, int e) {
@@ -75,8 +72,8 @@ void query(int n, int b, int e) {
     if (b == e) {
         ans[b] = d.comp; d.backtrack(d.sk.size() - prevsz); return;
     }
-    int l = (n << 1), r = l + 1, mid = b + e >> 1;
-    query(l, b, mid); query(r, mid + 1, e);
+    int l = (n << 1), r = l + 1, m = b + e >> 1;
+    query(l, b, m); query(r, m + 1, e);
     d.backtrack(d.sk.size() - prevsz);
 }
 struct HASH {

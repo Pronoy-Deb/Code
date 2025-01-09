@@ -64,12 +64,6 @@
         cout << fixed << n;
         cout << fixed << setprecision(number of digits after the point) << n;
 
-    To convert the value into integer:
-        (long long)(sqrtl(value));
-
-    Checking Whether a Number is resulted by a POWER of 2:
-        if(!(n & (n-1)))  OR,  if((long long)(log2(n)) == log2(n))
-
     Maximum of more than two elements:
         max({a, b, c, d, e});
 
