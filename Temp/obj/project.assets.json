@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/media/pronoy/Backup/CP/Code/temp/showering.csproj",
+      "projectUniqueName": "/media/pronoy/Backup/CP/Code/Temp/showering.csproj",
       "projectName": "showering",
-      "projectPath": "/media/pronoy/Backup/CP/Code/temp/showering.csproj",
+      "projectPath": "/media/pronoy/Backup/CP/Code/Temp/showering.csproj",
       "packagesPath": "/home/pronoy/.nuget/packages/",
-      "outputPath": "/media/pronoy/Backup/CP/Code/temp/obj/",
+      "outputPath": "/media/pronoy/Backup/CP/Code/Temp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/pronoy/.nuget/NuGet/NuGet.Config"

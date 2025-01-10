@@ -1,14 +1,15 @@
 // Merge Sort: O(n * log(n))
 
-void merge(int l, int m, int h) {
-    long long tmp[h - l + 1], i = l, j = m + 1, k = 0;
-    while (i <= m && j <= h) tmp[k++] = ar[(ar[i] < ar[j]) ? i++ : j++];
-    while (i <= m) tmp[k++] = ar[i++]; while (j <= h) tmp[k++] = ar[j++];
-    for (i = l; i <= h; ++i) ar[i] = tmp[i - l];
+long long n, ar[N];
+void merge(int l, int m, int r) {
+    long long tmp[r - l + 1], i = l, j = m + 1, k = 0;
+    while (i <= m && j <= r) tmp[k++] = ar[(ar[i] < ar[j]) ? i++ : j++];
+    while (i <= m) tmp[k++] = ar[i++]; while (j <= r) tmp[k++] = ar[j++];
+    for (i = l; i <= r; ++i) ar[i] = tmp[i - l];
 }
-void msrt(int l = 0, int h = n - 1) {
-	if (l >= h) return; int m = (l + h) >> 1;
-    msrt(l, m); msrt(m + 1, h); merge(l, m, h);
+void msrt(int l = 0, int r = n - 1) {
+	if (l >= r) return; int m = (l + r) >> 1;
+    msrt(l, m); msrt(m + 1, r); merge(l, m, r);
 }
 
 // Merge Sort Tree:

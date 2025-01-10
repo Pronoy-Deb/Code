@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/media/pronoy/Backup/CP/Code/showering/.cphcsrun/.cphcsrun.csproj": {}
+    "/media/pronoy/Backup/CP/Code/Temp/.cphcsrun/.cphcsrun.csproj": {}
   },
   "projects": {
-    "/media/pronoy/Backup/CP/Code/showering/.cphcsrun/.cphcsrun.csproj": {
+    "/media/pronoy/Backup/CP/Code/Temp/.cphcsrun/.cphcsrun.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/media/pronoy/Backup/CP/Code/showering/.cphcsrun/.cphcsrun.csproj",
+        "projectUniqueName": "/media/pronoy/Backup/CP/Code/Temp/.cphcsrun/.cphcsrun.csproj",
         "projectName": ".cphcsrun",
-        "projectPath": "/media/pronoy/Backup/CP/Code/showering/.cphcsrun/.cphcsrun.csproj",
+        "projectPath": "/media/pronoy/Backup/CP/Code/Temp/.cphcsrun/.cphcsrun.csproj",
         "packagesPath": "/home/pronoy/.nuget/packages/",
-        "outputPath": "/media/pronoy/Backup/CP/Code/showering/.cphcsrun/obj/",
+        "outputPath": "/media/pronoy/Backup/CP/Code/Temp/.cphcsrun/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/pronoy/.nuget/NuGet/NuGet.Config"

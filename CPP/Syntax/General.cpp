@@ -65,7 +65,7 @@
     -> Add the rounding down value:
         const double rd = 1e-9;
 
-    -> For .txt type input/output:
+    -> For file input/output:
         #ifndef ONLINE_JUDGE
         freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
         #endif
