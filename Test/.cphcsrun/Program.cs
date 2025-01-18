@@ -1,64 +1,46 @@
-﻿// C# program to illustrate how to
-// remove key/value pairs from
-// the sortedlist
-using System;
-using System.Collections;
+﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
 
-class GFG {
+class DebugUtils
+{
+    // Function to print variable names and values
+    public static void ck<T>(Expression<Func<T>> expression)
+    {
+        var body = (MemberExpression)expression.Body;
+        string variableName = body.Member.Name;
 
-	// Main Method
-	static public void Main()
-	{
+        // Get the value of the variable
+        T value = expression.Compile().Invoke();
 
-		// Creating a sortedlist
-		// Using SortedList class
-		var my_slist = new SortedList();
+        // Print the variable name and value to the error stream
+        Console.Error.WriteLine($"{variableName}: {value}");
+    }
 
-		// Adding key/value pairs in SortedList
-		// Using Add() method
-		// my_slist.Add(1.02, "This");
-        var ar = Console.ReadLine().Split();
-        Console.WriteLine("{0} {1}", ar[0], ar[1]);
-        my_slist.Add(Convert.ToDouble(ar[0]), ar[1]);
-		my_slist.Add(1.07, "Is");
-		my_slist.Add(1.04, "SortedList");
-		my_slist.Add(1.01, "Tutorial");
+    public static void ck<T1, T2>(Expression<Func<T1>> expression1, Expression<Func<T2>> expression2)
+    {
+        var body1 = (MemberExpression)expression1.Body;
+        var body2 = (MemberExpression)expression2.Body;
 
-		foreach(DictionaryEntry pair in my_slist)
-		{
-			Console.WriteLine("{0} and {1}",
-					pair.Key, pair.Value);
-		}
-		Console.WriteLine();
+        string variableName1 = body1.Member.Name;
+        string variableName2 = body2.Member.Name;
 
-		// Remove value having 1.07 key
-		// Using Remove() method
-		my_slist.Remove(1.07);
+        T1 value1 = expression1.Compile().Invoke();
+        T2 value2 = expression2.Compile().Invoke();
 
-		// After Remove() method
-		foreach(DictionaryEntry pair in my_slist)
-		{
-			Console.WriteLine("{0} and {1}",
-					pair.Key, pair.Value);
-		}
-		Console.WriteLine();
+        // Print the variable names and values to the error stream
+        Console.Error.WriteLine($"{variableName1}: {value1}, {variableName2}: {value2}");
+    }
+}
 
-		// Remove element at index 2
-		// Using RemoveAt() method
-		my_slist.RemoveAt(2);
+class Program
+{
+    static void Main()
+    {
+        int tc = 5;
+        var ar = new[] { 1, 2, 3 };
 
-		// After RemoveAt() method
-		foreach(DictionaryEntry pair in my_slist)
-		{
-			Console.WriteLine("{0} and {1}",
-					pair.Key, pair.Value);
-		}
-		Console.WriteLine();
-
-		// Remove all key/value pairs
-		// Using Clear method
-		my_slist.Clear();
-		Console.WriteLine("The total number of key/value pairs"+
-					" present in my_slist:{0}", my_slist.Count);
-	}
+        // Use ck to print variable names and values
+        DebugUtils.ck(() => tc, () => ar);
+    }
 }

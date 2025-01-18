@@ -19,17 +19,10 @@ stdin, stdout = IOWrapper(stdin), IOWrapper(stdout); input = lambda: stdin.readl
 def ck(*A): from inspect import currentframe as cf; from sys import stderr; frame = cf().f_back; name = {id(v): k for k, v in frame.f_locals.items()}; [print(f"{name.get(id(var), 'val')} = " + (f"[{', '.join(map(str, var))}]" if isinstance(var, list) else f"{{{', '.join(f'{k}: {v}' for k, v in var.items())}}}" if isinstance(var, dict) else f"{{{', '.join(map(str, var))}}}" if isinstance(var, set) else f"({', '.join(map(str, var))})" if isinstance(var, tuple) else str(var)), file=stderr) for var in A]
 def ps(b): print("YES" if b else "NO")
 M, N = int(1e9) + 7, int(2e5) + 5
-from math import log10
-def test(tc):
-    n = 111111111111111111111111
-    print(n%9)
 
-    # n = int(input())
-    # ls = list(map(int, input().split()))
-    # a = int(2e18 + 7) * int(3e18 + 7)
-    # print(a)
-    # print(a % int(4e17))
-    # print(int(log10(a)) + 1)
+def test(tc):
+    a = 3
+    print("hi" + {a} + "hello")
 
 if __name__ == "__main__":
     t = tc = 1

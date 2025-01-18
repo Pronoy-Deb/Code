@@ -34,7 +34,7 @@ bool cmp(const pair<long long, long long> &a, const pair<long long, long long> &
     return (a.first + a.second) < (b.first + b.second);
 }
 
-// Prints Ascending pair of first elements & Descending pair of second elements
+// Sorts Ascending pair of first elements & Descending pair of second elements
 bool cmp(const pair<long long, long long> &a, const pair<long long, long long> &b) {
     if(a.first != b.first) return a.first < b.first;
     return a.second > b.second;

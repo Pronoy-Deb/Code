@@ -62,7 +62,7 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
     fi
 
     start_time=$(date +%s%3N)
-    echo -e "$input_data" | timeout 25s dotnet run -p:WarningLevel=0 > out2
+    echo -e "$input_data" | timeout 30s dotnet run -p:WarningLevel=0 > out2
     exit_status=$?
     end_time=$(date +%s%3N)
     elapsed=$((end_time - start_time))

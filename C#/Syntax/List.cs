@@ -4,6 +4,10 @@
 // List
     var ls = new List();
     OR, var ls = new List<int>(n); // List of size n
+    // List from input
+        var ls = Console.ReadLine().Split().Select(int.Parse).ToList();
+    // OR,
+        var ls = new List<int>(Console.ReadLine().Split().Select(int.Parse));
     ls.Add(x); // Add element x to the end of the list
     ls.RemoveAt(i); // Remove element at index i
     ls.Remove(10); // Remove element 10

@@ -14,3 +14,44 @@ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 14 --slave /
 sudo update-alternatives --config gcc
 gcc --version
 
+# Git Commands:
+# To clone a repository:
+    git clone
+# To add a file to the staging area:
+    git add
+# To commit changes:
+    git commit -m "Message"
+# To push changes to the remote repository:
+    git push
+# To pull changes from the remote repository:
+    git pull
+# To check the status of the repository:
+    git status
+# To check the log of the repository:
+    git log
+# To create a new branch:
+    git branch
+# To switch to a branch:
+    git checkout
+# To merge a branch:
+    git merge
+# To delete a branch:
+    git branch -d
+# To create a new repository:
+    git init
+# To add a remote repository:
+    git remote add origin
+# To remove a remote repository:
+    git remote remove origin
+# To check the difference between two commits:
+    git diff
+# To keep the local repository in sync with the remote repository:
+    git fetch
+# To revert the latest push:
+    git revert HEAD
+# To remove a file for a repository:
+    git rm <filename>
+# To rename a file:
+    git mv <old_filename> <new_filename>
+# Keep the File Locally but Remove from Git:
+    git rm --cached <file>

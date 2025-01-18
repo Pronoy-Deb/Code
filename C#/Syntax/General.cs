@@ -12,3 +12,6 @@ public static int Min(params int[] numbers) {
     }
     return min;
 }
+
+// Taking the reference of a variable:
+    ref var c = ref s[j];
