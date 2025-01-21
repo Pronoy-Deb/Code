@@ -28,7 +28,7 @@ struct dsu {
 };
 
 // Operation: Determining the number of CONNECTED COMPONENTS after performing the union operation:
-    long long n, k; cin >> n >> k;
+    int64_t n, k; cin >> n >> k;
     dsu d(n);
     while (k--) {
         int u, v; cin >> u >> v; d.uni(u, v);
@@ -62,7 +62,7 @@ struct dsu {
 https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&category=0&problem=3138&mosmsg=Submission+received+with+ID+29844967
 
 struct dsu {
-    vector<long long> sz, tot;
+    vector<int64_t> sz, tot;
     dsu(int n) : sz((n << 1) + 5), tot((n << 1) + 5) {
         for (int i = 1; i <= n; ++i) { sz[i] = n + i; sz[i + n] = -1; tot[i + n] = i; }
     }
@@ -78,21 +78,21 @@ struct dsu {
     }
     void rem(int x) { if (del(x)) return; ++sz[get(x)]; sz[x] = -1; }
     int len(int x) { return -sz[get(x)]; }
-    long long sum(int x) { return tot[get(x)]; } // summation of elements in the set containing x
+    int64_t sum(int x) { return tot[get(x)]; } // summation of elements in the set containing x
 };
 
 // DSU on Tree: O(n*logn)
 https://cses.fi/problemset/task/1139
 
 vector<int> gp[N]; map<int, int> fre[N];
-long long cnt[N], clr[N], sz[N]; bitset<N> big;
+int64_t cnt[N], clr[N], sz[N]; bitset<N> big;
 void dfs(int u = 1, int p = 1) {
     sz[u] = 1;
     for (auto &v : gp[u]) {
         if (v != p) { dfs(v, u); sz[u] += sz[v]; }
     }
 }
-void add(int u, int p, long long x, auto &freq) {
+void add(int u, int p, int64_t x, auto &freq) {
     freq[clr[u]] += x;
     if (freq[clr[u]] == 0) freq.erase(clr[u]);
     for (auto &v : gp[u]) {
@@ -129,7 +129,7 @@ void dsu(int u = 1, int p = 1, bool keep = 1) {
 // Inspired by the problem http://www.spoj.com/problems/CHAIN/ which utilises this concept, which can extended for solving
 https://atcoder.jp/contests/abc328/tasks/abc328_f
 
-long long pot[N], par[N], inc; // numbers of inconsistencies
+int64_t pot[N], par[N], inc; // numbers of inconsistencies
 void make(int n) {
     inc = 0;
     for (int i = 1; i <= n; ++i) {

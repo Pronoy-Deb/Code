@@ -1,13 +1,17 @@
 // SortedSet:
     var st = new SortedSet<int>();
 
+// Array of SortedSet:
+    var st = new SortedSet<int>[n];
+    for (int i = 0; i < n; ++i) st[i] = new SortedSet<int>();
+
 // Operation:
     st.Add(x); // Add element x to the Set
     st.Remove(x); // Remove element x from the Set
     st.Contains(x); // Check whether the Set contains element x
     st.Clear(); // Remove all elements from the Set
 
-// HashSet:
+// HashSet: Unsorted set
     var hst = new HashSet<int>();
     OR, var hst = new HashSet<int>(n); // HashSet of size n
 

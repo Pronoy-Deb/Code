@@ -5,8 +5,17 @@ class Program {
         var vals = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
         int n = vals[0];
         var ar = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-        int sum = ar.Sum();
-        Console.WriteLine(-sum);
+        int j = n - 1;
+        while (j > 0 && ar[j - 1] <= ar[j]) --j;
+        for (int i = 0; i < j - 1; ++i) {
+            int a = Math.Min(ar[i], ar[i + 1]);
+            ar[i] -= a; ar[i + 1] -= a;
+            if (ar[i] > 0) {
+                ps(false); return;
+            }
+        }
+        ps(j == 0 || ar[j - 1] <= ar[j]);
+        // Console.WriteLine();
     }
 
     const int M = 1000000007;

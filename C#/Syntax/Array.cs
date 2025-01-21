@@ -1,8 +1,8 @@
 Declaring a 1D array:
-    int[] ar = new int[n]; // Array of size n
+    var ar = new int[n]; // Array of size n
 
 Declaring a 2D array:
-    int[,] ar = new int[m, n]; // Array of size m x n
+    var ar = new int[m, n]; // Array of size m x n
     ar[i, j] = x; // Set element at position (i, j) to x
     int x = ar[i, j]; // Get element at position (i, j)
     int m = ar.GetLength(0); // Get the number of rows

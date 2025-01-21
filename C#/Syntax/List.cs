@@ -18,6 +18,9 @@
     ls.Sort(); // Sort the list in ascending order
     ls.Reverse(); // Reverse the list
     ls.RemoveAll(x => x == y); // Remove all elements equal to y from the list
+    ls.Any(); // Check if the list is empty
+    ls.Count(); // Get the size of the list
+    ls.Last(); // Get the last element
     // traverse all
     foreach (int i in ls) {
         Console.WriteLine(i);

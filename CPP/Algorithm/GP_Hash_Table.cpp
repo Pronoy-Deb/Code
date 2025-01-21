@@ -1,24 +1,34 @@
+// For usual unordered_map:
+
+struct hs {
+	const uint64_t C = uint64_t(2e18) + 71, R = chrono::high_resolution_clock::now().time_since_epoch().count();
+	size_t operator()(uint64_t x) const {
+		return __builtin_bswap64((x ^ R) * C);
+	}
+};
+// example usage: unordered_map<int, int, hs> mp;
+
 https://cses.fi/problemset/task/1640
 
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
 
 const int rnd = chrono::high_resolution_clock::now().time_since_epoch().count();
-struct chash {
+struct hs {
     int operator()(int x) const { return x ^ rnd; }
 };
-gp_hash_table<long long, long long, chash> tab;
+gp_hash_table<int64_t, int64_t, hs> tab;
 
 // OR, For Pairs-
 
-struct chash {
+struct hs {
     int operator()(pair<int, int> x) const { return x.first* 31 + x.second; }
 };
-gp_hash_table<pair<int, int>, int, chash> tab;
+gp_hash_table<pair<int, int>, int, hs> tab;
 
 // OR, For Pairs-
 
-struct chash {
+struct hs {
 	static uint64_t splitmix64(uint64_t x) {
 		x += 0x9e3779b97f4a7c15;
 		x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
@@ -33,7 +43,7 @@ struct chash {
 
 // OR, Usual Hashing-
 
-struct chash {
+struct hs {
     static uint64_t splitmix64(uint64_t x) {
         x += 0x9e3779b97f4a7c15;
         x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
@@ -45,7 +55,7 @@ struct chash {
         return splitmix64(x + FR);
     }
 };
-gp_hash_table<long long, long long, chash> tab;
+gp_hash_table<int64_t, int64_t, hs> tab;
 
 // Operation:
     cin >> n >> k;
@@ -58,15 +68,6 @@ gp_hash_table<long long, long long, chash> tab;
     }
     cout << "IMPOSSIBLE\n";
 
-// For usual unordered_map:
-
-struct chash {
-	const uint64_t C = uint64_t(2e18) + 71, R = chrono::high_resolution_clock::now().time_since_epoch().count();
-	size_t operator()(uint64_t x) const {
-		return __builtin_bswap64((x ^ R) * C);
-	}
-};
-// example usage: unordered_map<int, int, chash> mp;
 
 // gp_hash_table that supports resize() function:
 

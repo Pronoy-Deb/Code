@@ -34,11 +34,20 @@ ll ran(ll l, ll r) {
 const ll M = 1e9, N = 1e6;
 
 void test(int tc) {
-    ll n = ran(1, 20); cout << n << ' ';
+    ll n = ran(1, 10); cout << n << ' ';
     ll k = ran(1, n); cout << k << '\n';
+    ll tot = 0;
     for (int i = 0; i < n; ++i) {
-        ll a = ran(0, 5); cout << a << ' ';
+        ll a = ran(1, 10); cout << a << ' ';
+        tot += a;
     }
+    cout << '\n';
+    ll sum = 0;
+    for (int i = 0; i < k - 1; ++i) {
+        ll a = ran(1, 10); cout << a << ' ';
+        sum += a;
+    }
+    if (sum < tot) cout << tot - sum; else cout << 1;
     cout << '\n';
     // set<ll> st;
     // while (st.size() != n) {

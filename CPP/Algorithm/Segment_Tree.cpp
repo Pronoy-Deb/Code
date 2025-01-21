@@ -1,16 +1,16 @@
 // WITHOUT lazy Propagation: Build: O(n), Update & Query: O(log(n))
 
-long long n, ar[N], tre[N];
-inline auto op(const long long &l, const long long &r) { return (l + r); }
+int64_t n, ar[N], tre[N];
+inline int64_t op(const int64_t &l, const int64_t &r) { return (l + r); }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
-void up(int in, long long val) {
+void up(int in, int64_t val) {
     for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = op(tre[in], tre[in ^ 1]);
 }
-long long get(int l, int r) {
-    long long res = 0;
+int64_t get(int l, int r) {
+    int64_t res = 0;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
         if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
@@ -19,20 +19,20 @@ long long get(int l, int r) {
 
 // OR,
 
-long long n, ar[N], tre[N << 2];
-inline auto op(const long long &l, const long long &r) { return (l + r); }
+int64_t n, ar[N], tre[N << 2];
+inline auto op(const int64_t &l, const int64_t &r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     make(lc, s, m); make(rc, m + 1, e); tre[nd] = op(tre[lc], tre[rc]);
 }
-void up(int in, long long val, int nd = 1, int s = 0, int e = n - 1) {
+void up(int in, int64_t val, int nd = 1, int s = 0, int e = n - 1) {
     if (s == e) { tre[nd] = val; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     if (in <= m) up(in, val, lc, s, m); else up(in, val, rc, m + 1, e);
     tre[nd] = op(tre[lc], tre[rc]);
 }
-long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
+int64_t get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     if (s > e || s > r || e < l) return 0;
     if (s >= l && e <= r) return tre[nd];
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -41,13 +41,13 @@ long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 
 // WITH lazy Propagation: Build: O(n), Increment / Query: O(logn)
 
-long long n, ar[N], tre[N << 1], lz[N << 1];
-inline auto op(const long long &x, const long long &y) { return (x + y); }
+int64_t n, ar[N], tre[N << 1], lz[N << 1];
+inline int64_t op(const int64_t &x, const int64_t &y) { return (x + y); }
 void make() {
     for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
-inline void apply(int in, long long val, int k) {
+inline void apply(int in, int64_t val, int k) {
     tre[in] += val * k; if (in < n) lz[in] += val;
 }
 void push(int l, int r) {
@@ -67,7 +67,7 @@ void rebuild(int l, int r) {
         for (int i = r; i >= l; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
     }
 }
-void inc(int l, int r, long long val) {
+void inc(int l, int r, int64_t val) {
     if (l < 0 || r >= n) return;
     push(l, l + 1); push(r, ++r); int l0 = l, r0 = r, k = 1;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1, k <<= 1) {
@@ -75,8 +75,8 @@ void inc(int l, int r, long long val) {
     }
     rebuild(l0, l0 + 1); rebuild(r0 - 1, r0);
 }
-long long get(int l, int r) {
-    long long res = 0; if (l < 0 || r >= n) return res;
+int64_t get(int l, int r) {
+    int64_t res = 0; if (l < 0 || r >= n) return res;
     push(l, l + 1); push(r, ++r);
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
         if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
@@ -86,8 +86,8 @@ long long get(int l, int r) {
 
 // OR,
 
-long long n, ar[N], tre[N << 2], lz[N << 2];
-inline auto op(const long long &l, const long long &r) { return (l + r); }
+int64_t n, ar[N], tre[N << 2], lz[N << 2];
+inline auto op(const int64_t &l, const int64_t &r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
     if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -100,14 +100,14 @@ void propagate(int nd, int s, int e) {
         lz[nd] = 0;
     }
 }
-void inc(int l, int r, long long val, int nd = 1, int s = 0, int e = n - 1) {
+void inc(int l, int r, int64_t val, int nd = 1, int s = 0, int e = n - 1) {
     propagate(nd, s, e); if (s > e || s > r || e < l) return;
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     if (s >= l && e <= r) { lz[nd] += val; propagate(nd, s, e); return; }
     inc(l, r, val, lc, s, m); inc(l, r, val, rc, m + 1, e);
     tre[nd] = op(tre[lc], tre[rc]);
 }
-long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
+int64_t get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     propagate(nd, s, e); if (s > e || s > r || e < l) return 0;
     if (s >= l && e <= r) return tre[nd];
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -116,12 +116,12 @@ long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 
 https://cses.fi/problemset/task/1735
 
-long long n, ar[N], tre[N << 2], lzi[N << 2], lza[N << 2];
-inline auto op(const long long &l, const long long &r) { return (l + r); }
-inline void pgi(int i, long long v, int s, int e) {
+int64_t n, ar[N], tre[N << 2], lzi[N << 2], lza[N << 2];
+inline auto op(const int64_t &l, const int64_t &r) { return (l + r); }
+inline void pgi(int i, int64_t v, int s, int e) {
     lzi[i] += v; tre[i] += (e - s + 1) * v;
 }
-inline void pga(int i, long long v, int s, int e) {
+inline void pga(int i, int64_t v, int s, int e) {
     lza[i] = v; lzi[i] = 0; tre[i] = (e - s + 1) * v;
 }
 void push(int i, int s, int e) {
@@ -138,21 +138,21 @@ void make(int i = 1, int s = 1, int e = n) {
     int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
     make(lc, s, m); make(rc, m + 1, e); tre[i] = op(tre[lc], tre[rc]);
 }
-void inc(int l, int r, long long v, int i = 1, int s = 1, int e = n) {
+void inc(int l, int r, int64_t v, int i = 1, int s = 1, int e = n) {
     if (s > e || l > e || r < s) return;
     if (l <= s && e <= r) { pgi(i, v, s, e); return; }
     push(i, s, e); int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
     inc(l, r, v, lc, s, m); inc(l, r, v, rc, m + 1, e);
     tre[i] = op(tre[lc], tre[rc]);
 }
-void asn(int l, int r, long long v, int i = 1, int s = 1, int e = n) {
+void asn(int l, int r, int64_t v, int i = 1, int s = 1, int e = n) {
     if (s > e || l > e || r < s) return;
     if (l <= s && e <= r) { pga(i, v, s, e); return; }
     push(i, s, e); int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
     asn(l, r, v, lc, s, m); asn(l, r, v, rc, m + 1, e);
     tre[i] = op(tre[lc], tre[rc]);
 }
-long long get(int l, int r, int i = 1, int s = 1, int e = n) {
+int64_t get(int l, int r, int i = 1, int s = 1, int e = n) {
     if (s > e || l > e || r < s) return 0;
     if (l <= s && e <= r) return tre[i];
     push(i, s, e); int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
@@ -163,12 +163,12 @@ long long get(int l, int r, int i = 1, int s = 1, int e = n) {
 https://www.spoj.op/problems/MKTHNUM/
 
 struct node {
-    long long l = 0, r = 0, val = 0;
+    int64_t l = 0, r = 0, val = 0;
 } tre[N * 20];
 int ptr = 0, n;
 int make(int s = 1, int e = n) {
     int cur = ++ptr; if (s == e) return cur;
-    long long m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
+    int64_t m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
     lc = make(s, m); rc = make(m + 1, e);
     tre[cur].val = tre[lc].val + tre[rc].val;
     return cur;
@@ -176,23 +176,23 @@ int make(int s = 1, int e = n) {
 int up(int pre, int i, int v, int s = 1, int e = n) {
     int cur = ++ptr; tre[cur] = tre[pre];
     if (s == e) { tre[cur].val += v; return cur; }
-    long long m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
+    int64_t m = s + e >> 1, &lc = tre[cur].l, &rc = tre[cur].r;
     if (i <= m) { rc = tre[pre].r; lc = up(tre[pre].l, i, v, s, m); }
     else { lc = tre[pre].l; rc = up(tre[pre].r, i, v, m + 1, e); }
     tre[cur].val = tre[lc].val + tre[rc].val;
     return cur;
 }
 // Finding the k-th number in a range l to r if the range were sorted
-long long get(int pre, int cur, int k, int s = 1, int e = n) {
+int64_t get(int pre, int cur, int k, int s = 1, int e = n) {
     if (s == e) return s;
-    long long m = s + e >> 1, lc = tre[cur].l, rc = tre[cur].r, cnt = tre[lc].val - tre[tre[pre].l].val;
+    int64_t m = s + e >> 1, lc = tre[cur].l, rc = tre[cur].r, cnt = tre[lc].val - tre[tre[pre].l].val;
     if (cnt >= k) return get(tre[pre].l, lc, k, s, m);
     return get(tre[pre].r, rc, k - cnt, m + 1, e);
 }
 
 // Operation:
-    long long n, q; cin >> n >> q;
-    long long ar[n + 5], root[n + 5]; map<long long, long long> mp, V;
+    int64_t n, q; cin >> n >> q;
+    int64_t ar[n + 5], root[n + 5]; map<int64_t, int64_t> mp, V;
     for (int i = 1; i <= n; ++i) cin >> ar[i], mp[ar[i]];
     for (auto x : mp) mp[x.first] = ++c, V[c] = x.first;
     root[0] = make();
@@ -310,7 +310,7 @@ void make(int X, int xs, int xe) {
     }
     make(X, xs, xe, 1, 1, n);
 }
-void up(int X, int xs, int xe, int Y, int ys, int ye, int x, int y, long long val) {
+void up(int X, int xs, int xe, int Y, int ys, int ye, int x, int y, int64_t val) {
     if (ys == ye) tre[X][Y] = (xs == xe ? val : tre[(X << 1)][Y] + tre[(X << 1) + 1][Y]);
     else {
         int m = (ys + ye) >> 1, lc = (Y << 1), rc = lc + 1;
@@ -319,7 +319,7 @@ void up(int X, int xs, int xe, int Y, int ys, int ye, int x, int y, long long va
         tre[X][Y] = tre[X][lc] + tre[X][rc];
     }
 }
-void up(int X, int xs, int xe, int x, int y, long long val) {
+void up(int X, int xs, int xe, int x, int y, int64_t val) {
     if (xs != xe) {
         int m = (xs + xe) >> 1, lc = (X << 1), rc = lc + 1;
         if (x <= m) up(lc, xs, m, x, y, val);
@@ -327,13 +327,13 @@ void up(int X, int xs, int xe, int x, int y, long long val) {
     }
     up(X, xs, xe, 1, 1, n, x, y, val);
 }
-long long get(int X, int Y, int ys, int ye, int y1, int y2) {
+int64_t get(int X, int Y, int ys, int ye, int y1, int y2) {
     if (y2 < ys || ye < y1) return 0;
     if (y1 <= ys && ye <= y2) return tre[X][Y];
     int m = (ys + ye) >> 1, lc = (Y << 1), rc = lc + 1;
     return get(X, lc, ys, m, y1, y2) + get(X, rc, m + 1, ye, y1, y2);
 }
-long long get(int X, int xs, int xe, int x1, int x2, int y1, int y2) {
+int64_t get(int X, int xs, int xe, int x1, int x2, int y1, int y2) {
     if (x2 < xs || xe < x1) return 0;
     if (x1 <= xs && xe <= x2) return get(X, 1, 1, n, y1, y2);
     int m = (xs + xe) >> 1, lc = (X << 1), rc = lc + 1;
@@ -420,8 +420,8 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 struct node {
     node *l, *r;
     int pos, key, mn, mx;
-    long long val, g;
-    node(int position, long long value) {
+    int64_t val, g;
+    node(int position, int64_t value) {
         l = r = nullptr;
         mn = mx = pos = position;
         key = rnd();
@@ -484,7 +484,7 @@ struct treap {
         }
         return false;
     }
-    void up(node *t, int pos, long long val) {
+    void up(node *t, int pos, int64_t val) {
         if (t->pos == pos) {
             t->val = val;
             t->pull();
@@ -496,7 +496,7 @@ struct treap {
             up(t->r, pos, val);
         t->pull();
     }
-    void insert(int pos, long long val) { // set a_pos = val
+    void insert(int pos, int64_t val) { // set a_pos = val
         if (find(pos))
             up(root, pos, val);
         else {
@@ -505,19 +505,19 @@ struct treap {
             root = op(op(l, new node(pos, val)), r);
         }
     }
-    long long get(node *t, int st, int en) {
+    int64_t get(node *t, int st, int en) {
         if (t->mx < st || en < t->mn)
             return 0;
         if (st <= t->mn && t->mx <= en)
             return t->g;
-        long long ans = (st <= t->pos && t->pos <= en ? t->val : 0);
+        int64_t ans = (st <= t->pos && t->pos <= en ? t->val : 0);
         if (t->l)
             ans = __gcd(ans, get(t->l, st, en));
         if (t->r)
             ans = __gcd(ans, get(t->r, st, en));
         return ans;
     }
-    long long get(int l, int r) { // gcd of a_i such that l <= i <= r
+    int64_t get(int l, int r) { // gcd of a_i such that l <= i <= r
         if (!root)
             return 0;
         return get(root, l, r);
@@ -543,14 +543,14 @@ struct ST {
         b = st, e = en;
     }
     void fix(int pos) {
-        long long val = 0;
+        int64_t val = 0;
         if (l)
             val = __gcd(val, l->t.get(pos, pos));
         if (r)
             val = __gcd(val, r->t.get(pos, pos));
         t.insert(pos, val);
     }
-    void up(int x, int y, long long val) { // set ar[x][y] = val
+    void up(int x, int y, int64_t val) { // set ar[x][y] = val
         if (e < x || x < b)
             return;
         if (b == e) {
@@ -571,12 +571,12 @@ struct ST {
         }
         fix(y);
     }
-    long long get(int i, int j, int st, int en) { // gcd of ar[x][y] such that i <= x <= j && st <= y <= en
+    int64_t get(int i, int j, int st, int en) { // gcd of ar[x][y] such that i <= x <= j && st <= y <= en
         if (e < i || j < b)
             return 0;
         if (i <= b && e <= j)
             return t.get(st, en);
-        long long ans = 0;
+        int64_t ans = 0;
         if (l)
             ans = __gcd(ans, l->get(i, j, st, en));
         if (r)
@@ -614,9 +614,9 @@ int32_t main() {
 // https://judge.yosupo.jp/problem/range_chmin_chmax_add_range_sum
 // https://codeforces.op/problemset/problem/438/D
 
-long long ar[N], n;
+int64_t ar[N], n;
 struct Node {
-    long long sum, mx1, mx2, mxc, mn1, mn2, mnc, lz;
+    int64_t sum, mx1, mx2, mxc, mn1, mn2, mnc, lz;
 } tre[N << 2];
 void op(int nd) {
     int lc = nd << 1, rc = lc | 1;
@@ -666,13 +666,13 @@ void make(int nd = 1, int s = 0, int e = n - 1) {
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     make(lc, s, m); make(rc, m + 1, e); op(nd);
 }
-void push_add(int nd, int s, int e, long long v) {
+void push_add(int nd, int s, int e, int64_t v) {
     if (v == 0) return;
     tre[nd].sum += (e - s + 1) * v; tre[nd].mx1 += v;
     if (tre[nd].mx2 != LLONG_MIN) tre[nd].mx2 += v; tre[nd].mn1 += v;
     if (tre[nd].mn2 != LLONG_MAX) tre[nd].mn2 += v; tre[nd].lz += v;
 }
-void push_max(int nd, long long v, bool l) {
+void push_max(int nd, int64_t v, bool l) {
     if (v >= tre[nd].mx1) return;
     tre[nd].sum -= tre[nd].mx1 * tre[nd].mxc; tre[nd].mx1 = v;
     tre[nd].sum += tre[nd].mx1 * tre[nd].mxc;
@@ -682,7 +682,7 @@ void push_max(int nd, long long v, bool l) {
         else if (v < tre[nd].mn2) tre[nd].mn2 = v;
     }
 }
-void push_min(int nd, long long v, bool l) {
+void push_min(int nd, int64_t v, bool l) {
     if (v <= tre[nd].mn1) return;
     tre[nd].sum -= tre[nd].mn1 * tre[nd].mnc; tre[nd].mn1 = v;
     tre[nd].sum += tre[nd].mn1 * tre[nd].mnc;
@@ -698,25 +698,25 @@ void pushdown(int nd, int s, int e) {
     push_max(lc, tre[nd].mx1, s == m); push_max(rc, tre[nd].mx1, m + 1 == e);
     push_min(lc, tre[nd].mn1, s == m); push_min(rc, tre[nd].mn1, m + 1 == e);
 }
-void stmn(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+void stmn(int l, int r, int64_t v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l || v >= tre[nd].mx1) return;
     if (l <= s && e <= r && v > tre[nd].mx2) { push_max(nd, v, s == e); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     stmn(l, r, v, lc, s, m); stmn(l, r, v, rc, m + 1, e); op(nd);
 }
-void stmx(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+void stmx(int l, int r, int64_t v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l || v <= tre[nd].mn1) return;
     if (l <= s && e <= r && v < tre[nd].mn2) { push_min(nd, v, s == e); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     stmx(l, r, v, lc, s, m); stmx(l, r, v, rc, m + 1, e); op(nd);
 }
-void inc(int l, int r, long long v, int nd = 1, int s = 0, int e = n - 1) {
+void inc(int l, int r, int64_t v, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return;
     if (l <= s && e <= r) { push_add(nd, s, e, v); return; }
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     inc(l, r, v, lc, s, m); inc(l, r, v, rc, m + 1, e); op(nd);
 }
-long long get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
+int64_t get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
     if (r < s || e < l) return 0; if (l <= s && e <= r) return tre[nd].sum;
     pushdown(nd, s, e); int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     return get(l, r, lc, s, m) + get(l, r, rc, m + 1, e);

@@ -221,43 +221,39 @@ void dfs(int u, int p = 0) {
 }
 
 // Operation:
-cin >> n;
-for (i = 1; i <= n; ++i)
-    cin >> p[i];
-int r = make(n);
-dfs(r);
-cin >> q;
-while (q--) {
-    int l, r;
-    cin >> l >> r;
-    if (l == r)
-    {
-        cout << l << ' ' << r << '\n';
-        continue;
+    cin >> n;
+    for (i = 1; i <= n; ++i)
+        cin >> p[i];
+    int r = make(n);
+    dfs(r);
+    cin >> q;
+    while (q--) {
+        int l, r;
+        cin >> l >> r;
+        if (l == r)
+        {
+            cout << l << ' ' << r << '\n';
+            continue;
+        }
+        int u = l;
+        for (k = LG - 1; k >= 0; --k) {
+            if (P[u][k] && span[P[u][k]].second < r) u = P[u][k];
+        }
+        u = P[u][0];
+        if (ty[u] == 0) {
+            cout << span[u].first << ' ' << span[u].second << '\n';
+            continue;
+        }
+        int curl = -1, curr = ptre[u].size();
+        for (k = LG - 1; k >= 0; --k)
+        {
+            if (curl + (1 << k) < ptre[u].size() && span[ptre[u][curl + (1 << k)]].second < l)
+                curl += 1 << k;
+            if (curr - (1 << k) >= 0 && r < span[ptre[u][curr - (1 << k)]].first)
+                curr -= 1 << k;
+        }
+        cout << span[ptre[u][curl + 1]].first << ' ' << span[ptre[u][curr - 1]].second << '\n';
     }
-    int u = l;
-    for (k = LG - 1; k >= 0; --k)
-    {
-        if (P[u][k] && span[P[u][k]].second < r)
-            u = P[u][k];
-    }
-    u = P[u][0];
-    if (ty[u] == 0)
-    {
-        cout << span[u].first << ' ' << span[u].second << '\n';
-        continue;
-    }
-    int curl = -1, curr = ptre[u].size();
-    for (k = LG - 1; k >= 0; --k)
-    {
-        if (curl + (1 << k) < ptre[u].size() && span[ptre[u][curl + (1 << k)]].second < l)
-            curl += 1 << k;
-        if (curr - (1 << k) >= 0 && r < span[ptre[u][curr - (1 << k)]].first)
-            curr -= 1 << k;
-    }
-    cout << span[ptre[u][curl + 1]].first << ' ' << span[ptre[u][curr - 1]].second << '\n';
-}
-
 
 // Permutation Cycles:
 
