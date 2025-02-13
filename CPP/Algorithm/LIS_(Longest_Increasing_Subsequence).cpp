@@ -1,15 +1,15 @@
 // Note: Gives result of STRICTLY incresing subsequence
-// For longest non-decreasing subsequence, replace 'lower_bound' with 'upper_bound' and for longest decreasing subsequence, replace ar[i] *= -1;
+// For longest non-decreasing subsequence, replace 'lower_bound' with 'upper_bound' and for longest decreasing subsequence, replace aa[i] *= -1;
 // Iterative Approach to determine the length: O(n * log(n))
 
-long long ar[N], n;
+int64_t aa[N], n;
 int lis() {
-    vector<long long> ans; ans.push_back(ar[0]);
+    vector<int64_t> ans; ans.push_back(aa[0]);
     for (int i = 1; i < n; ++i) {
-        if (ar[i] > ans.back()) ans.push_back(ar[i]);
+        if (aa[i] > ans.back()) ans.push_back(aa[i]);
         else {
-            int low = lower_bound(ans.begin(), ans.end(), ar[i]) - ans.begin();
-            ans[low] = ar[i];
+            int low = lower_bound(ans.begin(), ans.end(), aa[i]) - ans.begin();
+            ans[low] = aa[i];
         }
     }
     return (int)ans.size();
@@ -30,23 +30,23 @@ int lis(auto &v) {
 
 // Operation:
     cin >> n;
-    vector<long long> v(n); for (i = 0; i < n; ++i) { cin >> v[i]; }
+    vector<int64_t> v(n); for (i = 0; i < n; ++i) { cin >> v[i]; }
     cout << lis(v);
 
 // Recursive Approach:
 
-int ar[N], dp[N];
+int aa[N], dp[N];
 int lis(int i) {
     if (dp[i] != -1) return dp[i];
     int ans = 1;
     for (int j = 0; j < i; ++j) {
-        if (ar[i] > ar[j]) ans = max(ans, lis(j) + 1);
+        if (aa[i] > aa[j]) ans = max(ans, lis(j) + 1);
     }
     return dp[i] = ans;
 }
 
 // Operation:
-    cin >> n; for (i = 0; i < n; ++i) cin >> ar[i];
+    cin >> n; for (i = 0; i < n; ++i) cin >> aa[i];
     memset(dp, -1, sizeof dp);
     int ans = 0;
     for (i = 0; i < n; ++i) ans = max(ans, lis(i));
@@ -54,15 +54,15 @@ int lis(int i) {
 
 // To determine the subsequence:
 
-int ar[N], dp[N], in = 0; vector<int> sub;
+int aa[N], dp[N], in = 0; vector<int> sub;
 int lis(auto i) {
     if (dp[i] != -1) return dp[i];
     int ans = 1; bool ok = true;
     for (int j = 0; j < i; ++j) {
-        if (ar[i] >= ar[j]) {
+        if (aa[i] >= aa[j]) {
             ans = max(ans, lis(j) + 1);
             if (ok) {
-                sub.emplace_back(ar[i]);
+                sub.emplace_back(aa[i]);
                 in = i; ok = false;
             }
         }
@@ -71,12 +71,12 @@ int lis(auto i) {
 }
 
 // Operation:
-    cin >> n; for (i = 0; i < n; ++i) cin >> ar[i];
+    cin >> n; for (i = 0; i < n; ++i) cin >> aa[i];
     memset(dp, -1, sizeof dp);
     for (i = 0; i < n; ++i) lis(i);
     for (i = 0; i < in; ++i) {
-        if (ar[i] <= ar[in]) {
-            sub.emplace_back(ar[i]); break;
+        if (aa[i] <= aa[in]) {
+            sub.emplace_back(aa[i]); break;
         }
     }
     cout << sub.size() << '\n';

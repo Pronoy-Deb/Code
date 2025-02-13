@@ -5,15 +5,14 @@ using namespace std;
 #else
 #define ck(...)
 #endif
-#define ll long long
-#define pe(c) for (auto e : c) cout << e << ' '; cout << '\n'
 #define ps(b) cout << (b ? "YES" : "NO") << '\n'
-const ll M = 1e9 + 7, N = 2e5 + 5;
+const int64_t M = 1e9 + 7, N = 2e5 + 5;
 
 void test(int32_t tc) {
-    ll n; cin >> n;
-    vector<ll> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
-    
+    int64_t n; cin >> n;
+    vector<int64_t> aa(n);
+    for (int i = 0; i < n; ++i) { cin >> aa[i]; }
+
     cout << '\n';
 }
 

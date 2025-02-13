@@ -1,9 +1,9 @@
 // WITHOUT lazy Propagation: Build: O(n), Update & Query: O(log(n))
 
-int64_t n, ar[N], tre[N];
+int64_t n, aa[N], tre[N];
 inline int64_t op(const int64_t &l, const int64_t &r) { return (l + r); }
 void make() {
-    for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
+    for (int i = 0; i < n; ++i) tre[i + n] = aa[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
 void up(int in, int64_t val) {
@@ -19,10 +19,10 @@ int64_t get(int l, int r) {
 
 // OR,
 
-int64_t n, ar[N], tre[N << 2];
+int64_t n, aa[N], tre[N << 2];
 inline auto op(const int64_t &l, const int64_t &r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
-    if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
+    if (s >= e) { if (s == e) tre[nd] = aa[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     make(lc, s, m); make(rc, m + 1, e); tre[nd] = op(tre[lc], tre[rc]);
 }
@@ -41,10 +41,10 @@ int64_t get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 
 // WITH lazy Propagation: Build: O(n), Increment / Query: O(logn)
 
-int64_t n, ar[N], tre[N << 1], lz[N << 1];
+int64_t n, aa[N], tre[N << 1], lz[N << 1];
 inline int64_t op(const int64_t &x, const int64_t &y) { return (x + y); }
 void make() {
-    for (int i = 0; i < n; ++i) tre[i + n] = ar[i];
+    for (int i = 0; i < n; ++i) tre[i + n] = aa[i];
     for (int i = n - 1; i > 0; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]);
 }
 inline void apply(int in, int64_t val, int k) {
@@ -86,10 +86,10 @@ int64_t get(int l, int r) {
 
 // OR,
 
-int64_t n, ar[N], tre[N << 2], lz[N << 2];
+int64_t n, aa[N], tre[N << 2], lz[N << 2];
 inline auto op(const int64_t &l, const int64_t &r) { return (l + r); }
 void make(int nd = 1, int s = 0, int e = n - 1) {
-    if (s >= e) { if (s == e) tre[nd] = ar[s]; return; }
+    if (s >= e) { if (s == e) tre[nd] = aa[s]; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     make(lc, s, m); make(rc, m + 1, e); tre[nd] = op(tre[lc], tre[rc]);
 }
@@ -116,7 +116,7 @@ int64_t get(int l, int r, int nd = 1, int s = 0, int e = n - 1) {
 
 https://cses.fi/problemset/task/1735
 
-int64_t n, ar[N], tre[N << 2], lzi[N << 2], lza[N << 2];
+int64_t n, aa[N], tre[N << 2], lzi[N << 2], lza[N << 2];
 inline auto op(const int64_t &l, const int64_t &r) { return (l + r); }
 inline void pgi(int i, int64_t v, int s, int e) {
     lzi[i] += v; tre[i] += (e - s + 1) * v;
@@ -134,7 +134,7 @@ void push(int i, int s, int e) {
     }
 }
 void make(int i = 1, int s = 1, int e = n) {
-    if (s >= e) { if (s == e) tre[i] = ar[s]; return; }
+    if (s >= e) { if (s == e) tre[i] = aa[s]; return; }
     int m = (s + e) >> 1, lc = i << 1, rc = lc | 1;
     make(lc, s, m); make(rc, m + 1, e); tre[i] = op(tre[lc], tre[rc]);
 }
@@ -192,11 +192,11 @@ int64_t get(int pre, int cur, int k, int s = 1, int e = n) {
 
 // Operation:
     int64_t n, q; cin >> n >> q;
-    int64_t ar[n + 5], root[n + 5]; map<int64_t, int64_t> mp, V;
-    for (int i = 1; i <= n; ++i) cin >> ar[i], mp[ar[i]];
+    int64_t aa[n + 5], root[n + 5]; map<int64_t, int64_t> mp, V;
+    for (int i = 1; i <= n; ++i) cin >> aa[i], mp[aa[i]];
     for (auto x : mp) mp[x.first] = ++c, V[c] = x.first;
     root[0] = make();
-    for (int i = 1; i <= n; ++i) root[i] = up(root[i - 1], mp[ar[i]], 1);
+    for (int i = 1; i <= n; ++i) root[i] = up(root[i - 1], mp[aa[i]], 1);
     while (q--) {
         int l, r, k; cin >> l >> r >> k;
         cout << V[get(root[l - 1], root[r], k)] << '\n';
@@ -231,7 +231,7 @@ template <int32_t MOD> istream &operator>>(istream &in, modint<MOD> &n) { return
 template <int32_t MOD> ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.val; }
 using mint = modint<M>;
 
-mint ar[N], P = 37;
+mint aa[N], P = 37;
 struct node {
     int l = 0, r = 0, lz = 0, p = 0; mint val = 0;
 } tre[N * 300];
@@ -244,7 +244,7 @@ int make(int s, int e) {
 int push(int pre, int s, int e, int x = 0) {
     int cur = ++T; tre[cur] = tre[pre]; tre[cur].lz ^= x;
     if (tre[cur].lz) {
-        tre[cur].val = ar[e] - ar[s - 1] - tre[cur].val;
+        tre[cur].val = aa[e] - aa[s - 1] - tre[cur].val;
         tre[cur].p ^= 1;
         if (s != e) {
             auto &lc = tre[cur].l, &rc = tre[cur].r;
@@ -282,7 +282,7 @@ void print(int cur, int s, int e) {
 int root[N];
 
 // Operation:
-    for (i = 1; i < N; ++i) ar[i] = ar[i - 1] + P.pow(i);
+    for (i = 1; i < N; ++i) aa[i] = aa[i - 1] + P.pow(i);
     cin >> n >> q;
     root[0] = make(1, n); int ans = 0;
     for (i = 1; i <= q; ++i) {
@@ -294,9 +294,9 @@ int root[N];
 
 // 2D Segment Tree:
 
-int tre[N << 2][N << 2], ar[N][N], n;
+int tre[N << 2][N << 2], aa[N][N], n;
 void make(int X, int xs, int xe, int Y, int ys, int ye) {
-    if (ys == ye) tre[X][Y] = (xs == xe ? ar[xs][ys] : tre[(X << 1)][Y] + tre[(X << 1) + 1][Y]);
+    if (ys == ye) tre[X][Y] = (xs == xe ? aa[xs][ys] : tre[(X << 1)][Y] + tre[(X << 1) + 1][Y]);
     else {
         int m = (ys + ye) >> 1, lc = (Y << 1), rc = lc + 1;
         make(X, xs, xe, lc, ys, m); make(X, xs, xe, rc, m + 1, ye);
@@ -344,18 +344,18 @@ int64_t get(int X, int xs, int xe, int x1, int x2, int y1, int y2) {
     cin >> n >> q;
     for (i = 1; i <= n; ++i) {
         string row; cin >> row;
-        for (j = 1; j <= n; ++j) ar[i][j] = (row[j - 1] == '*');
+        for (j = 1; j <= n; ++j) aa[i][j] = (row[j - 1] == '*');
     }
     make(1, 1, n);
     while (q--) {
         int ty; cin >> ty;
         if (ty == 1) {
             int x, y; cin >> x >> y;
-            if (ar[x][y] == 1) {
-                up(1, 1, n, x, y, 0); ar[x][y] = 0;
+            if (aa[x][y] == 1) {
+                up(1, 1, n, x, y, 0); aa[x][y] = 0;
             }
             else {
-                up(1, 1, n, x, y, 1); ar[x][y] = 1;
+                up(1, 1, n, x, y, 1); aa[x][y] = 1;
             }
         }
         else {
@@ -550,7 +550,7 @@ struct ST {
             val = __gcd(val, r->t.get(pos, pos));
         t.insert(pos, val);
     }
-    void up(int x, int y, int64_t val) { // set ar[x][y] = val
+    void up(int x, int y, int64_t val) { // set aa[x][y] = val
         if (e < x || x < b)
             return;
         if (b == e) {
@@ -571,7 +571,7 @@ struct ST {
         }
         fix(y);
     }
-    int64_t get(int i, int j, int st, int en) { // gcd of ar[x][y] such that i <= x <= j && st <= y <= en
+    int64_t get(int i, int j, int st, int en) { // gcd of aa[x][y] such that i <= x <= j && st <= y <= en
         if (e < i || j < b)
             return 0;
         if (i <= b && e <= j)
@@ -614,7 +614,7 @@ int32_t main() {
 // https://judge.yosupo.jp/problem/range_chmin_chmax_add_range_sum
 // https://codeforces.op/problemset/problem/438/D
 
-int64_t ar[N], n;
+int64_t aa[N], n;
 struct Node {
     int64_t sum, mx1, mx2, mxc, mn1, mn2, mnc, lz;
 } tre[N << 2];
@@ -659,7 +659,7 @@ void op(int nd) {
 void make(int nd = 1, int s = 0, int e = n - 1) {
     tre[nd].lz = 0;
     if (s == e) {
-    	tre[nd].sum = tre[nd].mx1 = tre[nd].mn1 = ar[s];
+    	tre[nd].sum = tre[nd].mx1 = tre[nd].mn1 = aa[s];
     	tre[nd].mxc = tre[nd].mnc = 1;
     	tre[nd].mx2 = LLONG_MIN; tre[nd].mn2 = LLONG_MAX; return;
     }
@@ -802,7 +802,7 @@ bool ty[N]; // 0 - inc; 1 - dec
 // roots[i] stores the root, rb[i] stores the right border
 int root[N], rb[N];
 set<int> cur; // maintains the left borders of ordered substrs
-int n, q, ar[N];
+int n, q, aa[N];
 // split (l, ...) so that rb[l] = r
 void split(int l, int r) {
     if (r >= rb[l] || r < l)
@@ -826,7 +826,7 @@ void op(int a, int b) {
     root[a] = t.op(root[a], root[b]);
     rb[a] = rb[b];
 }
-// query for ar[k] on substr (l, ...)
+// query for aa[k] on substr (l, ...)
 int get(int l, int k) {
     k -= l - 1;
     if (!ty[l])
@@ -836,8 +836,8 @@ int get(int l, int k) {
 int main() {
     scanf("%d %d", &n, &q);
     for (int i = 1; i <= n; ++i) {
-        scanf("%d", &ar[i]);
-        root[i] = t.make(1, n, ar[i]);
+        scanf("%d", &aa[i]);
+        root[i] = t.make(1, n, aa[i]);
         cur.insert(i);
         rb[i] = i;
     }
@@ -990,37 +990,37 @@ int32_t main() {
     cin >> n >> k;
     vector<mint> a(n + 1);
     for (int i = 1; i <= n; ++i) {
-        cin >> ar[i];
+        cin >> aa[i];
     }
     for (int w = 0; w < k; w++) {
         t.make(1, 1, n);
         for (int i = 1; i <= n; ++i) {
-            t.upd(1, 1, n, i, i, {ar[i] * (C(i - 1) + C(n - i)), 0});
+            t.upd(1, 1, n, i, i, {aa[i] * (C(i - 1) + C(n - i)), 0});
             if (i * 2 <= n) {
                 int j = n - i + 1;
-                t.upd(1, 1, n, j, n, {ar[i] * (n - j + 1), mint(mod) - ar[i]});
+                t.upd(1, 1, n, j, n, {aa[i] * (n - j + 1), mint(mod) - aa[i]});
                 if (i < j)
-                    t.upd(1, 1, n, i, j - 1, {ar[i] * i, 0});
+                    t.upd(1, 1, n, i, j - 1, {aa[i] * i, 0});
 
                 if (i > 1)
-                    t.upd(1, 1, n, 1, i - 1, {ar[i], ar[i]});
+                    t.upd(1, 1, n, 1, i - 1, {aa[i], aa[i]});
             }
             else {
                 if (i < n)
-                    t.upd(1, 1, n, i + 1, n, {ar[i] * (n - i), mint(mod) - ar[i]});
+                    t.upd(1, 1, n, i + 1, n, {aa[i] * (n - i), mint(mod) - aa[i]});
 
                 int j = n - i + 1;
-                t.upd(1, 1, n, 1, j, {ar[i], ar[i]});
+                t.upd(1, 1, n, 1, j, {aa[i], aa[i]});
                 if (j < i)
-                    t.upd(1, 1, n, j + 1, i, {ar[i] * (n - i + 1), 0});
+                    t.upd(1, 1, n, j + 1, i, {aa[i] * (n - i + 1), 0});
             }
         }
         for (int i = 1; i <= n; ++i) {
-            ar[i] = t.get(1, 1, n, i, i);
+            aa[i] = t.get(1, 1, n, i, i);
         }
     }
     for (int i = 1; i <= n; ++i) {
-        cout << ar[i] / mint(C(n)).pow(k) << ' ';
+        cout << aa[i] / mint(C(n)).pow(k) << ' ';
     }
     cout << '\n';
     return 0;

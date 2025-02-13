@@ -8,6 +8,18 @@ struct hs {
 };
 // example usage: unordered_map<int, int, hs> mp;
 
+// For Vector:
+
+struct hs {
+    size_t operator()(const vector<int64_t> &v) const {
+        size_t H = v.size();
+        for (auto e : v) {
+            H ^= e + 0x9e3779b9 + (H << 6) + (H >> 2);
+        }
+        return H;
+    }
+};
+
 https://cses.fi/problemset/task/1640
 
 #include <ext/pb_ds/assoc_container.hpp>
@@ -72,7 +84,7 @@ gp_hash_table<int64_t, int64_t, hs> tab;
 // gp_hash_table that supports resize() function:
 
 template <class K, class V>
-using ht = gp_hash_table<K, V, hash<K>, equal_to<K>, direct_mask_range_hashing<>, linear_probe_fn<>, hash_standard_resize_policy<hash_exponential_size_policy<>, hash_load_check_resize_trigger<>, true>>;
+using ht = gp_hash_table<K, V, H<K>, equal_to<K>, direct_mask_range_hashing<>, linear_probe_fn<>, hash_standard_resize_policy<hash_exponential_size_policy<>, hash_load_check_resize_trigger<>, true>>;
 
 // Operation:
 	ht<int, null_type> g;

@@ -10,14 +10,12 @@
 #include <map>
 // #include <chrono>
 using namespace std;
-#define ll long long
 #ifdef LOCAL
 #include "def.h"
 #else
 #define ck(...)
 #endif
-#define pe(c) for (auto &e : c) cout << e << ' '; cout << '\n'
-#define ps(b) cout << (b ? "YES" : "NO") << '\n';
+#define ps(b) cout << (b ? "YES" : "NO") << '\n'
 
 random_device rd; mt19937_64 gen(rd());
 long double ranr(long double l, long double r) {
@@ -25,31 +23,30 @@ long double ranr(long double l, long double r) {
     uniform_real_distribution<> dis(l, r);
     return dis(gen);
 }
-ll ran(ll l, ll r) {
+int64_t ran(int64_t l, int64_t r) {
     assert(l <= r);
-    uniform_int_distribution<ll> dis(l, r);
+    uniform_int_distribution<int64_t> dis(l, r);
     return dis(gen);
     // return l + rand() % (r - l + 1);
 }
-const ll M = 1e9, N = 1e6;
+const int64_t M = 1e9, N = 1e6;
 
-void test(int tc) {
-    ll n = ran(1, 10); cout << n << ' ';
-    ll k = ran(1, n); cout << k << '\n';
-    ll tot = 0;
+void test(int32_t tc) {
+    int64_t n = ran(1, 10); cout << n << ' ';
+    int64_t k = ran(1, 11); cout << k << '\n';
     for (int i = 0; i < n; ++i) {
-        ll a = ran(1, 10); cout << a << ' ';
-        tot += a;
+        int64_t a = ran(1, 10); cout << a << ' ';
     }
     cout << '\n';
-    ll sum = 0;
-    for (int i = 0; i < k - 1; ++i) {
-        ll a = ran(1, 10); cout << a << ' ';
-        sum += a;
-    }
-    if (sum < tot) cout << tot - sum; else cout << 1;
-    cout << '\n';
-    // set<ll> st;
+    cout << ran(1, 10) << '\n';
+    // int64_t sum = 0;
+    // for (int i = 0; i < k - 1; ++i) {
+    //     int64_t a = ran(1, 10); cout << a << ' ';
+    //     sum += a;
+    // }
+    // if (sum < tot) cout << tot - sum; else cout << 1;
+    // cout << '\n';
+    // set<int64_t> st;
     // while (st.size() != n) {
     //     a = ran(1, 30);
     //     if (st.find(a) == st.end()) {
@@ -62,7 +59,7 @@ void test(int tc) {
 signed main() {
     cin.tie(0)->sync_with_stdio(0);
     // srand(chrono::high_resolution_clock::now().time_since_epoch().count());
-    int tc = 0, tt = ran(1, 1);
+    int32_t tc = 0, tt = ran(1, 1);
     cout << tt << '\n'; // For testcase input
     while (tc++ < tt) test(tc);
     return 0;

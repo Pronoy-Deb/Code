@@ -1,20 +1,73 @@
+https://cses.fi/problemset/task/1647/
+
+int64_t L[N], R[N], aa[N], ans[N]; pair<int, int> qr[N];
+inline int64_t op(int64_t l, int64_t r) { return min(l, r); }
+void dnq(int l, int r, auto &queries) {
+    if (queries.empty()) return;
+    if (l == r) {
+        for (int i : queries) ans[i] = aa[l]; return;
+    }
+    int m = (l + r) >> 1; L[m] = aa[m];
+    for (int i = m - 1; i >= l; --i) L[i] = op(aa[i], L[i + 1]);
+    R[m + 1] = aa[m + 1];
+    for (int i = m + 2; i <= r; ++i) R[i] = op(R[i - 1], aa[i]);
+    vector<int> lq, rq;
+    for (int i : queries) {
+        int s = qr[i].first, e = qr[i].second;
+        if (s <= m && m < e) {
+            ans[i] = op(op(L[s], aa[m]), R[e]); continue;
+        }
+        if (e <= m) lq.push_back(i);
+        else rq.push_back(i);
+    }
+    dnq(l, m, lq); dnq(m + 1, r, rq);
+}
+
+// Operation:
+    int n, q; cin >> n >> q;
+    for (int i = 0; i < n; ++i) cin >> aa[i];
+    for (int i = 0; i < q; ++i) {
+        cin >> qr[i].first >> qr[i].second;
+        --qr[i].first, --qr[i].second;
+    }
+    vector<int> ind(q); iota(ind.begin(), ind.end(), 0);
+    dnq(0, n - 1, ind);
+    for (int i = 0; i < q; ++i) cout << ans[i] << '\n';
+
+https://codeforces.com/problemset/problem/1400/E
+
+vector<int> aa(N);
+int rec(int l, int r) {
+    if (l > r) return 0;
+    int mn = *min_element(aa.begin() + l, aa.begin() + r + 1), idx = -1;
+    for (int i = l; i <= r; ++i) {
+        aa[i] -= mn; if (!aa[i]) idx = i;
+    }
+    return min(rec(l, idx - 1) + rec(idx + 1, r) + mn, r - l + 1);
+}
+
+// Operation:
+    int64_t n; cin >> n;
+    for (int i = 0; i < n; ++i) { cin >> aa[i]; }
+    cout << rec(0, n - 1) << '\n';
+
 // * Divide and Conquer Optimization
 // * Must satisfy : Opt(i,j) <= Opt(i,j+1)
 
-const long long INF = 1e17;
-long long DW[N], D[N], W[N], n;
+const int64_t INF = 1e17;
+int64_t DW[N], D[N], W[N], n;
 
-long long cost(long long l, long long r) {
-    long long num = DW[r - 1] - DW[l - 1];
-    long long denom = (D[n] - D[r - 1]) * (W[r - 1] - W[l - 1]);
+int64_t cost(int64_t l, int64_t r) {
+    int64_t num = DW[r - 1] - DW[l - 1];
+    int64_t denom = (D[n] - D[r - 1]) * (W[r - 1] - W[l - 1]);
     return num - denom;
 }
-vector<long long> dp_before(N), dp_cur(N);
-void compute(long long l, long long r, long long optl, long long optr) {
+vector<int64_t> dp_before(N), dp_cur(N);
+void compute(int64_t l, int64_t r, int64_t optl, int64_t optr) {
     if (l > r) return;
-    long long mid = (l + r) >> 1, best = INF, opt = -1;
-    for (long long k = optl; k <= min(mid, optr); ++k) {
-        long long cur = (k ? dp_before[k - 1] : 0) + cost(k, mid);
+    int64_t mid = (l + r) >> 1, best = INF, opt = -1;
+    for (int64_t k = optl; k <= min(mid, optr); ++k) {
+        int64_t cur = (k ? dp_before[k - 1] : 0) + cost(k, mid);
         if (cur < best) best = cur, opt = k;
     }
     dp_cur[mid] = best;
@@ -23,10 +76,8 @@ void compute(long long l, long long r, long long optl, long long optr) {
 
 // Operation:
     cin >> n;
-    for (i = 1; i <= n; ++i) {
-        cin >> W[i] >> D[i];
-    }
-    long long totD = 0;
+    for (i = 1; i <= n; ++i) cin >> W[i] >> D[i];
+    int64_t totD = 0;
     for (i = n; i >= 1; --i) {
         totD += D[i]; DW[i] = totD * W[i];
     }
@@ -43,10 +94,6 @@ void compute(long long l, long long r, long long optl, long long optr) {
 
 // OR,
 
-#include<bits/stdc++.h>
-using namespace std;
-
-#define ll long long
 const int N = 4010, inf = 1e9;
 
 int sc() {

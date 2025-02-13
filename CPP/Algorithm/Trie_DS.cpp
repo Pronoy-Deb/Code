@@ -16,7 +16,7 @@ void rem(int x) {
         int f = x >> i & 1; u = trie[u][f]; --cnt[u];
     }
 }
-int mx_xr(int x) { // maximum of val ^ x
+int mxxr(int x) { // maximum of val ^ x
     int u = 1, res = 0;
     for (int i = L - 1; i >= 0; --i) {
         int f = x >> i & 1;
@@ -25,7 +25,7 @@ int mx_xr(int x) { // maximum of val ^ x
     }
     return res;
 }
-int mn_xr(int x) { // minimum of val ^ x
+int mnxr(int x) { // minimum of val ^ x
     int u = 1, res = 0;
     for (int i = L - 1; i >= 0; --i) {
         int f = x >> i & 1;
@@ -111,8 +111,8 @@ int cnt(Trie* head, const char* c) { // Counting the number of strings with a pr
     }
     return cur->cnt;
 }
-void reset() { delete t; t = nullptr; dis = 0; }
 Trie* t = nullptr;
+void reset() { delete t; t = nullptr; dis = 0; }
 
 // Operation:
     cin >> n >> q;

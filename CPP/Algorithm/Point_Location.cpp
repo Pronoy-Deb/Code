@@ -8,22 +8,21 @@ const int N = 3e5 + 9;
 // the face of the subdivision it belongs to. We will sove it offline.
 // for doubles change the compare methods and the point type.
 // O(log n) per query
-typedef long long ll;
-bool ge(const ll& a, const ll& b) { return a >= b; }
-bool le(const ll& a, const ll& b) { return a <= b; }
-bool eq(const ll& a, const ll& b) { return a == b; }
-bool gt(const ll& a, const ll& b) { return a > b; }
-bool lt(const ll& a, const ll& b) { return a < b; }
-int sign(const ll& x) { return le(x, 0) ? eq(x, 0) ? 0 : -1 : 1; }
+bool ge(const int64_t& a, const int64_t& b) { return a >= b; }
+bool le(const int64_t& a, const int64_t& b) { return a <= b; }
+bool eq(const int64_t& a, const int64_t& b) { return a == b; }
+bool gt(const int64_t& a, const int64_t& b) { return a > b; }
+bool lt(const int64_t& a, const int64_t& b) { return a < b; }
+int sign(const int64_t& x) { return le(x, 0) ? eq(x, 0) ? 0 : -1 : 1; }
 struct PT {
-    ll x, y;
+    int64_t x, y;
     PT() {}
-    PT(ll _x, ll _y) : x(_x), y(_y) {}
+    PT(int64_t _x, int64_t _y) : x(_x), y(_y) {}
     PT operator-(const PT& a) const { return PT(x - a.x, y - a.y); }
-    ll dot(const PT& a) const { return x * a.x + y * a.y; }
-    ll dot(const PT& a, const PT& b) const { return (a - *this).dot(b - *this); }
-    ll cross(const PT& a) const { return x * a.y - y * a.x; }
-    ll cross(const PT& a, const PT& b) const { return (a - *this).cross(b - *this); }
+    int64_t dot(const PT& a) const { return x * a.x + y * a.y; }
+    int64_t dot(const PT& a, const PT& b) const { return (a - *this).dot(b - *this); }
+    int64_t cross(const PT& a) const { return x * a.y - y * a.x; }
+    int64_t cross(const PT& a, const PT& b) const { return (a - *this).cross(b - *this); }
     bool operator == (const PT& a) const { return a.x == x && a.y == y; }
 };
 struct edge {
