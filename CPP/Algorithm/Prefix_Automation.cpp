@@ -1,3 +1,34 @@
+https://codeforces.com/problemset/problem/432/D
+
+auto prefix(auto &s) {
+    int n = s.size(); vector<int> pi(n);
+    for (int i = 1; i < n; ++i) {
+        int j = pi[i - 1];
+        while (j > 0 && s[i] != s[j]) j = pi[j - 1];
+        j += (s[i] == s[j]); pi[i] = j;
+    }
+    return pi;
+}
+auto pref_occur(auto &pi) {
+    int n = pi.size(); vector<int> cnt(n + 1);
+    for (int i = 0; i < n; ++i) ++cnt[pi[i]];
+    for (int l = n; l > 0; --l) {
+        cnt[pi[l - 1]] += cnt[l]; ++cnt[l];
+    }
+    return cnt;
+}
+
+// Operation:
+    string s; cin >> s;
+    auto pi = prefix(s), pre = pref_occur(pi);
+    vector<int> res;
+    for (int i = s.size(); i > 0; i = pi[i - 1]) res.push_back(i);
+    reverse(res.begin(), res.end());
+    cout << res.size() << '\n';
+    for (auto x : res) cout << x << ' ' << pre[x] << '\n';
+
+// OR,
+
 #include <bits/stdc++.h>
 using namespace std;
 

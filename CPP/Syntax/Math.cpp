@@ -2,9 +2,10 @@
     -> If(a % x == 0) and (b % x == 0) then, (a + b) % x == 0, (a - b) % x == 0, (ab) % x == 0 and (ab) % (x * x) == 0
     -> Number of distinct multiple of a, b from 1 to n: (n / a) + (n / b) - (n / lcm(a, b));
     -> Increment 1 if there is a remainder: (n + k - 1) / k
-    -> Largest prime that can be stored in unsigned long long: 18446744073709551557ll
+    -> Largest prime that can be stored in int: 2147483647
     -> Largest prime that can be stored in unsigned int: 4294967291
     -> Largest prime that can be stored in long long: 9223372036854775783ll
+    -> Largest prime that can be stored in unsigned long long: 18446744073709551557ll
 
 // Syntax:
     Finding out the Number of Digits in a Number:

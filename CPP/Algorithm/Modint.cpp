@@ -3,10 +3,10 @@ struct modint {
     int64_t val; modint() = default; modint(int64_t value) : val(value % MOD) { if (val < 0) val += MOD; }
     inline modint<MOD> operator+(modint<MOD> other) const { int64_t c = this->val + other.val; return modint<MOD>(c >= MOD ? c - MOD : c); }
     inline modint<MOD> operator-(modint<MOD> other) const { int64_t c = this->val - other.val; return modint<MOD>(c < 0 ? c + MOD : c); }
-    inline modint<MOD> operator*(modint<MOD> other) const { int64_t c = (__int128_t)this->val * other.val % MOD; return modint<MOD>(c < 0 ? c + MOD : c); }
+    inline modint<MOD> operator*(modint<MOD> other) const { int64_t c = (__int128)this->val * other.val % MOD; return modint<MOD>(c < 0 ? c + MOD : c); }
     inline modint<MOD> &operator+=(modint<MOD> other) { this->val += other.val; if (this->val >= MOD) this->val -= MOD; return *this; }
     inline modint<MOD> &operator-=(modint<MOD> other) { this->val -= other.val; if (this->val < 0) this->val += MOD; return *this; }
-    inline modint<MOD> &operator*=(modint<MOD> other) { this->val = (__int128_t)this->val * other.val % MOD; if (this->val < 0) this->val += MOD; return *this; }
+    inline modint<MOD> &operator*=(modint<MOD> other) { this->val = (__int128)this->val * other.val % MOD; if (this->val < 0) this->val += MOD; return *this; }
     inline modint<MOD> operator-() const { return modint<MOD>(this->val ? MOD - this->val : 0); }
     modint<MOD> pow(uint64_t k) const { modint<MOD> x = *this, y = 1; for (; k; k >>= 1) { if (k & 1) y *= x; x *= x; } return y; }
     inline modint<MOD> operator/(modint<MOD> other) const { return *this * other.pow(M - 2); }
@@ -22,9 +22,7 @@ template <int64_t MOD> istream &operator>>(istream &in, modint<MOD> &n) { int64_
 template <int64_t MOD> ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.val; }
 using mint = modint<M>;
 
-
 // OR,
-
 
 struct mint {
 	const static int M = 998244353;

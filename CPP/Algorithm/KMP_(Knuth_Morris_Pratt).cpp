@@ -3,7 +3,7 @@
 lightoj.com/problem/substring-frequency
 
 auto kmp(auto &str, auto &pat) {
-    int pl = pat.size(), sl = str.size(), sz = max(pl, sl) + 5, pi[sz], now = pi[0] = -1, match = 0;
+    int pl = pat.size(), sl = str.size(), sz = max(pl, sl) + 5, pi[sz], now = pi[0] = -1;
     for (int i = 1; i < pl; ++i) {
         while (now != -1 && pat[now + 1] != pat[i]) now = pi[now];
         if (pat[now + 1] == pat[i]) ++now; pi[i] = now;
@@ -12,8 +12,7 @@ auto kmp(auto &str, auto &pat) {
     for (int i = 0; i < sl; ++i) {
         while (now != -1 && pat[now + 1] != str[i]) now = pi[now];
         if (pat[now + 1] == str[i]) ++now;
-        // match += (now == pl - 1);
-        if(now == pl - 1) ind.emplace_back(i - pl + 1);  // To determine the indices
+        if (now == pl - 1) ind.push_back(i - pl + 1);
     }
     return ind;
 }
@@ -81,7 +80,7 @@ int32_t main()
 
 // Hashing Approach:
 
-const ll M = 9223372036854775783ll, N = 1e6 + 5;
+const int64_t M = 9223372036854775783ll, N = 1e6 + 5;
 __int128_t cfh(auto &s, int base = 31) {
     __int128_t sz = s.size(), tmp = 0, pow = 1;
     for (int i = 0; i < sz; ++i) {
@@ -112,16 +111,16 @@ void pre1(__int128_t p = 31) {
 }
 
 void test(int32_t tc) {
-    ll n, c; cin >> n >> m >> c;
-    vector<ll> ar(m); for (int i = 0; i < m; ++i) { cin >> ar[i]; }
+    int64_t n, c; cin >> n >> m >> c;
+    vector<int64_t> ar(m); for (int i = 0; i < m; ++i) { cin >> ar[i]; }
     string s; cin >> s;
     transform(s.begin(), s.end(), s.begin(), ::tolower);
-    ll sz = s.size(), hsh = cfh(s); bool ok = 0;
+    int64_t sz = s.size(), hsh = cfh(s); bool ok = 0;
     while (n--) {
         cin >> r; transform(r.begin(), r.end(), r.begin(), ::tolower); pre1();
-        ll tot = 0;
+        int64_t tot = 0;
         for (int i = sz; !ok and i <= m; ++i) {
-            ll hash = ((hs[i] - hs[i - sz] + M) % M * inv[i - sz]) % M;
+            int64_t hash = ((hs[i] - hs[i - sz] + M) % M * inv[i - sz]) % M;
             if (hash == hsh and tot < c) tot += ar[i - sz];
             if (tot >= c) ok = 1;
         }
