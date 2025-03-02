@@ -1,7 +1,7 @@
 // Complexity: O(n^2)
 // Iterative approach:
 
-void bsrt(auto &v, auto n) {
+void bsrt(auto &v, int n) {
     for (int i = 0; i < n - 1; ++i) {
         bool ck = true;
         for (int j = 0; j < n - i - 1; ++j) {
@@ -15,7 +15,7 @@ void bsrt(auto &v, auto n) {
 
 // Recursive approach:
 
-void bsrt(auto &v, auto n) {
+void bsrt(auto &v, int n) {
     if (n < 2) return;
     for (int i = 0; i < n - 1; ++i) {
         if (v[i] > v[i + 1]) swap(v[i], v[i + 1]);

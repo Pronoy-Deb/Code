@@ -18,7 +18,7 @@ struct SuffixAutomaton {
     int sz, last;
     vector<node> t;
     vector<int> terminal;
-    vector<long long> dp;
+    vector<int64_t> dp;
     vector<vector<int>> g;
     SuffixAutomaton() {}
     SuffixAutomaton(int n) {
@@ -81,9 +81,9 @@ struct SuffixAutomaton {
         }
         build_tree();
     }
-    long long cnt(int i) { //number of times i-th node occurs in the string
+    int64_t cnt(int i) { //number of times i-th node occurs in the string
         if (dp[i] != -1) return dp[i];
-        long long ret = terminal[i];
+        int64_t ret = terminal[i];
         for (auto &x: g[i]) ret += cnt(x);
         return dp[i] = ret;
     }
@@ -98,7 +98,7 @@ int32_t main() {
         int n = s.size();
         SuffixAutomaton sa(n);
         sa.build(s);
-        long long ans = 0; //number of unique substrings
+        int64_t ans = 0; //number of unique substrings
         for (int i = 1; i < sa.sz; i++) ans += sa.t[i].len - sa.t[sa.t[i].link].len;
         cout << ans << '\n';
     }
@@ -116,7 +116,7 @@ const int N = 1e5 + 9;
 struct ST {
   #define lc (n << 1)
   #define rc ((n << 1) | 1)
-  long long t[4 * N], lazy[4 * N];
+  int64_t t[4 * N], lazy[4 * N];
   ST() {
     memset(t, 0, sizeof t);
     memset(lazy, 0, sizeof lazy);
@@ -130,7 +130,7 @@ struct ST {
     }
     lazy[n] = 0;
   }
-  inline long long combine(long long a,long long b) {
+  inline int64_t combine(int64_t a,int64_t b) {
     return a + b;
   }
   inline void pull(int n) {
@@ -149,7 +149,7 @@ struct ST {
     upd(rc, mid + 1, e, i, j, v);
     pull(n);
   }
-  long long query(int n, int b, int e, int i, int j) {
+  int64_t query(int n, int b, int e, int i, int j) {
     push(n, b, e);
     if (i > e || b > j) return 0; //return null
     if (i <= b && e <= j) return t[n];
@@ -268,7 +268,7 @@ namespace lct {
 
 int pos[N];
 vector<pair<int, int>> Q[N];
-long long ans[N];
+int64_t ans[N];
 int32_t main() {
   ios_base::sync_with_stdio(0);
   cin.tie(0);

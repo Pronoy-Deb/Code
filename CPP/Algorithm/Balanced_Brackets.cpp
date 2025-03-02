@@ -51,7 +51,7 @@ void dfs(int u) {
     }
     for (auto &r : rts) dfs(r);
     sort(sz + 1, sz + bid + 1);
-    long long ans = 0;
+    int64_t ans = 0;
     for (i = 1; i <= bid - k; ++i) ans += sz[i] - 1;
     cout << ans << '\n';
     for (i = 1; i <= bid; ++i) g[i].clear();

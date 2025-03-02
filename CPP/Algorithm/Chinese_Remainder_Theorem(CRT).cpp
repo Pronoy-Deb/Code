@@ -2,21 +2,21 @@
 // Use: Used to determine the minimum number x such that: x % val[i] = rem[i] for all i. Here, val[i] are pairwise coprime.
 // Note: If val[i] are not pairwise coprime, then: x % lcm(val[i]) = rem[i] for all i
 
-long long val[N], rem[N], n;
-long long inv(auto a, auto m) {
+int64_t val[N], rem[N], n;
+int64_t inv(auto a, auto m) {
 	if (m == 1) return 0;
-	long long m0 = m, x0 = 0, x1 = 1;
+	int64_t m0 = m, x0 = 0, x1 = 1;
 	while (a > 1) {
-		long long q = a / m, t = m;
+		int64_t q = a / m, t = m;
 		m = a % m, a = t; t = x0;
 		x0 = x1 - q * x0; x1 = t;
 	}
 	return (x1 < 0 ? x1 + m0 : x1);
 }
-long long minv(auto pro) {
-	long long res = 0;
+int64_t minv(auto pro) {
+	int64_t res = 0;
 	for (int i = 0; i < n; ++i) {
-		long long pp = pro / val[i];
+		int64_t pp = pro / val[i];
 		res += rem[i] * inv(pp, val[i]) * pp;
 	}
 	return res % pro;
@@ -24,7 +24,7 @@ long long minv(auto pro) {
 
 // Operation:
 	cin >> n;
-	long long pro = 1;
+	int64_t pro = 1;
 	for (i = 0; i < n; ++i) {
 		cin >> val[i]; pro *= val[i];
 	}

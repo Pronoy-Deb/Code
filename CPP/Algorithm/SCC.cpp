@@ -3,7 +3,7 @@ using namespace std;
 const int N = 3e5 + 9;
 
 // given a directed graph return the minimum number of edges to be added so that the whole graph  become an SCC
-bool vis[N];
+bitset<N> vis;
 vector<int> g[N], r[N], G[N], vec; // G is the condensed graph
 void dfs1(int u)
 {

@@ -1,27 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
 namespace PollardRho
 {
     mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     const int P = 1e6 + 9;
-    ll seq[P];
+    int64_t seq[P];
     int primes[P], spf[P];
-    inline ll add_mod(ll x, ll y, ll m)
+    inline int64_t add_mod(int64_t x, int64_t y, int64_t m)
     {
         return (x += y) < m ? x : x - m;
     }
-    inline ll mul_mod(ll x, ll y, ll m)
+    inline int64_t mul_mod(int64_t x, int64_t y, int64_t m)
     {
-        ll res = __int128(x) * y % m;
+        int64_t res = __int128(x) * y % m;
         return res;
-        // ll res = x * y - (ll)((long double)x * y / m + 0.5) * m;
+        // int64_t res = x * y - (int64_t)((long double)x * y / m + 0.5) * m;
         // return res < 0 ? res + m : res;
     }
-    inline ll pow_mod(ll x, ll n, ll m)
+    inline int64_t pow_mod(int64_t x, int64_t n, int64_t m)
     {
-        ll res = 1 % m;
+        int64_t res = 1 % m;
         for (; n; n >>= 1)
         {
             if (n & 1)
@@ -31,13 +30,13 @@ namespace PollardRho
         return res;
     }
     // O(it * (logn)^3), it = number of rounds performed
-    inline bool miller_rabin(ll n)
+    inline bool miller_rabin(int64_t n)
     {
         if (n <= 2 || (n & 1 ^ 1))
             return (n == 2);
         if (n < P)
             return spf[n] == n;
-        ll c, d, s = 0, r = n - 1;
+        int64_t c, d, s = 0, r = n - 1;
         for (; !(r & 1); r >>= 1, s++)
         {
         }
@@ -73,12 +72,12 @@ namespace PollardRho
         }
     }
     // returns O(n^(1/4))
-    ll pollard_rho(ll n)
+    int64_t pollard_rho(int64_t n)
     {
         while (1)
         {
-            ll x = rnd() % n, y = x, c = rnd() % n, u = 1, v, t = 0;
-            ll *px = seq, *py = seq;
+            int64_t x = rnd() % n, y = x, c = rnd() % n, u = 1, v, t = 0;
+            int64_t *px = seq, *py = seq;
             while (1)
             {
                 *py++ = y = add_mod(mul_mod(y, y, n), c, n);
@@ -100,13 +99,13 @@ namespace PollardRho
                 return u;
         }
     }
-    vector<ll> factorize(ll n)
+    vector<int64_t> factorize(int64_t n)
     {
         if (n == 1)
-            return vector<ll>();
+            return vector<int64_t>();
         if (miller_rabin(n))
-            return vector<ll>{n};
-        vector<ll> v, w;
+            return vector<int64_t>{n};
+        vector<int64_t> v, w;
         while (n > 1 && n < P)
         {
             v.push_back(spf[n]);
@@ -114,7 +113,7 @@ namespace PollardRho
         }
         if (n >= P)
         {
-            ll x = pollard_rho(n);
+            int64_t x = pollard_rho(n);
             v = factorize(x);
             w = factorize(n / x);
             v.insert(v.end(), w.begin(), w.end());
@@ -131,7 +130,7 @@ int32_t main()
     cin >> t;
     while (t--)
     {
-        ll n;
+        int64_t n;
         cin >> n;
         auto f = PollardRho::factorize(n);
         sort(f.begin(), f.end());

@@ -1,8 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
-
 // time complexity : O(n^2 log^3 |G| + t n log |G|)
 // memory complexity : O(n^2 log |G| + tn)
 // t : number of generators
@@ -48,9 +46,9 @@ struct Group
         }
         return -1;
     }
-    ll size()
+    int64_t size()
     {
-        ll ret = 1;
+        int64_t ret = 1;
         for (int i = 0; i < n; i++)
             ret *= buckets[i].size();
         return ret;

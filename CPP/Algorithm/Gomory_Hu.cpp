@@ -5,13 +5,13 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-const long long inf = 1LL << 61;
+const int64_t inf = 1LL << 61;
 struct Dinic
 {
     struct edge
     {
         int to, rev;
-        long long flow, w;
+        int64_t flow, w;
         int id;
     };
     int n, s, t, mxid;
@@ -25,7 +25,7 @@ struct Dinic
         mxid = 0;
         g.resize(n);
     }
-    void add_edge(int u, int v, long long w, int id = -1)
+    void add_edge(int u, int v, int64_t w, int id = -1)
     {
         edge a = {v, (int)g[v].size(), 0, w, id};
         edge b = {u, (int)g[u].size(), 0, w, -2}; // for bidirectional edges cap(b) = w
@@ -52,7 +52,7 @@ struct Dinic
         }
         return d[t] != -1;
     }
-    long long dfs(int u, long long flow)
+    int64_t dfs(int u, int64_t flow)
     {
         if (u == t)
             return flow;
@@ -64,7 +64,7 @@ struct Dinic
             int v = e.to;
             if (d[v] == d[u] + 1)
             {
-                long long nw = dfs(v, min(flow, e.w - e.flow));
+                int64_t nw = dfs(v, min(flow, e.w - e.flow));
                 if (nw > 0)
                 {
                     e.flow += nw;
@@ -75,15 +75,15 @@ struct Dinic
         }
         return 0;
     }
-    long long max_flow(int _s, int _t)
+    int64_t max_flow(int _s, int _t)
     {
         s = _s;
         t = _t;
-        long long flow = 0;
+        int64_t flow = 0;
         while (bfs())
         {
             done.assign(n, 0);
-            while (long long nw = dfs(s, inf))
+            while (int64_t nw = dfs(s, inf))
                 flow += nw;
         }
         flow_through.assign(mxid + 10, 0);
@@ -101,7 +101,7 @@ is equal to the maximum flow in the graph.*/
 struct edge
 {
     int u, v;
-    long long w;
+    int64_t w;
 };
 // all nodes are from 1 to n
 // returns edges of the gomory hu tree
@@ -183,7 +183,7 @@ int32_t main()
          { return l.w > r.w; });
     dsu d(n);
     vector<vector<int>> perm(n + 1);
-    long long ans = 0LL;
+    int64_t ans = 0LL;
     for (int i = 1; i <= n; ++i)
         perm[i].push_back(i);
     for (const auto &e : t)
@@ -212,14 +212,14 @@ const int mod = 998244353;
 struct EDGE
 {
     int from, to, rev;
-    long long w;
+    int64_t w;
 } E[N * 4];
 int n, m, bel[N * 4];
 bool vis[N * 4];
 vector<int> G[N];
 vector<vector<int>> plr;
-set<pair<long long, int>> st;
-vector<pair<pair<int, int>, long long>> tr;
+set<pair<int64_t, int>> st;
+vector<pair<pair<int, int>, int64_t>> tr;
 int fa[N], sz[N];
 int Find(int x)
 {

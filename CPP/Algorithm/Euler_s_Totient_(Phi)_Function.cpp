@@ -6,7 +6,7 @@
 // n * (1 - 1/a) * (1 - 1/b) * (1 - 1/c) * .......; a,b,c = Prime factors of n
 // Ex: Prime factors of 5 -> 5 & 6 -> 2, 3
 
-long long phi[N]; bitset<N> sv;
+int64_t phi[N]; bitset<N> sv;
 void etf() {
     for (int i = 2; i < N; i += 2) phi[i] = (i >> 1);
     for (int i = 3; i < N; i += 2) {
@@ -47,85 +47,6 @@ int32_t main()
 }
 
 // Phi Field:
-
-#include <bits/stdc++.h>
-using namespace std;
-
-const int mod = 998244353;
-using ll = long long;
-
-template <const int32_t MOD>
-struct modint
-{
-    int32_t value;
-    modint() = default;
-    modint(int32_t value_) : value(value_) {}
-    inline modint<MOD> operator+(modint<MOD> other) const
-    {
-        int32_t c = this->value + other.value;
-        return modint<MOD>(c >= MOD ? c - MOD : c);
-    }
-    inline modint<MOD> operator-(modint<MOD> other) const
-    {
-        int32_t c = this->value - other.value;
-        return modint<MOD>(c < 0 ? c + MOD : c);
-    }
-    inline modint<MOD> operator*(modint<MOD> other) const
-    {
-        int32_t c = (int64_t)this->value * other.value % MOD;
-        return modint<MOD>(c < 0 ? c + MOD : c);
-    }
-    inline modint<MOD> &operator+=(modint<MOD> other)
-    {
-        this->value += other.value;
-        if (this->value >= MOD)
-            this->value -= MOD;
-        return *this;
-    }
-    inline modint<MOD> &operator-=(modint<MOD> other)
-    {
-        this->value -= other.value;
-        if (this->value < 0)
-            this->value += MOD;
-        return *this;
-    }
-    inline modint<MOD> &operator*=(modint<MOD> other)
-    {
-        this->value = (int64_t)this->value * other.value % MOD;
-        if (this->value < 0)
-            this->value += MOD;
-        return *this;
-    }
-    inline modint<MOD> operator-() const { return modint<MOD>(this->value ? MOD - this->value : 0); }
-    modint<MOD> pow(uint64_t k) const
-    {
-        modint<MOD> x = *this, y = 1;
-        for (; k; k >>= 1)
-        {
-            if (k & 1)
-                y *= x;
-            x *= x;
-        }
-        return y;
-    }
-    modint<MOD> inv() const { return pow(MOD - 2); } // MOD must be a prime
-    inline modint<MOD> operator/(modint<MOD> other) const { return *this * other.inv(); }
-    inline modint<MOD> operator/=(modint<MOD> other) { return *this *= other.inv(); }
-    inline bool operator==(modint<MOD> other) const { return value == other.value; }
-    inline bool operator!=(modint<MOD> other) const { return value != other.value; }
-    inline bool operator<(modint<MOD> other) const { return value < other.value; }
-    inline bool operator>(modint<MOD> other) const { return value > other.value; }
-};
-template <int32_t MOD>
-modint<MOD> operator*(int64_t value, modint<MOD> n) { return modint<MOD>(value) * n; }
-template <int32_t MOD>
-modint<MOD> operator*(int32_t value, modint<MOD> n) { return modint<MOD>(value % MOD) * n; }
-template <int32_t MOD>
-istream &operator>>(istream &in, modint<MOD> &n) { return in >> n.value; }
-template <int32_t MOD>
-ostream &operator<<(ostream &out, modint<MOD> n) { return out << n.value; }
-
-using mint = modint<mod>;
 
 struct field
 { // a . 1 + b . sqrt(5)

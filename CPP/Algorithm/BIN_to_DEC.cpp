@@ -1,19 +1,17 @@
-// Input is a Binary String:
-// Complexity: O(n)
+// Input is a Binary String: O(n)
 
-long long bin(auto &s) {
-    long long n = 0;
+int64_t bin(auto &s) {
+    int64_t n = 0;
     for (auto &c : s) {
         n <<= 1; n |= (c - '0');
     }
     return n;
 }
 
-// Input is a Decimal Number:
-// Complexity: O(log n)
+// Input is a Decimal Number: O(log n)
 
-long long bin(auto n) {
-    long long b = 0;
+int64_t bin(auto n) {
+    int64_t b = 0;
     while (n) {
         b <<= 1; b |= (n & 1); n >>= 1;
     }
@@ -22,9 +20,9 @@ long long bin(auto n) {
 
 // Built-in Method: Complexity: O(1)
     string s = "1011";
-    long long n = stoi(s, 0, 2);
+    int64_t n = stoi(s, 0, 2);
     cout << n; // 11
 
 // OR,
-    long long a = 0b1011;
+    int64_t a = 0b1011;
     cout << a; // 11

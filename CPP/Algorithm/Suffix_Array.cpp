@@ -135,7 +135,7 @@ struct SuffixArray {
     void prec() {
         lg.resize(n, 0);
         for (int i = 2; i < n; i++)
-            lg[i] = lg[i / 2] + 1;
+            lg[i] = lg[i >> 1] + 1;
     }
     void build() {
         int sz = n - 1;
@@ -165,7 +165,7 @@ struct SuffixArray {
     int lower_bound(string &t) {
         int l = 0, r = n - 1, k = t.size(), ans = n;
         while (l <= r) {
-            int mid = l + r >> 1;
+            int mid = (l + r) >> 1;
             if (s.substr(sa[mid], min(n - sa[mid], k)) >= t)
                 ans = mid, r = mid - 1;
             else
@@ -176,7 +176,7 @@ struct SuffixArray {
     int upper_bound(string &t) {
         int l = 0, r = n - 1, k = t.size(), ans = n;
         while (l <= r) {
-            int mid = l + r >> 1;
+            int mid = (l + r) >> 1;
             if (s.substr(sa[mid], min(n - sa[mid], k)) > t)
                 ans = mid, r = mid - 1;
             else
@@ -227,8 +227,7 @@ using namespace std;
 const int N = 1e5 + 9;
 
 const int kinds = N;
-int str[N];
-int buc[N], r[N], suf[N], X[N], Y[N], high[N];
+int str[N], buc[N], r[N], suf[N], X[N], Y[N], high[N];
 bool cmp(int *r, int a, int b, int x) {
     return (r[a] == r[b] && r[a + x] == r[b + x]);
 }
@@ -310,7 +309,7 @@ struct SuffixArray {
     void prec() {
         lg.resize(n, 0);
         for (int i = 2; i < n; i++)
-            lg[i] = lg[i / 2] + 1;
+            lg[i] = lg[i >> 1] + 1;
     }
     void build() {
         int sz = n - 1;
@@ -404,7 +403,7 @@ struct IsomorphicSuffixArray {
     void prec() {
         lg.resize(n, 0);
         for (int i = 2; i < n; i++)
-            lg[i] = lg[i / 2] + 1;
+            lg[i] = lg[i >> 1] + 1;
     }
     void build() {
         int sz = n - 1;

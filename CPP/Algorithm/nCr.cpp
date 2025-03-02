@@ -3,30 +3,30 @@
 // 3. nC0 + nC1 + nC2 + ... + nCn = 2^n
 // Complexity: O(r)
 
-long long ncr(long long n, long long r) {
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1;
 	if (r == 1) return n; long double ans = 1;
 	for (int i = 1; i <= r; ++i) ans *= (n - r + i) / i;
-	return (long long)(ans + 0.01);
+	return (int64_t)(ans + 0.01);
 }
 
 // OR,
 
-long long ncr(long long n, long long r) {
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
 	long double res = 0;
 	for (int i = 0; i < r; ++i) {
 		res += log(n - i) - log(i + 1);
 	}
-	return (long long)round(exp(res));
+	return (int64_t)round(exp(res));
 }
 
 // Iterative Approach:
 // Complexity: O(n)
 
-long long ncr(long long n, long long r) {
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
-	long long mx = max(r, n - r), mn = n - mx, x = 1, y = 1;
+	int64_t mx = max(r, n - r), mn = n - mx, x = 1, y = 1;
 	for (int i = mx + 1; i <= n; ++i) x *= i;
 	for (int i = 2; i <= mn; ++i) y *= i;
 	return x / y;
@@ -35,8 +35,8 @@ long long ncr(long long n, long long r) {
 // Recursive Approach:
 // Complexity: O(n^2)
 
-long long dp[N][N];
-long long ncr(long long n, long long r) {
+int64_t dp[N][N];
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
 	if (dp[n][r] != -1) return dp[n][r];
 	return dp[n][r] = (ncr(n - 1, r - 1) + ncr(n - 1, r)) % M;
@@ -45,61 +45,61 @@ long long ncr(long long n, long long r) {
 // Modular Multiplicative Inverse(MMI) Appraoch:
 // Complexity: O(n)
 
-long long fac[N];
+int64_t fac[N];
 void pre() {
 	fac[0] = fac[1] = 1;
 	for (int i = 2; i < N; ++i) fac[i] = (fac[i - 1] * i) % M;
 }
-long long mmi(long long base) {
-	long long ans = 1, pow = M - 2;
+int64_t mmi(int64_t base) {
+	int64_t ans = 1, pow = M - 2;
 	while (pow) {
 		if (pow & 1) ans = (ans * base) % M;
 		base = (base * base) % M; pow >>= 1;
 	}
 	return ans;
 }
-long long ncr(long long n, long long r) {
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
 	return (fac[n] * mmi((fac[r] * fac[n - r]) % M)) % M;
 }
 
 // OR,
 
-long long mmul(long long a, long long b) {
-	a %= M; long long res = 0;
+int64_t mmul(int64_t a, int64_t b) {
+	a %= M; int64_t res = 0;
 	while (b) {
 		if (b & 1) res = (res + a) % M;
 		a = (a << 1) % M; b >>= 1;
 	}
 	return res;
 }
-long long exgcd(long long a, long long b, long long *x, long long *y) {
+int64_t exgcd(int64_t a, int64_t b, int64_t *x, int64_t *y) {
 	if (!a) {
 		*x = 0, *y = 1;
 		return b;
 	}
-	long long x1, y1, gcd = exgcd(b % a, a, &x1, &y1);
+	int64_t x1, y1, gcd = exgcd(b % a, a, &x1, &y1);
 	*x = y1 - (b / a) * x1;
 	*y = x1;
 	return gcd;
 }
-long long modinv(long long b) {
-	long long x, y, g = exgcd(b, M, &x, &y);
+int64_t modinv(int64_t b) {
+	int64_t x, y, g = exgcd(b, M, &x, &y);
 	if (g != 1)
 		return -1;
 	return (x % M + M) % M;
 }
-long long mdv(long long a, long long b) {
+int64_t mdv(int64_t a, int64_t b) {
 	a %= M;
-	long long inv = modinv(b);
+	int64_t inv = modinv(b);
 	if (inv == -1)
 		return 0;
 	return (inv * a) % M;
 }
-long long ncr(long long n, long long r) {
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
 	if (r > n - r) r = n - r;
-	long long x = 1;
+	int64_t x = 1;
 	for (int i = 1; i <= r; ++i) x = mdv(mmul(x, (n + 1 - i)), i);
 	return x;
 }
@@ -107,7 +107,7 @@ long long ncr(long long n, long long r) {
 // Pre-calculation of nCr:
 // Complexity: O(N)
 
-long long fac[N], inv[N], finv[N];
+int64_t fac[N], inv[N], finv[N];
 void pre() {
 	fac[0] = fac[1] = inv[0] = inv[1] = finv[0] = finv[1] = 1;
 	for (int i = 2; i < N; ++i) {
@@ -116,14 +116,14 @@ void pre() {
 		finv[i] = (inv[i] * finv[i - 1]) % M;
 	}
 }
-long long ncr(long long n, long long r) {
+int64_t ncr(int64_t n, int64_t r) {
 	if (r > n) return 0; if (!r || n == r) return 1; if (r == 1) return n;
 	return ((fac[n] * finv[r]) % M * finv[n - r]) % M;
 }
 
 // OR, Complexity: O(n ^ 2)
 
-long long ncr[N][N];
+int64_t ncr[N][N];
 void pre() {
 	ncr[0][0] = 1;
 	for (int i = 1; i < N; ++i) {
@@ -353,22 +353,22 @@ vector<int> multiply(vector<int> &a, vector<int> &b, int eq = 0) {
 	fft(B, sz);
 	vector<int> res(need);
 	for (int i = 0; i < need; i++) {
-		long long aa = A[i].x + 0.5;
-		long long bb = B[i].x + 0.5;
-		long long cc = A[i].y + 0.5;
+		int64_t aa = A[i].x + 0.5;
+		int64_t bb = B[i].x + 0.5;
+		int64_t cc = A[i].y + 0.5;
 		res[i] = (aa + ((bb % mod) << 15) + ((cc % mod) << 30)) % mod;
 	}
 	return res;
 }
-int power(long long n, long long k) {
+int power(int64_t n, int64_t k) {
 	int ans = 1 % mod;
 	n %= mod;
 	if (n < 0)
 		n += mod;
 	while (k) {
 		if (k & 1)
-			ans = (long long)ans * n % mod;
-		n = (long long)n * n % mod;
+			ans = (int64_t)ans * n % mod;
+		n = (int64_t)n * n % mod;
 		k >>= 1;
 	}
 	return ans;
@@ -470,9 +470,9 @@ int main() {
 
 using namespace std;
 
-using i64 = long long;
+using i64 = int64_t;
 using u32 = unsigned;
-using u64 = unsigned long long;
+using u64 = unsigned int64_t;
 using f80 = long double;
 
 namespace ntt {
@@ -1150,13 +1150,13 @@ using namespace std;
 const int N = 1 << 16;
 const int mod = 998244353;
 const int root = 3;
-using ll = long long;
+using ll = int64_t;
 int lim, rev[N], w[N], wn[N], inv_lim;
 void reduce(int &x) { x = (x + mod) % mod; }
 int POW(int x, int y, int ans = 1) {
-	for (; y; y >>= 1, x = (long long)x * x % mod)
+	for (; y; y >>= 1, x = (int64_t)x * x % mod)
 		if (y & 1)
-			ans = (long long)ans * x % mod;
+			ans = (int64_t)ans * x % mod;
 	return ans;
 }
 void precompute(int len) {
@@ -1169,7 +1169,7 @@ void precompute(int len) {
 	const int g = POW(root, (mod - 1) / lim);
 	inv_lim = POW(lim, mod - 2);
 	for (int i = 1; i < lim; ++i)
-		wn[i] = (long long)wn[i - 1] * g % mod;
+		wn[i] = (int64_t)wn[i - 1] * g % mod;
 }
 void ntt(vector<int> &a, int typ) {
 	for (int i = 0; i < lim; ++i)
@@ -1181,14 +1181,14 @@ void ntt(vector<int> &a, int typ) {
 		for (int j = 0; j < lim; j += i << 1)
 			for (int k = 0; k < i; ++k)
 			{
-				const int x = a[k + j], y = (long long)a[k + j + i] * w[k] % mod;
+				const int x = a[k + j], y = (int64_t)a[k + j + i] * w[k] % mod;
 				reduce(a[k + j] += y - mod), reduce(a[k + j + i] = x - y);
 			}
 	}
 	if (!typ) {
 		reverse(a.begin() + 1, a.begin() + lim);
 		for (int i = 0; i < lim; ++i)
-			a[i] = (long long)a[i] * inv_lim % mod;
+			a[i] = (int64_t)a[i] * inv_lim % mod;
 	}
 }
 vector<int> multiply(vector<int> &f, vector<int> &g) {
@@ -1199,7 +1199,7 @@ vector<int> multiply(vector<int> &f, vector<int> &g) {
 	b.resize(lim);
 	ntt(a, 1), ntt(b, 1);
 	for (int i = 0; i < lim; ++i)
-		a[i] = (long long)a[i] * b[i] % mod;
+		a[i] = (int64_t)a[i] * b[i] % mod;
 	ntt(a, 0);
 	while ((int)a.size() && a.back() == 0)
 		a.pop_back();
@@ -1253,17 +1253,17 @@ int32_t main() {
 using namespace std;
 
 const int N = 1e6 + 9;
-using ll = long long;
+using ll = int64_t;
 
-int power(long long n, long long k, const int mod) {
+int power(int64_t n, int64_t k, const int mod) {
 	int ans = 1 % mod;
 	n %= mod;
 	if (n < 0)
 		n += mod;
 	while (k) {
 		if (k & 1)
-			ans = (long long)ans * n % mod;
-		n = (long long)n * n % mod;
+			ans = (int64_t)ans * n % mod;
+		n = (int64_t)n * n % mod;
 		k >>= 1;
 	}
 	return ans;

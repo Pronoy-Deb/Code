@@ -1,7 +1,7 @@
 // Complexity: O(n * w)
 
-long long wt[N], val[N], dp[N][N];
-long long rec(int in, int w) {
+int64_t wt[N], val[N], dp[N][N];
+int64_t rec(int in, int w) {
     if (!w || in < 0) return 0;
 	auto &ans = dp[in][w]; if (~ans) return dp[in][w];
 	ans = rec(in - 1, w);
@@ -15,7 +15,7 @@ void reset(int in, int w) {
 }
 
 // Operation:
-	long long w; cin >> n >> w;
+	int64_t w; cin >> n >> w;
 	for (i = 0; i < n; ++i) {
 		cin >> wt[i] >> val[i];
 	}
@@ -26,8 +26,8 @@ void reset(int in, int w) {
 // wt = Total weight, p = profit, w = weight.
 https://cses.fi/problemset/task/1158/
 
-long long n, wt, dp[N], w[N], p[N];
-long long knap() {
+int64_t n, wt, dp[N], w[N], p[N];
+int64_t knap() {
     for(int i = 0; i < n; ++i) {
         for(int j = wt; j >= w[i]; --j) {
             dp[j] = max(dp[j], p[i] + dp[j - w[i]]);

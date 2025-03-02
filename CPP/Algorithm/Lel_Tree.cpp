@@ -34,12 +34,12 @@ class ST {
     using LT = typename VT::LT;
 
    public:
-    long long L, R, counter = 1;
+    int64_t L, R, counter = 1;
     vector<VT> tree;
-    ST(long long n) : L(0), R(n - 1), tree(n << 2) {}
-    ST(long long s, long long e) : L(s), R(e), tree(e - s + 1 << 2) {}
+    ST(int64_t n) : L(0), R(n - 1), tree(n << 2) {}
+    ST(int64_t s, int64_t e) : L(s), R(e), tree(e - s + 1 << 2) {}
 
-    void propagate(long long s, long long e, long long node) {
+    void propagate(int64_t s, int64_t e, int64_t node) {
         if (s == e) return;
         tree[node * 2].apply(tree[node].lazy, s, s + e >> 1);
         tree[node * 2 + 1].apply(tree[node].lazy, s + e + 2 >> 1, e);
@@ -47,11 +47,11 @@ class ST {
     }
 
     void build(vector<DT> &v) { build(L, R, v); }
-    void update(long long S, long long E, LT U) { update(S, E, U, L, R); }
-    DT query(long long S, long long E) { return query(S, E, L, R); }
+    void update(int64_t S, int64_t E, LT U) { update(S, E, U, L, R); }
+    DT query(int64_t S, int64_t E) { return query(S, E, L, R); }
 
-    void build(long long s, long long e, vector<DT> &v, long long node = 1) {
-        long long m = s + e >> 1;
+    void build(int64_t s, int64_t e, vector<DT> &v, int64_t node = 1) {
+        int64_t m = s + e >> 1;
         if (s == e) {
             tree[node] = VT(v[s]);
             return;
@@ -60,23 +60,23 @@ class ST {
         build(m + 1, e, v, node * 2 + 1);
         tree[node].merge(tree[node * 2], tree[node * 2 + 1], s, e);
     }
-    void update(long long S, long long E, LT uval, long long s, long long e, long long node = 1) {
+    void update(int64_t S, int64_t E, LT uval, int64_t s, int64_t e, int64_t node = 1) {
         if (S > E) return;
         if (S == s and E == e) {
             tree[node].apply(uval, s, e);
             return;
         }
         propagate(s, e, node);
-        long long m = s + e >> 1;
+        int64_t m = s + e >> 1;
         update(S, min(m, E), uval, s, m, node * 2);
         update(max(S, m + 1), E, uval, m + 1, e, node * 2 + 1);
         tree[node].merge(tree[node * 2], tree[node * 2 + 1], s, e);
     }
-    DT query(long long S, long long E, long long s, long long e, long long node = 1) {
+    DT query(int64_t S, int64_t E, int64_t s, int64_t e, int64_t node = 1) {
         if (S > E) return VT::I;
         if (s == S and e == E) return tree[node].ans(s, e);
         propagate(s, e, node);
-        long long m = s + e >> 1;
+        int64_t m = s + e >> 1;
         DT L = query(S, min(m, E), s, m, node * 2);
         DT R = query(max(S, m + 1), E, m + 1, e, node * 2 + 1);
         return tree[node].get(L, R, s, e);
@@ -85,8 +85,8 @@ class ST {
 
 class vertex {
    public:
-    using DT = long long;
-    using LT = long long;
+    using DT = int64_t;
+    using LT = int64_t;
     DT val;
     LT lazy;
     static constexpr DT I = 0;
@@ -94,16 +94,16 @@ class vertex {
 
     vertex(DT val = I, LT lazy = None) : val(val), lazy(lazy) {}
     // update functions
-    inline void apply(const LT &U, long long s, long long e) {
+    inline void apply(const LT &U, int64_t s, int64_t e) {
         if(U == None) return;
         val += (e - s + 1) * U;
         lazy += U;
     }
     inline void reset() { lazy = None; }
-    inline void merge(const vertex &a, const vertex &b, long long s, long long e) {
+    inline void merge(const vertex &a, const vertex &b, int64_t s, int64_t e) {
         val = a.val + b.val;
     }
     // query functions
-    inline DT get(const DT &a, const DT &b, long long s, long long e) { return a + b; }
-    inline DT ans(long long s, long long e) { return val; }
+    inline DT get(const DT &a, const DT &b, int64_t s, int64_t e) { return a + b; }
+    inline DT ans(int64_t s, int64_t e) { return val; }
 };

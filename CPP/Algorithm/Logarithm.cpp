@@ -1,6 +1,6 @@
 // Complexity: O(log(n)), where n is the power.
 
-long double log(long long base, long long pow) {
+long double log(int64_t base, int64_t pow) {
     return log2(pow) / log2(base);
 }
 
@@ -17,7 +17,7 @@ void pre() {
 using namespace std;
 
 const int N = 1e5 + 9;
-int a[N];
+int aa[N];
 int32_t main()
 {
     ios_base::sync_with_stdio(0);
@@ -26,18 +26,18 @@ int32_t main()
     cin >> n;
     for (int i = 1; i <= n; i++)
     {
-        cin >> a[i];
+        cin >> aa[i];
     }
 
     vector<pair<int, int>> v; // stores the number of times a subarray gcd occurs ending at each index
-    map<int, long long> ans;
+    map<int, int64_t> ans;
     for (int i = 1; i <= n; i++)
     {
         vector<pair<int, int>> u;
-        u.push_back({a[i], 1});
+        u.push_back({aa[i], 1});
         for (auto [x, c] : v)
         {
-            int g = __gcd(x, a[i]);
+            int g = __gcd(x, aa[i]);
             if (g == u.back().first)
             {
                 u.back().second += c;
@@ -96,7 +96,7 @@ int discrete_log(int a, int b, int m)
     {
         if (vals.find(cur) != vals.end())
         {
-            long long nw = 1LL * vals[cur] * n - q;
+            int64_t nw = 1LL * vals[cur] * n - q;
             if (nw < ans)
                 ans = nw;
         }
@@ -106,7 +106,7 @@ int discrete_log(int a, int b, int m)
         ans = -1;
     return ans;
 }
-using ll = long long;
+using ll = int64_t;
 ll extended_euclid(ll a, ll b, ll &x, ll &y)
 {
     if (b == 0)

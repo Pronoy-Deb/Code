@@ -2,8 +2,8 @@
 // Note: Modular multiplicative inverse: 1 / n = bex(n, M - 2)
 // Iterative Approach:
 
-long long bex(long long base, long long pow = M - 2) {
-    base %= M; long long ans = 1;
+int64_t bex(int64_t base, int64_t pow = M - 2) {
+    base %= M; int64_t ans = 1;
     while (pow) {
         if (pow & 1) ans = (ans * base) % M;
         base = (base * base) % M; pow >>= 1;
@@ -13,15 +13,14 @@ long long bex(long long base, long long pow = M - 2) {
 
 // Recursive Approach:
 
-long long bex(long long base, long long pow = M - 2) {
+int64_t bex(int64_t base, int64_t pow = M - 2) {
     if (!pow) return 1;
-    long long val = bex(base, pow >> 1);
+    int64_t val = bex(base, pow >> 1);
     if (pow & 1) return (base * ((val * val) % M)) % M;
     return (val * val) % M;
 }
 
-// For long long value:
-// const long long M = 9223372036854775783ll;
+// For int64_t value of M = 9223372036854775783ll;
 
 uint64_t bmul(uint64_t a, uint64_t b) {
     uint64_t ans = 0;
@@ -31,8 +30,8 @@ uint64_t bmul(uint64_t a, uint64_t b) {
     }
     return ans;
 }
-long long bex(long long base, long long pow = M - 2) {
-    base %= M; long long ans = 1;
+int64_t bex(int64_t base, int64_t pow = M - 2) {
+    base %= M; int64_t ans = 1;
     while (pow) {
         if (pow & 1) ans = bmul(ans, base);
         base = bmul(base, base); pow >>= 1;
@@ -53,8 +52,8 @@ uint64_t modmul(uint64_t a, uint64_t b) {
 
 // Purpose: To Calculate a ^ b ^ c or, pow(a, pow(b, c)):
 
-long long bex(long long a, long long b, long long m) {
-    a %= M; long long ans = 1;
+int64_t bex(int64_t a, int64_t b, int64_t m) {
+    a %= M; int64_t ans = 1;
     while (b) {
         if (b & 1) ans = (ans * a) % m;
         a = (a * a) % m; b >>= 1;

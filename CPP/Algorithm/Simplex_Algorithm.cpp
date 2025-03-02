@@ -3,22 +3,21 @@ using namespace std;
 
 const int N = 510;
 const int mod = 1e9 + 7;
-using ll = long long;
 using ld = long double;
 const ld eps = 1e-9;
 const ld PI = acos(-1.0);
 
-ll n, k, a[N], dis[N][N];
-vector<ll> g[N], cost[N];
+int64_t n, k, aa[N], dis[N][N];
+vector<int64_t> g[N], cost[N];
 bool ok[N][N];
 
-void dfs(ll u, ll p, ll d, ll cur)
+void dfs(int64_t u, int64_t p, int64_t d, int64_t cur)
 {
     dis[cur][u] = d;
-    ll len = g[u].size(), i;
+    int64_t len = g[u].size(), i;
     for (int i = 0; i < len; i++)
     {
-        ll v = g[u][i];
+        int64_t v = g[u][i];
         if (v == p)
             continue;
         dfs(v, u, d + cost[u][i], cur);
@@ -220,13 +219,13 @@ long double obj[N], cons[N];
 
 int32_t main()
 {
-    ll black = 0;
+    int64_t black = 0;
     cin >> n >> k;
     for (int i = 0; i < n; i++)
-        cin >> a[i], black += a[i];
+        cin >> aa[i], black += aa[i];
     for (int i = 1; i < n; i++)
     {
-        ll x, y, w;
+        int64_t x, y, w;
         cin >> x >> y >> w;
         x--;
         y--;
@@ -246,7 +245,7 @@ int32_t main()
         }
     }
     for (int i = 0; i < n; i++)
-        obj[i] = (long double)1 - a[i];
+        obj[i] = (long double)1 - aa[i];
     lp::init(n, obj, MINIMIZE);
     for (int i = 0; i < n; i++)
         cons[i] = 1.0;
@@ -260,7 +259,7 @@ int32_t main()
         lp::add_constraint(cons, 1.0, GREATEQ);
     }
     long double ret = lp::solve();
-    ll ans = round(ret);
+    int64_t ans = round(ret);
     if (ans < 0)
         ans = -1;
     cout << ans << '\n';

@@ -10,7 +10,7 @@ bool pal(string &s) {
 // Hashing Approach:
 
 bool pal(string &s, int b = 29) {
-    long long sz = s.size(), l = s[0] - 'a', r = s[sz - 1] - 'a';
+    int64_t sz = s.size(), l = s[0] - 'a', r = s[sz - 1] - 'a';
     for (int i = 1; i < sz; ++i) l = ((l * b) + (s[i] - 'a')) % M;
     for (int i = sz - 2; i >= 0; --i) r = ((r * b) + (s[i] - 'a')) % M;
     return (l == r);
@@ -42,8 +42,8 @@ auto man(string &s) {
 // Number of Palindromic Subsequence having length k: O(n^2 * k)
 
 int n;
-long long psk(string &s, int K) {
-	long long dp[n + 2][n + 2][K + 1]{};
+int64_t psk(string &s, int K) {
+	int64_t dp[n + 2][n + 2][K + 1]{};
     for (int i = n; i >= 1; --i) {
         for (int j = i; j <= n; ++j) {
             dp[i][j][0] = 1; dp[i][j][1] = j - i + 1;
@@ -57,10 +57,9 @@ long long psk(string &s, int K) {
     return dp[1][n][K];
 }
 
-
 // If k <= 3: O(26 * n)
 
-long long l[26][N], r[26][N], n;
+int64_t l[26][N], r[26][N], n;
 void pre(string &s) {
 	l[s[0] - 'a'][0] = 1;
 	for (int i = 1; i < n; ++i) {
@@ -73,8 +72,8 @@ void pre(string &s) {
 		++r[s[i] - 'a'][i];
 	}
 }
-long long psk(int k) {
-	long long ans = 0;
+int64_t psk(int k) {
+	int64_t ans = 0;
 	if (k == 1) {
 		for (int i = 0; i < 26; ++i) ans += l[i][n - 1];
 		return ans;
@@ -198,7 +197,7 @@ int32_t main() {
     for (int i = 0; i < s.size(); i++)
         t.extend(i);
     t.calc_occurrences();
-    long long ans = 0;
+    int64_t ans = 0;
     for (int i = 3; i <= t.sz; i++)
         ans += t.t[i].oc;
     cout << ans << '\n';
@@ -522,7 +521,7 @@ int32_t main() {
     for (int i = 0; i < s.size(); i++)
         t.extend(i);
     t.calc_occurrences();
-    long long ans = 0; // number of palindromes
+    int64_t ans = 0; // number of palindromes
     for (int i = 3; i <= t.sz; i++)
         ans += t.t[i].oc;
     cout << ans << '\n';

@@ -1,12 +1,12 @@
 // Complexity: O(n^2)
 
-long long ar[N], n;
+int64_t aa[N], n;
 void ssrt() {
     for (int i = 0; i < n - 1; ++i) {
         int mnin = i;
         for (int j = i + 1; j < n; ++j) {
-            if (ar[j] < ar[mnin]) mnin = j;
+            if (aa[j] < aa[mnin]) mnin = j;
         }
-        if (i != mnin) swap(ar[i], ar[mnin]);
+        if (i != mnin) swap(aa[i], aa[mnin]);
     }
 }

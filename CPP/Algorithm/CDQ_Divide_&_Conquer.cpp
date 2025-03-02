@@ -1,5 +1,3 @@
-
-
 //
 
 struct atm { int64_t d, p, r, g; };

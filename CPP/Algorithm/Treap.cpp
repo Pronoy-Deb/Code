@@ -78,24 +78,24 @@ int ans[N];
 mt19937 rnd(chrono::high_resolution_clock::now().time_since_epoch().count());
 struct treap {
     struct NODE {
-        long long val, sz, prior, lazy, sum, mx, mn, repl;
+        int64_t val, sz, prior, lazy, sum, mx, mn, repl;
         bool repl_flag, rev; NODE *l, *r, *par;
         NODE() {
             lazy = rev = sum = val = sz = mx = mn = repl = repl_flag = prior = 0; l = r = par = NULL;
         }
-        NODE(long long _val) {
+        NODE(int64_t _val) {
             val = sum = mx = mn = _val;
             repl = repl_flag = rev = lazy = 0;
             sz = 1; prior = rnd(); l = r = par = NULL;
         }
     };
     typedef NODE *node; node root;
-    unordered_map<long long, node> position; // positions of all the values
+    unordered_map<int64_t, node> position; // positions of all the values
     inline void clear() { // clearing the treap
         root = NULL; position.clear();
     }
     treap() { clear(); }
-    inline long long size(node t) { return t ? t->sz : 0; }
+    inline int64_t size(node t) { return t ? t->sz : 0; }
     void update_size(node &t) {
         if (t) t->sz = size(t->l) + size(t->r) + 1;
     }
@@ -179,7 +179,7 @@ struct treap {
     }
     // insert val in position a[pos]
     // so all previous values from pos to last will be right shifted
-    void insert(int pos, long long val) {
+    void insert(int pos, int64_t val) {
         if (root == NULL) {
             node to_add = new NODE(val); root = to_add;
             position[val] = root; return;
@@ -194,27 +194,27 @@ struct treap {
         split(r, mid, r, R - L); merge(root, l, r);
     }
     // returns answer for corresponding types of query
-    long long get_sum(int L, int R) {
+    int64_t get_sum(int L, int R) {
         node l, r, mid; split(root, l, r, L - 1);
-        split(r, mid, r, R - L); long long ans = mid->sum;
+        split(r, mid, r, R - L); int64_t ans = mid->sum;
         merge(r, mid, r); merge(root, l, r); return ans;
     }
-    long long get_min(int L, int R) {
+    int64_t get_min(int L, int R) {
         node l, r, mid;
         split(root, l, r, L - 1); split(r, mid, r, R - L);
-        long long ans = mid->mn;
+        int64_t ans = mid->mn;
         merge(r, mid, r); merge(root, l, r);
         return ans;
     }
-    long long get_max(int L, int R) {
+    int64_t get_max(int L, int R) {
         node l, r, mid;
         split(root, l, r, L - 1); split(r, mid, r, R - L);
-        long long ans = mid->mx;
+        int64_t ans = mid->mx;
         merge(r, mid, r); merge(root, l, r);
         return ans;
     }
     // add val in all the values from a[L] to a[R] positions
-    void add(int L, int R, long long val) {
+    void add(int L, int R, int64_t val) {
         node l, r, mid; split(root, l, r, L - 1);
         split(r, mid, r, R - L); lazy_repl_upd(mid);
         mid->lazy += val; merge(r, mid, r); merge(root, l, r);
@@ -226,7 +226,7 @@ struct treap {
         merge(r, mid, r); merge(root, l, r);
     }
     // replace all the values from a[L] to a[R] by v
-    void replace(int L, int R, long long v) {
+    void replace(int L, int R, int64_t v) {
         node l, r, mid; split(root, l, r, L - 1);
         split(r, mid, r, R - L); lazy_sum_upd(mid);
         mid->repl_flag = 1; mid->repl = v;
@@ -420,7 +420,7 @@ int32_t main() {
 #include <bits/stdc++.h>
 
 using namespace std;
-using ll = long long;
+using ll = int64_t;
 
 namespace Treap {
 
@@ -454,7 +454,7 @@ namespace Treap {
 
     mt19937 mt(chrono::steady_clock::now().time_since_epoch().count());
     using ptr = struct Node*;
-    using T = long long;
+    using T = int64_t;
 
     struct Node {
         Value val;

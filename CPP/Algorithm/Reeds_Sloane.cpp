@@ -1,26 +1,26 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
 // given first m items init[0..m-1] and coefficents trans[0..m-1] or
 // given first 2 * m items init[0..2m-1], it will compute trans[0..m-1]
 // for you. trans[0..m] should be given as that
 // init[m] = sum_{i=0}^{m-1} init[i] * trans[i]
 // credit: zimpha
+
 struct LinearRecurrence {
-  using vec = vector<ll>;
-  static void extend(vec &a, size_t d, ll value = 0) {
+  using vec = vector<int64_t>;
+  static void extend(vec &a, size_t d, int64_t value = 0) {
     if (d <= a.size()) return;
     a.resize(d, value);
   }
-  static vec BerlekampMassey(const vec &s, ll mod) {
-    function<ll(ll)> inverse = [&](ll a) {
-      return a == 1 ? 1 : (ll)(mod - mod / a) * inverse(mod % a) % mod;
+  static vec BerlekampMassey(const vec &s, int64_t mod) {
+    function<int64_t(int64_t)> inverse = [&](int64_t a) {
+      return a == 1 ? 1 : (int64_t)(mod - mod / a) * inverse(mod % a) % mod;
     };
     vec A = {1}, B = {1};
-    ll b = s[0];
+    int64_t b = s[0];
     for (size_t i = 1, m = 1; i < s.size(); ++i, m++) {
-      ll d = 0;
+      int64_t d = 0;
       for (size_t j = 0; j < A.size(); ++j) {
         d += A[j] * s[i - j] % mod;
       }
@@ -28,7 +28,7 @@ struct LinearRecurrence {
       if (2 * (A.size() - 1) <= i) {
         auto temp = A;
         extend(A, B.size() + m);
-        ll coef = d * inverse(b) % mod;
+        int64_t coef = d * inverse(b) % mod;
         for (size_t j = 0; j < B.size(); ++j) {
           A[j + m] -= coef * B[j] % mod;
           if (A[j + m] < 0) A[j + m] += mod;
@@ -36,7 +36,7 @@ struct LinearRecurrence {
         B = temp, b = d, m = 0;
       } else {
         extend(A, B.size() + m);
-        ll coef = d * inverse(b) % mod;
+        int64_t coef = d * inverse(b) % mod;
         for (size_t j = 0; j < B.size(); ++j) {
           A[j + m] -= coef * B[j] % mod;
           if (A[j + m] < 0) A[j + m] += mod;
@@ -45,27 +45,27 @@ struct LinearRecurrence {
     }
     return A;
   }
-  static void exgcd(ll a, ll b, ll &g, ll &x, ll &y) {
+  static void exgcd(int64_t a, int64_t b, int64_t &g, int64_t &x, int64_t &y) {
     if (!b) x = 1, y = 0, g = a;
     else {
       exgcd(b, a % b, g, y, x);
       y -= x * (a / b);
     }
   }
-  static ll crt(const vec &c, const vec &m) {
+  static int64_t crt(const vec &c, const vec &m) {
     int n = c.size();
-    ll M = 1, ans = 0;
+    int64_t M = 1, ans = 0;
     for (int i = 0; i < n; ++i) M *= m[i];
     for (int i = 0; i < n; ++i) {
-      ll x, y, g, tm = M / m[i];
+      int64_t x, y, g, tm = M / m[i];
       exgcd(tm, m[i], g, x, y);
       ans = (ans + tm * x * c[i] % M) % M;
     }
     return (ans + M) % M;
   }
-  static vec ReedsSloane(const vec &s, ll mod) {
-    auto inverse = [] (ll a, ll m) {
-      ll d, x, y;
+  static vec ReedsSloane(const vec &s, int64_t mod) {
+    auto inverse = [] (int64_t a, int64_t m) {
+      int64_t d, x, y;
       exgcd(a, m, d, x, y);
       return d == 1 ? (x % m + m) % m : -1;
     };
@@ -74,7 +74,7 @@ struct LinearRecurrence {
       int db = (b.size() > 1 || (b.size() == 1 && b[0])) ? b.size() - 1 : -40000;
       return max(da, db + 1);
     };
-    auto prime_power = [&] (const vec &s, ll mod, ll p, ll e) {
+    auto prime_power = [&] (const vec &s, int64_t mod, int64_t p, int64_t e) {
       // linear feedback shift register mod p^e, p is prime
       vector<vec> a(e), b(e), an(e), bn(e), ao(e), bo(e);
       vec t(e), u(e), r(e), to(e, 1), uo(e), pw(e + 1, 1);;
@@ -82,7 +82,7 @@ struct LinearRecurrence {
         pw[i] = pw[i - 1] * p;
         assert(pw[i] <= mod);
       }
-      for (ll i = 0; i < e; ++i) {
+      for (int64_t i = 0; i < e; ++i) {
         a[i] = {pw[i]}, an[i] = {pw[i]};
         b[i] = {0}, bn[i] = {s[0] * pw[i] % mod};
         t[i] = s[0] * pw[i] % mod;
@@ -104,7 +104,7 @@ struct LinearRecurrence {
         }
         a = an, b = bn;
         for (int o = 0; o < e; ++o) {
-          ll d = 0;
+          int64_t d = 0;
           for (size_t i = 0; i < a[o].size() && i <= k; ++i) {
             d = (d + a[o][i] * s[k - i]) % mod;
           }
@@ -117,7 +117,7 @@ struct LinearRecurrence {
               extend(bn[o], k + 1);
               bn[o][k] = (bn[o][k] + d) % mod;
             } else {
-              ll coef = t[o] * inverse(to[g], mod) % mod * pw[u[o] - uo[g]] % mod;
+              int64_t coef = t[o] * inverse(to[g], mod) % mod * pw[u[o] - uo[g]] % mod;
               int m = k - r[g];
               assert(m >= 0);
               extend(an[o], ao[g].size() + m);
@@ -138,9 +138,9 @@ struct LinearRecurrence {
       }
       return make_pair(an[0], bn[0]);
     };
-    vector<tuple<ll, ll, int>> fac;
-    for (ll i = 2; i * i <= mod; ++i) if (mod % i == 0) {
-        ll cnt = 0, pw = 1;
+    vector<tuple<int64_t, int64_t, int>> fac;
+    for (int64_t i = 2; i * i <= mod; ++i) if (mod % i == 0) {
+        int64_t cnt = 0, pw = 1;
         while (mod % i == 0) mod /= i, ++cnt, pw *= i;
         fac.emplace_back(pw, i, cnt);
       }
@@ -148,7 +148,7 @@ struct LinearRecurrence {
     vector<vec> as;
     size_t n = 0;
     for (auto &&x: fac) {
-      ll mod, p, e;
+      int64_t mod, p, e;
       vec a, b;
       tie(mod, p, e) = x;
       auto ss = s;
@@ -168,9 +168,9 @@ struct LinearRecurrence {
     return a;
   }
 
-  LinearRecurrence(const vec &s, const vec &c, ll mod):
+  LinearRecurrence(const vec &s, const vec &c, int64_t mod):
     init(s), trans(c), mod(mod), m(s.size()) {}
-  LinearRecurrence(const vec &s, ll mod, bool is_prime = true): mod(mod) {
+  LinearRecurrence(const vec &s, int64_t mod, bool is_prime = true): mod(mod) {
     assert(s.size() % 2 == 0);
     vec A;
     if (is_prime) A = BerlekampMassey(s, mod);
@@ -185,14 +185,14 @@ struct LinearRecurrence {
     reverse(trans.begin(), trans.end());
     init = {s.begin(), s.begin() + m};
   }
-  ll solve(ll n) {
+  int64_t solve(int64_t n) {
     if (mod == 1) return 0;
     if (n < m) return init[n];
     vec v(m), u(m << 1);
-    ll msk = !!n;
-    for (ll m = n; m > 1; m >>= 1) msk <<= 1;
+    int64_t msk = !!n;
+    for (int64_t m = n; m > 1; m >>= 1) msk <<= 1;
     v[0] = 1 % mod;
-    for (ll x = 0; msk; msk >>= 1, x <<= 1) {
+    for (int64_t x = 0; msk; msk >>= 1, x <<= 1) {
       fill_n(u.begin(), m * 2, 0);
       x |= !!(n & msk);
       if (x < m) u[x] = 1 % mod;
@@ -210,14 +210,14 @@ struct LinearRecurrence {
       }
       v = {u.begin(), u.begin() + m};
     }
-    ll ret = 0;
+    int64_t ret = 0;
     for (int i = 0; i < m; ++i) {
       ret = (ret + v[i] * init[i]) % mod;
     }
     return ret;
   }
   vec init, trans;
-  ll mod;
+  int64_t mod;
   int m;
 };
 int main() {
@@ -226,15 +226,15 @@ int main() {
   int t;
   cin >> t;
   while (t--) {
-    ll k, mod; cin >> k >> mod;
-    vector<ll> v(2 * k);
+    int64_t k, mod; cin >> k >> mod;
+    vector<int64_t> v(2 * k);
     for (int i = 0; i < 2 * k; i++) {
       cin >> v[i];
       v[i] %= mod;
       v[i] = (v[i] + mod) % mod;
     }
     LinearRecurrence reeds_sloane(v, mod, 0);
-    ll ans = reeds_sloane.solve(2 * k);
+    int64_t ans = reeds_sloane.solve(2 * k);
     cout << ans << '\n';
   }
 }

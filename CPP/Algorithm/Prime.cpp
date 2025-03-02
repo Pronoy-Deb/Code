@@ -1,6 +1,6 @@
 // Miller-Rabin Method of Primality Test:
 
-long long pri[N >> 3], spf[N];
+int64_t pri[N >> 3], spf[N];
 void pre() {
     for (int i = 2, c = 0; i < N; ++i) {
         if (!spf[i]) pri[c++] = spf[i] = i;
@@ -9,28 +9,28 @@ void pre() {
         }
     }
 }
-long long mmul(long long x, long long y, long long m) {
-    long long res = __int128(x) * y % m; return res;
-    // long long res = x * y - (long long)((long double)x * y / m + 0.5) * m;
+int64_t mmul(int64_t x, int64_t y, int64_t m) {
+    int64_t res = __int128(x) * y % m; return res;
+    // int64_t res = x * y - (int64_t)((long double)x * y / m + 0.5) * m;
     // return res < 0 ? res + m : res;
 }
-long long bex(long long x, long long n, long long m) {
-    long long res = 1 % m;
+int64_t bex(int64_t x, int64_t n, int64_t m) {
+    int64_t res = 1 % m;
     while (n) {
         if (n & 1) res = mmul(res, x, m);
         x = mmul(x, x, m); n >>= 1;
     }
     return res;
 }
-bool ip(long long n) {
+bool ip(int64_t n) {
 	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
     if (n < N) return spf[n] == n;
-    long long s = 0, r = n - 1;
+    int64_t s = 0, r = n - 1;
     while (~r & 1) { r >>= 1; ++s; }
     for (int i = 0; pri[i] < n && pri[i] < 32; ++i) {
-        long long c = bex(pri[i], r, n);
+        int64_t c = bex(pri[i], r, n);
         for (int j = 0; j < s; ++j) {
-            long long d = mmul(c, c, n);
+            int64_t d = mmul(c, c, n);
             if (d == 1 && c != 1 && c != (n - 1)) return false;
             c = d;
         }
@@ -43,18 +43,18 @@ bool ip(long long n) {
 // Fermat Method of Primality Test:
 
 mt19937_64 ran(chrono::high_resolution_clock::now().time_since_epoch().count());
-long long bex(long long a, long long n, long long p) {
-	long long res = 1; a %= p;
+int64_t bex(int64_t a, int64_t n, int64_t p) {
+	int64_t res = 1; a %= p;
 	while (n) {
 		if (n & 1) res = (res * a) % p;
 		n >>= 1; a = (a * a) % p;
 	}
 	return res;
 }
-bool ip(long long n, int k = 10) {
+bool ip(int64_t n, int k = 10) {
 	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
     while (k--) {
-        long long a = 2 + ran() % (n - 4);
+        int64_t a = 2 + ran() % (n - 4);
         if (gcd(n, a) != 1 || bex(a, n - 1, n) != 1) return false;
 	}
 	return true;
@@ -63,16 +63,16 @@ bool ip(long long n, int k = 10) {
 // Solovay-Strassen method of Primality Test:
 
 mt19937_64 ran(chrono::high_resolution_clock::now().time_since_epoch().count());
-long long bex(long long a, long long n, long long p) {
-	long long res = 1; a %= p;
+int64_t bex(int64_t a, int64_t n, int64_t p) {
+	int64_t res = 1; a %= p;
 	while (n) {
 		if (n & 1) res = (res * a) % p;
 		n >>= 1; a = (a * a) % p;
 	}
 	return res;
 }
-long long jaco(long long a, long long n) {
-	if (!a) return 0; long long ans = 1;
+int64_t jaco(int64_t a, int64_t n) {
+	if (!a) return 0; int64_t ans = 1;
 	if (a < 0) {
 		a = -a; if (n % 4 == 3) ans = -ans;
 	}
@@ -90,10 +90,10 @@ long long jaco(long long a, long long n) {
 	}
 	return (n == 1 ? ans : 0);
 }
-bool ip(long long p, int k = 12) {
+bool ip(int64_t p, int k = 12) {
 	if (p < 2 || (~p & 1) || !(p % 3)) return (p == 2 || p == 3);
 	while (k--) {
-		long long a = ran() % (p - 1) + 1, jb = (p + jaco(a, p)) % p, m = bex(a, (p - 1) >> 1, p);
+		int64_t a = ran() % (p - 1) + 1, jb = (p + jaco(a, p)) % p, m = bex(a, (p - 1) >> 1, p);
 		if (!jb || m != jb) return false;
 	}
 	return true;
@@ -101,9 +101,9 @@ bool ip(long long p, int k = 12) {
 
 // Complexity: O(sqrt(n))
 
-bool ip(long long n) {
+bool ip(int64_t n) {
 	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
-	for (long long i = 5; i * i <= n; i += 6) {
+	for (int64_t i = 5; i * i <= n; i += 6) {
 		if (!(n % i) || !(n % (i + 2))) return false;
 	}
 	return true;
@@ -111,9 +111,9 @@ bool ip(long long n) {
 
 // OR,
 
-bool ip(long long n) {
+bool ip(int64_t n) {
 	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
-    for (long long i = 3; i * i <= n; i += 2) {
+    for (int64_t i = 3; i * i <= n; i += 2) {
         if (!(n % i)) return false;
     }
     return true;
@@ -121,12 +121,12 @@ bool ip(long long n) {
 
 // Number of Primes from [1 - n] using Meissel-Lehmer Algorithm: O(n ^ (2 / 3))
 
-const long long N = 2e7 + 10, MXP = 7, MXN = 50, MXM = 2 * 3 * 7 * 5 * 11 * 13 * 17;
-constexpr auto fdv = [](const long long& a, const int& b) ->long long { return double(a) / b + 1e-9; };
+const int64_t N = 2e7 + 10, MXP = 7, MXN = 50, MXM = 2 * 3 * 7 * 5 * 11 * 13 * 17;
+constexpr auto fdv = [](const int64_t& a, const int& b) ->int64_t { return double(a) / b + 1e-9; };
 vector<int> pri; bitset<N> ip; int pro[MXP], pi[N], dp[MXN][MXM];
 
 void pre() {
-    long long i, j; assert(MXN >= MXP);
+    int64_t i, j; assert(MXN >= MXP);
     ip[2] = true; for (i = 3; i < N; i += 2) ip[i] = true;
     for (i = 3; i * i < N; i += 2) {
         for (j = i * i; ip[i] && j < N; j += (i << 1)) ip[j] = false;
@@ -141,17 +141,17 @@ void pre() {
             dp[i][j] = dp[i - 1][j] - dp[i - 1][fdv(j, pri[i - 1])];
     }
 }
-uint64_t phi(long long m, int n) {
+uint64_t phi(int64_t m, int n) {
     if (!n) return m; if (n < MXN && m < MXM) return dp[n][m];
     if (n < MXP) return dp[n][m % pro[n - 1]] + fdv(m, pro[n - 1]) * dp[n][pro[n - 1]];
-    long long p = pri[n - 1]; if (m < N && p * p >= m) return pi[m] - n + 1;
+    int64_t p = pri[n - 1]; if (m < N && p * p >= m) return pi[m] - n + 1;
     if (p * p * p < m || m >= N) return phi(m, n - 1) - phi(fdv(m, p), n - 1);
     int lim = pi[(int)sqrtl(0.5 + m)];
     uint64_t res = pi[m] - ((lim + n - 2) * (lim - n + 1) >> 1);
     for (int i = n; i < lim; ++i) res += pi[fdv(m, pri[i])];
     return res;
 }
-uint64_t ip(long long n) {
+uint64_t ip(int64_t n) {
     if (n < N) return pi[n]; int s = sqrtl(0.5 + n), c = cbrtl(0.5 + n);
     uint64_t res = phi(n, pi[c]) + pi[c] - 1;
     for (int i = pi[c]; i < pi[s]; ++i) res -= ip(fdv(n, pri[i])) - i;
@@ -161,12 +161,12 @@ uint64_t ip(long long n) {
 // Prime Factorization:
 // To store all the prime factors: O(sqrt(n))
 
-auto pfac(long long n) {
-    vector<long long> v;
+auto pfac(int64_t n) {
+    vector<int64_t> v;
     while (~n & 1) {
         v.push_back(2); n >>= 1;
     }
-    for (long long i = 3; i * i <= n; i += 2) {
+    for (int64_t i = 3; i * i <= n; i += 2) {
         while (!(n % i)) {
             v.push_back(i); n /= i;
         }
@@ -176,12 +176,12 @@ auto pfac(long long n) {
 
 // To store the count of prime factors:
 
-auto pfac(long long n) {
-    map<long long, long long> mp;
+auto pfac(int64_t n) {
+    map<int64_t, int64_t> mp;
     while (~n & 1) {
         ++mp[2]; n >>= 1;
     }
-    for (long long i = 3; i * i <= n; i += 2) {
+    for (int64_t i = 3; i * i <= n; i += 2) {
         while (!(n % i)) {
             ++mp[i]; n /= i;
         }
@@ -191,25 +191,25 @@ auto pfac(long long n) {
 
 // Sieve Approach: O(n * (log(log(n))) + log(n))
 
-long long spf[N]; bool sv[N];
+int64_t spf[N]; bool sv[N];
 void pre() {
     spf[2] = 2;
     for (int i = 4; i < N; i += 2) {
         sv[i] = true; spf[i] = 2;
     }
-    for (long long i = 3; i < N; i += 2) {
+    for (int64_t i = 3; i < N; i += 2) {
         if (!sv[i]) {
             spf[i] = i;
-            for (long long j = i * i; j < N; j += (i << 1)) {
+            for (int64_t j = i * i; j < N; j += (i << 1)) {
                 sv[j] = true; if (!spf[j]) spf[j] = i;
             }
         }
     }
 }
-auto pfac(long long n) {
-    vector<long long> v;
+auto pfac(int64_t n) {
+    vector<int64_t> v;
     while (n > 1) {
-        long long p = spf[n];
+        int64_t p = spf[n];
         while (!(n % p)) {
             n /= p; v.push_back(p);
         }
@@ -220,25 +220,25 @@ auto pfac(long long n) {
 // To store the count of prime numbers:
 // Complexity: O(N * (log(log(N))) + log(n))
 
-long long spf[N]; bool sv[N];
+int64_t spf[N]; bool sv[N];
 auto pre() {
     spf[2] = 2;
     for (int i = 4; i < N; i += 2) {
         sv[i] = true; spf[i] = 2;
     }
-    for (long long i = 3; i < N; i += 2) {
+    for (int64_t i = 3; i < N; i += 2) {
         if (!sv[i]) {
             spf[i] = i;
-            for (long long j = i * i; j < N; j += (i << 1)) {
+            for (int64_t j = i * i; j < N; j += (i << 1)) {
                 sv[j] = true; if (!spf[j]) spf[j] = i;
             }
         }
     }
 }
-auto pfac(long long n) {
-    map<long long, long long> mp;
+auto pfac(int64_t n) {
+    map<int64_t, int64_t> mp;
     while (n > 1) {
-        long long p = spf[n];
+        int64_t p = spf[n];
         while (!(n % p)) {
             n /= p; ++mp[p];
         }
@@ -485,7 +485,7 @@ vector<int> lcm(vector<int> a, vector<int> b)
     }
     return a;
 }
-using ll = long long;
+using ll = int64_t;
 int32_t main()
 {
     ios_base::sync_with_stdio(0);
@@ -603,7 +603,7 @@ namespace pcf
     // not divisible by any of the first k pri
     // recurrence --> yo(n, k) = yo(n, k-1) - yo(n / p_k , k-1)
     // for sum of pri yo(n, k) = yo(n, k-1) - p_k * yo(n / p_k , k-1)
-    long long yo(long long n, int k)
+    int64_t yo(int64_t n, int k)
     {
         if (n < PHI_N && k < PHI_K)
             return dp[n][k];
@@ -614,7 +614,7 @@ namespace pcf
         return yo(n, k - 1) - yo(n / pri[k - 1], k - 1);
     }
     // complexity: n^(2/3).(log n^(1/3))
-    long long Legendre(long long n)
+    int64_t Legendre(int64_t n)
     {
         if (n < MAXN)
             return pref[n];
@@ -623,11 +623,11 @@ namespace pcf
         return yo(n, k) + (k - 1);
     }
     // runs under 0.2s for n = 1e12
-    long long Lehmer(long long n)
+    int64_t Lehmer(int64_t n)
     {
         if (n < MAXN)
             return pref[n];
-        long long w, res = 0;
+        int64_t w, res = 0;
         int b = sqrt(n), c = Lehmer(cbrt(n)), a = Lehmer(sqrt(b));
         b = Lehmer(b);
         res = yo(n, a) + ((1LL * (b + a - 2) * (b - a + 1)) >> 1);
@@ -653,7 +653,7 @@ int32_t main()
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     pcf::init();
-    long long n;
+    int64_t n;
     cin >> n;
     cout << pcf::Lehmer(n) << '\n';
     return 0;
@@ -682,7 +682,7 @@ void linear_sieve()
         }
     }
 }
-int power(long long n, long long k)
+int power(int64_t n, int64_t k)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -691,8 +691,8 @@ int power(long long n, long long k)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;

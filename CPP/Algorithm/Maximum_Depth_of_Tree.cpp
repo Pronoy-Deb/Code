@@ -1,6 +1,6 @@
 // Comlexity: O(v)
 
-vector<int> tre[N]; long long dep[N];
+vector<int> tre[N]; int64_t dep[N];
 void dfs(int vr, int par = -1) {
     for (auto child : tre[vr]) {
         if (child == par) continue;

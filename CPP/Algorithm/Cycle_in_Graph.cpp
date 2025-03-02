@@ -1,7 +1,7 @@
 // Complexity:
 // Work: Checks if there is any cycle in the graph
 
-vector<long long> gp[N]; bool vis[N];
+vector<int64_t> gp[N]; bool vis[N];
 bool dfs(auto rt, auto par) {
     vis[rt] = true; bool loop = false;
     for (auto &cld : gp[rt]) {
@@ -21,18 +21,18 @@ bool cycle(auto v) {
 }
 
 // Operation:
-    long long eg, vr; cin >> eg >> vr;
+    int64_t eg, vr; cin >> eg >> vr;
     for (i = 0; i < eg; ++i) {
-        long long v1, v2; cin >> v1 >> v2;
+        int64_t v1, v2; cin >> v1 >> v2;
         gp[v1].emplace_back(v2); gp[v2].emplace_back(v1);
     }
 
 // OR,
 
-vector<long long> adj[N];
-long long par[N], st, en, vis[N];
+vector<int64_t> adj[N];
+int64_t par[N], st, en, vis[N];
 
-void dfs(long long u, long long p = 0) {
+void dfs(int64_t u, int64_t p = 0) {
     if (st) return;
     for (auto &v : adj[u]) {
         if (vis[v] == 0) {
@@ -49,7 +49,7 @@ void dfs(long long u, long long p = 0) {
 // Operation:
     cin >> n >> m;
     for (i = 1; i <= m; ++i) {
-        long long u, v; cin >> u >> v;
+        int64_t u, v; cin >> u >> v;
         adj[u].push_back(v);
     }
     for (i = 1; i <= n; ++i) {
@@ -57,7 +57,7 @@ void dfs(long long u, long long p = 0) {
         if (vis[i] == 1) continue;
         vis[i] = true; dfs(i);
     }
-    long long cur = en; vector<long long> ans;
+    int64_t cur = en; vector<int64_t> ans;
     while (cur) {
         ans.push_back(cur);
         if (cur == st) break; cur = par[cur];
@@ -73,8 +73,8 @@ void dfs(long long u, long long p = 0) {
 
 // Cycle in Directed Graph:
 
-vector<long long> adj[N]; long long par[N], st, en; bool vis[N];
-void dfs(long long u, long long p = 0) {
+vector<int64_t> adj[N]; int64_t par[N], st, en; bool vis[N];
+void dfs(int64_t u, int64_t p = 0) {
     if (st) return;
     for (auto &v : adj[u]) {
         if (vis[v] == 0) {
@@ -91,7 +91,7 @@ void dfs(long long u, long long p = 0) {
 // Operation:
     cin >> n >> m;
     for (i = 1; i <= m; ++i) {
-        long long u, v; cin >> u >> v;
+        int64_t u, v; cin >> u >> v;
         adj[u].push_back(v);
     }
     for (i = 1; i <= n; ++i) {
@@ -99,7 +99,7 @@ void dfs(long long u, long long p = 0) {
         if (vis[i] == 1) continue;
         vis[i] = true; dfs(i);
     }
-    long long cur = en; vector<long long> ans;
+    int64_t cur = en; vector<int64_t> ans;
     while (cur) {
         ans.push_back(cur);
         if (cur == st) break;

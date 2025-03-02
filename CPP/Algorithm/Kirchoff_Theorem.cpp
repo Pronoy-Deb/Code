@@ -6,14 +6,14 @@ using namespace std;
 
 const int N = 205, mod = 1000210433;
 
-int power(long long n, long long k)
+int power(int64_t n, int64_t k)
 {
     int ans = 1;
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;
@@ -22,7 +22,7 @@ int det(vector<vector<int>> a)
 {
     int n = a.size(), m = (int)a[0].size();
     int free_var = 0;
-    const long long MODSQ = (long long)mod * mod;
+    const int64_t MODSQ = (int64_t)mod * mod;
     int det = 1, rank = 0;
     for (int col = 0, row = 0; col < m && row < n; col++)
     {
@@ -45,11 +45,11 @@ int det(vector<vector<int>> a)
         {
             if (i != row && a[i][col])
             {
-                int x = ((long long)a[i][col] * inv) % mod;
+                int x = ((int64_t)a[i][col] * inv) % mod;
                 for (int j = col; j < m && x; j++)
                 {
                     if (a[row][j])
-                        a[i][j] = (MODSQ + a[i][j] - ((long long)a[row][j] * x)) % mod;
+                        a[i][j] = (MODSQ + a[i][j] - ((int64_t)a[row][j] * x)) % mod;
                 }
             }
         }

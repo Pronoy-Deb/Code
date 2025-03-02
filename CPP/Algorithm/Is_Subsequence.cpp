@@ -13,7 +13,7 @@ bool sseq(auto &main, auto &sub) {
 
 // Recursive Approach:
 
-bool sseq(auto &main, auto &sub, long long m_sz, long long s_sz) {
+bool sseq(auto &main, auto &sub, int64_t m_sz, int64_t s_sz) {
     if (!s_sz) return true;
     if (!m_sz) return false;
     if (main[m_sz - 1] == sub[s_sz - 1]) return sseq(main, sub, m_sz - 1, s_sz - 1);
@@ -34,7 +34,7 @@ bool sseq(auto &main, auto &sub) {
 
 // Recursive Approach:
 
-auto sseq(auto &main, auto &sub, long long m_sz, long long s_sz) {
+auto sseq(auto &main, auto &sub, int64_t m_sz, int64_t s_sz) {
     if (!s_sz) return true;
     if (!m_sz) return false;
     if (main[m_sz - 1] == sub[s_sz - 1]) return sseq(main, sub, m_sz - 1, s_sz - 1);

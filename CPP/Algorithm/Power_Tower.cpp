@@ -2,15 +2,14 @@
 using namespace std;
 
 const int N = 1e5 + 9;
-using ll = long long;
 
-map<ll, ll> mp;
-ll phi(ll n)
+map<int64_t, int64_t> mp;
+int64_t phi(int64_t n)
 {
     if (mp.count(n))
         return mp[n];
-    ll ans = n, m = n;
-    for (ll i = 2; i * i <= m; i++)
+    int64_t ans = n, m = n;
+    for (int64_t i = 2; i * i <= m; i++)
     {
         if (m % i == 0)
         {
@@ -23,15 +22,15 @@ ll phi(ll n)
         ans = ans / m * (m - 1);
     return mp[n] = ans;
 }
-inline ll MOD(ll x, ll m)
+inline int64_t MOD(int64_t x, int64_t m)
 {
     if (x < m)
         return x;
     return x % m + m;
 }
-ll power(ll n, ll k, ll mod)
+int64_t power(int64_t n, int64_t k, int64_t mod)
 {
-    ll ans = MOD(1, mod);
+    int64_t ans = MOD(1, mod);
     while (k)
     {
         if (k & 1)
@@ -43,7 +42,7 @@ ll power(ll n, ll k, ll mod)
 }
 int a[N];
 // if x >= log2(m), then a^x = a^(MOD(x, phi(m))) % m
-ll yo(ll l, ll r, ll m)
+int64_t yo(int64_t l, int64_t r, int64_t m)
 {
     if (l == r)
         return MOD(a[l], m);

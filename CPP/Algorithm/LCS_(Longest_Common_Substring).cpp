@@ -1,8 +1,8 @@
 // Complexity: O(n^2)
 // To determine the length:
 
-long long lcs(auto &s1, auto &s2) {
-    long long m = s1.size(), n = s2.size(), dp[n + 5][m + 5]{}, res = 0;
+int64_t lcs(auto &s1, auto &s2) {
+    int64_t m = s1.size(), n = s2.size(), dp[n + 5][m + 5]{}, res = 0;
     for (int i = 1; i <= n; ++i) {
 		for (int j = 1; j <= m; ++j) {
 			if (s1[i - 1] == s2[j - 1]) {
@@ -17,7 +17,7 @@ long long lcs(auto &s1, auto &s2) {
 // To determine the substring:
 
 auto lcs(auto &s1, auto &s2) {
-    long long m = s1.size(), n = s2.size(), res = 0, len[2][n + 5], end = 0; bool cur = 0;
+    int64_t m = s1.size(), n = s2.size(), res = 0, len[2][n + 5], end = 0; bool cur = 0;
     for (int i = 0; i <= m; ++i) {
 		for (int j = 0; j <= n; ++j) {
 			if (i == 0 || j == 0) len[cur][j] = 0;

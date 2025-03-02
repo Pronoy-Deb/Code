@@ -1,49 +1,49 @@
 // Complexity: O()
 
-long double sn(long double d) {
+inline long double sn(long double d) {
     return sin(d * M_PI / 180);
 }
 
-long double csc(long double d) {
+inline long double csc(long double d) {
     return (1 / sin(d * M_PI / 180));
 }
 
-long double cs(long double d) {
+inline long double cs(long double d) {
     return cos(d * M_PI / 180);
 }
 
-long double sc(long double d) {
+inline long double sc(long double d) {
     return (1 / cos(d * M_PI / 180));
 }
 
-long double tn(long double d) {
+inline long double tn(long double d) {
     return tan(d * M_PI / 180);
 }
 
-long double ct(long double d) {
+inline long double ct(long double d) {
     return (1 / tan(d * M_PI / 180));
 }
 
-long double sni(long double v) {
+inline long double sni(long double v) {
     return asin(v) * 180 / M_PI;
 }
 
-long double csci(long double v) {
+inline long double csci(long double v) {
     return asin(1 / v) * 180 / M_PI;
 }
 
-long double csi(long double v) {
+inline long double csi(long double v) {
     return acos(v) * 180 / M_PI;
 }
 
-long double sci(long double v) {
+inline long double sci(long double v) {
     return acos(1 / v) * 180 / M_PI;
 }
 
-long double tni(long double v) {
+inline long double tni(long double v) {
     return atan(v) * 180 / M_PI;
 }
 
-long double cti(long double v) {
+inline long double cti(long double v) {
     return atan(1 / v) * 180 / M_PI;
 }

@@ -2,14 +2,14 @@
 // To determine the length:
 // Iterative Approach:
 
-long long dp[N][N];
-long long lcs(auto &s1, auto &s2) {
+int64_t dp[N][N];
+int64_t lcs(auto &s1, auto &s2) {
     int l1 = s1.size(), l2 = s2.size();
     for (int i = 1; i <= l1; ++i) {
 		for (int j = 1; j <= l2; ++j)
             dp[i][j] = max({dp[i - 1][j], dp[i][j - 1], s1[i - 1] == s2[j - 1] ? dp[i - 1][j - 1] + 1 : -1});
 	}
-    long long c = 0;
+    int64_t c = 0;
     while (l1 && l2) {
 		if (s1[l1 - 1] == s2[l2 - 1]) {
 			++c; --l1; --l2;
@@ -24,8 +24,8 @@ long long lcs(auto &s1, auto &s2) {
 
 // Recursive Approach (DP):
 
-string s1, s2; long long dp[N][N];
-long long lcs(int i, int j) {
+string s1, s2; int64_t dp[N][N];
+int64_t lcs(int i, int j) {
     if (i < 0 || j < 0) return 0;
     auto &ans = dp[i][j]; if (~ans) return ans;
     ans = max(lcs(i - 1, j), lcs(i, j - 1));
@@ -40,7 +40,7 @@ long long lcs(int i, int j) {
 
 // To determine the subsequence:
 
-long long dp[N][N];
+int64_t dp[N][N];
 auto lcs(auto &s1, auto &s2) {
     int l1 = s1.size(), l2 = s2.size();
     for (int i = 1; i <= l1; ++i) {
@@ -66,8 +66,8 @@ auto lcs(auto &s1, auto &s2) {
 
 // OR,
 
-long long dp[N][N], mark[N][N], n, m; string s, s1;
-long long lcs(int i, int j) {
+int64_t dp[N][N], mark[N][N], n, m; string s, s1;
+int64_t lcs(int i, int j) {
     if (i == n or j == m) return 0;
     if (dp[i][j] != -1) return dp[i][j];
     if (s[i] == s1[j]) {
@@ -75,7 +75,7 @@ long long lcs(int i, int j) {
         return dp[i][j] = 1 + lcs(i + 1, j + 1);
     }
     else {
-        long long a = lcs(i, j + 1), b = lcs(i + 1, j);
+        int64_t a = lcs(i, j + 1), b = lcs(i + 1, j);
         if (a > b) mark[i][j] = 2;
         return dp[i][j] = max(a, b);
     }
@@ -146,7 +146,7 @@ const int N = 5e4 + 9, SIGMA = 26;
 const int W = 62;
 int M;
 struct Bitset {
-    long long u[N / W + 5];
+    int64_t u[N / W + 5];
     void clear() {
         memset(u, 0, sizeof(u));
     }
@@ -173,7 +173,7 @@ struct Bitset {
             }
     }
     void shl() {
-        long long c = 1;
+        int64_t c = 1;
         for (long i = 0; i < M; ++ i) {
             u[i] <<= 1;
             u[i] |= c;

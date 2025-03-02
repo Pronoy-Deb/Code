@@ -4,15 +4,15 @@ using namespace std;
 const int N = 3e5 + 9;
 
 struct PT {
-    long long x,y;
+    int64_t x,y;
     PT operator - (PT p) const { return {x - p.x, y- p.y}; }
-    long long cross(PT p) const { return x * p.y- y * p.x; }
-    long long dot(PT p) const { return x * p.x + y * p.y; }
+    int64_t cross(PT p) const { return x * p.y- y * p.x; }
+    int64_t dot(PT p) const { return x * p.x + y * p.y; }
     bool operator < (PT p) const { if (y != p.y) return y < p.y; return x < p.x; }
     bool operator == (PT p) const { return x == p.x && y == p.y; }
     PT operator - () const { return {-x, -y}; }
 };
-long long cross(PT a, PT b, PT c) {
+int64_t cross(PT a, PT b, PT c) {
     return (b - a).cross(c - a);
 }
 // Decremental Convex Hull
@@ -34,7 +34,7 @@ struct LeftHull {
     void pull(int w) {
         assert(!isleaf(w));
         int l = nodes[w].lc, r = nodes[w].rc;
-        long long split_y = ps[nodes[r].L].y;
+        int64_t split_y = ps[nodes[r].L].y;
         while(!isleaf(l) || !isleaf(r)) {
             int a = nodes[l].bl, b = nodes[l].br,
                 c = nodes[r].bl, d = nodes[r].br;
@@ -51,8 +51,8 @@ struct LeftHull {
                 l = nodes[l].rc;
             }
             else {
-                long long s1 = cross(ps[a], ps[b], ps[c]);
-                long long s2 = cross(ps[b], ps[a], ps[d]);
+                int64_t s1 = cross(ps[a], ps[b], ps[c]);
+                int64_t s2 = cross(ps[b], ps[a], ps[d]);
                 assert(s1 + s2 >= 0);
                 if (s1 + s2  ==  0 || s1 * ps[d].y + s2 * ps[c].y<split_y * (s1 + s2)) {
                     l = nodes[l].rc;

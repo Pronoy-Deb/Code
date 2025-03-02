@@ -16,8 +16,8 @@ int chromatic_number(int n)
     int ans = n;
     for (int d : {7})
     { //,11,21,33,87,93}) {
-        long long mod = 1e9 + d;
-        vector<long long> ind(N), aux(N, 1);
+        int64_t mod = 1e9 + d;
+        vector<int64_t> ind(N), aux(N, 1);
         ind[0] = 1;
         for (int S = 1; S < N; ++S)
         {
@@ -26,7 +26,7 @@ int chromatic_number(int n)
         }
         for (int k = 1; k < ans; ++k)
         {
-            long long w = 0;
+            int64_t w = 0;
             for (int i = 0; i < N; ++i)
             {
                 int S = i ^ (i >> 1); // gray-code
@@ -255,7 +255,7 @@ struct ChromaticPolynomial
         n = g.size();
         p = polynomial(g);
     }
-    mint get(long long c)
+    mint get(int64_t c)
     { // returns P(c)
         if (c >= 0 && c < (int)p.size())
             return p[c];

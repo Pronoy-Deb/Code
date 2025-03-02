@@ -2,7 +2,7 @@
 // Substring:
 
 auto sstr(auto &s) {
-    long long n = s.size(), k = 0;
+    int64_t n = s.size(), k = 0;
     vector<string> sub((n * (n + 1)) >> 1);
     for (int i = 0; i < n; ++i) {
         string tmp;
@@ -16,10 +16,10 @@ auto sstr(auto &s) {
 // Subarray:
 
 auto sar(auto &v) {
-    long long n = v.size(), k = 0;
-    vector<vector<long long>> sub((n * (n + 1)) >> 1);
+    int64_t n = v.size(), k = 0;
+    vector<vector<int64_t>> sub((n * (n + 1)) >> 1);
     for (int i = 0; i < n; ++i) {
-        vector<long long> tmp;
+        vector<int64_t> tmp;
         for (int j = i; j < n; ++j) {
             tmp.emplace_back(v[j]); sub[k++] = tmp;
         }

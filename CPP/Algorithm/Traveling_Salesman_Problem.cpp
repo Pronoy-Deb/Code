@@ -1,8 +1,8 @@
 // Complexity: O(n^2 * 2^n),  n = Number of Vertices
 
-long long gp[N][N], vr;
+int64_t gp[N][N], vr;
 auto tsp() {
-	long long c = 0, j = 0, i = 0, mn = LLONG_MAX, route[vr], sum = 0; bool vis[vr]{true};
+	int64_t c = 0, j = 0, i = 0, mn = LLONG_MAX, route[vr], sum = 0; bool vis[vr]{true};
 	while (i < vr && j < vr) {
 		if (c >= vr - 1) break;
 		if (j != i && !vis[j]) {

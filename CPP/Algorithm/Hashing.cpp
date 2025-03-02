@@ -94,7 +94,7 @@ void pre(int base = 31) {
 // Operation:
     cin >> n >> s;
     fhs(29); fhs();
-    set<pair<int64_t, long>> st;
+    set<pair<int64_t, int64_t>> st;
     for (i = length_skipped; i <= n; ++i)
         st.emplace((hs[i - length_skipped] + ((((hs[n] - hs[i] + M))) * 853745547) % M) % M, (hs1[i - length_skipped] + ((((hs1[n] - hs1[i] + M))) * 746097820) % M) % M);
 

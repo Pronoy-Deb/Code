@@ -1,35 +1,35 @@
 // Complexity: O((m+n) * sqrt(n)), 0-based indexing
 // For Dynamic Array:
 
-long long ar[N], bs, n, ini = 0;
-vector<long long> block;
-inline long long op(long long a, long long b) { return (a + b); }
+int64_t aa[N], bs, n, ini = 0;
+vector<int64_t> block;
+inline int64_t op(int64_t a, int64_t b) { return (a + b); }
 void pre() {
     bs = (int)ceil(sqrt(n));
     block.assign((n + bs - 1) / bs, ini);
-    for (int i = 0; i < n; ++i) block[i / bs] = op(block[i / bs], ar[i]);
+    for (int i = 0; i < n; ++i) block[i / bs] = op(block[i / bs], aa[i]);
 }
 void up(int in, int val) {
     block[in / bs] = ini;
-    ar[in] = val;
+    aa[in] = val;
     for (int i = (in / bs) * bs, e = min(n, (in / bs + 1) * bs); i < e; ++i)
-        block[in / bs] = op(block[in / bs], ar[i]);
+        block[in / bs] = op(block[in / bs], aa[i]);
 }
-long long get(int l, int r) {
-    long long sb = l / bs, eb = r / bs, res = ini;
+int64_t get(int l, int r) {
+    int64_t sb = l / bs, eb = r / bs, res = ini;
     if (sb == eb) {
-        for (int i = l; i <= r; ++i) res = op(res, ar[i]);
+        for (int i = l; i <= r; ++i) res = op(res, aa[i]);
     } else {
-        for (int i = l, e = (sb + 1) * bs; i < e; ++i) res = op(res, ar[i]);
+        for (int i = l, e = (sb + 1) * bs; i < e; ++i) res = op(res, aa[i]);
         for (int i = sb + 1; i < eb; ++i) res = op(res, block[i]);
-        for (int i = eb * bs; i <= r; ++i) res = op(res, ar[i]);
+        for (int i = eb * bs; i <= r; ++i) res = op(res, aa[i]);
     }
     return res;
 }
 
 https :  // codeforces.com/contest/220/problem/B
 
-long long bs, ans[N], ar[N], n, q;
+int64_t bs, ans[N], aa[N], n, q;
 tuple<int, int, int> qr[N];
 bool cmp(const tuple<int, int, int>& a, const tuple<int, int, int>& b) {
     int L1 = get<0>(a), R1 = get<1>(a);
@@ -39,17 +39,17 @@ bool cmp(const tuple<int, int, int>& a, const tuple<int, int, int>& b) {
 }
 void mo() {
     bs = sqrt(n); sort(qr, qr + q, cmp);
-    long long l = -1, r = -1, res = 0;
+    int64_t l = -1, r = -1, res = 0;
     unordered_map<int, int> cnt;  // NB
     auto add = [&](int x) {
-        if (cnt[ar[x]] == ar[x]) res--;
-        cnt[ar[x]]++;
-        if (cnt[ar[x]] == ar[x]) res++;
+        if (cnt[aa[x]] == aa[x]) res--;
+        cnt[aa[x]]++;
+        if (cnt[aa[x]] == aa[x]) res++;
     };
     auto rem = [&](int x) {
-        if (cnt[ar[x]] == ar[x]) res--;
-        cnt[ar[x]]--;
-        if (cnt[ar[x]] == ar[x]) res++;
+        if (cnt[aa[x]] == aa[x]) res--;
+        cnt[aa[x]]--;
+        if (cnt[aa[x]] == aa[x]) res++;
     };
     for (int i = 0; i < q; ++i) {
         auto& [L, R, in] = qr[i];
@@ -64,7 +64,7 @@ void mo() {
 // Operation:
     cin >> n >> q;
     for (i = 0; i < n; ++i) {
-        cin >> ar[i];
+        cin >> aa[i];
     }
     for (i = 0; i < q; ++i) {
         cin >> a >> b;
@@ -75,13 +75,13 @@ void mo() {
 
 // OR,
 
-long long ar[N], cnt[N], ans[N], cur;
-void rem(long long id) {
+int64_t aa[N], cnt[N], ans[N], cur;
+void rem(int64_t id) {
 }
-void add(long long id) {
+void add(int64_t id) {
 }
 struct Query {
-    long long l, r, id;
+    int64_t l, r, id;
     bool operator<(Query other) const {
         return make_pair(l / S, r) < make_pair(other.l / S, other.r);
     }
@@ -89,13 +89,13 @@ struct Query {
 
 // Operation:
     cin >> n >> q;
-    for (i = 1; i <= n; ++i) cin >> ar[i];
+    for (i = 1; i <= n; ++i) cin >> aa[i];
     vector<Query> Q(q);
     for (i = 0; i < q; ++i) {
         cin >> Q[i].l >> Q[i].r;
         Q[i].id = i;
     }
-    sort(Q.begin(), Q.end()); long long l = 1, r = 0;
+    sort(Q.begin(), Q.end()); int64_t l = 1, r = 0;
     for (i = 0; i < q; ++i) {
         while (l > Q[i].l) add(--l);
         while (r < Q[i].r) add(++r);

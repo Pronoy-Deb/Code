@@ -1,6 +1,6 @@
 // Complexity: O(n^2 * 2^n), n = Number of Vertices
 
-long long gp[N], vr;
+int64_t gp[N], vr;
 bool hp() {
 	int n = (1ll << vr); bool dp[vr][n]{};
 	for (int i = 0; i < vr; ++i) dp[i][(1ll << i)] = true;

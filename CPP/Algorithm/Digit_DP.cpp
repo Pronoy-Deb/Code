@@ -1,12 +1,12 @@
 // Complexity: O()
 
-vector<long long> L, R; long long dp[11][2][2][1001][91], k;
-long long rec(int in, bool LLo, bool Lhi, int sum, int digsum) {
+vector<int64_t> L, R; int64_t dp[11][2][2][1001][91], k;
+int64_t rec(int in, bool LLo, bool Lhi, int sum, int digsum) {
     if (in == R.size()) return (!sum && !digsum);
     auto &res = dp[in][LLo][Lhi][sum][digsum];
     if (~res) return res; res = 0;
-    long long lo = (LLo ? 0 : L[in]), hi = (Lhi ? 9 : R[in]);
-    for (long long i = lo; i <= hi; ++i) {
+    int64_t lo = (LLo ? 0 : L[in]), hi = (Lhi ? 9 : R[in]);
+    for (int64_t i = lo; i <= hi; ++i) {
         bool NLhi = Lhi | (R[in] > i), NLlo = LLo | (i > L[in]);
         int Nsum = (sum * 10 + i) % k, Ndsum = (digsum + i) % k;
         res = (res + rec(in + 1, NLlo, NLhi, Nsum, Ndsum)) % M;
@@ -37,8 +37,8 @@ long long rec(int in, bool LLo, bool Lhi, int sum, int digsum) {
 
 // 1. How many numbers less than 10^n(1 <= n, k <= 1000) having sum of digits equal to k?
 
-long long n, k, dp[N][N];
-long long rec(int in, int sum) {
+int64_t n, k, dp[N][N];
+int64_t rec(int in, int sum) {
     if (in == n) return sum == k;
     if (sum > k) return 0;
     auto &res = dp[in][sum];
@@ -55,8 +55,8 @@ long long rec(int in, int sum) {
 
 // 2. How many n-digit(1 <= n, k <= 1000) numbers are divisible by k?
 
-long long n, k, dp[N][N];
-long long rec(int in, int rem) {
+int64_t n, k, dp[N][N];
+int64_t rec(int in, int rem) {
     if (in == n) return !rem;
     auto &res = dp[in][rem];
     if (~res) return res; res = 0;
@@ -75,8 +75,8 @@ long long rec(int in, int rem) {
 // 3. What is the maximum sum of digits of a number less than or equal to n(1 <= n <= 10^100000)?
 
 string s;
-long long dp[N][2];
-long long rec(int in, bool less) {
+int64_t dp[N][2];
+int64_t rec(int in, bool less) {
     if (in == s.size()) return 0;
     auto &res = dp[in][less];
     if (~res) return res; res = 0;
@@ -94,8 +94,8 @@ long long rec(int in, bool less) {
 // 4. How many numbers are there in the range [l, r](1 <= l <= r <= 10^100000) that are divisible by 2 or 3 but not divisible by both?
 
 string s;
-long long dp[N][2][2][3];
-long long rec(int in, bool less, int rem2, int rem3) {
+int64_t dp[N][2][2][3];
+int64_t rec(int in, bool less, int rem2, int rem3) {
     if (in == s.size()) return (!rem2) ^ (!rem3);
     auto &res = dp[in][less][rem2][rem3];
     if (~res) return res; res = 0;
@@ -121,8 +121,8 @@ bool d3(auto &s) {
 
 // 5. How many numbers are there in the range [l, r](1 <= l <= r <= 10^100000) such that no consecutive digits are equal.
 
-stirng s; long long dp[N][2][10][2];
-long long rec(int in, bool less, int prev, bool L0) {
+stirng s; int64_t dp[N][2][10][2];
+int64_t rec(int in, bool less, int prev, bool L0) {
     if (in == s.size()) return 1;
     auto &res = dp[in][less][prev][L0];
     if (~res) return res; res = 0;
@@ -148,8 +148,8 @@ long long rec(int in, bool less, int prev, bool L0) {
 
 // 6. How many numbers are there in the range [l, r](1 <= l <= r <= 10^10000) such that each digit appears even number of times?
 
-string s; long long dp[N][2][1025][2];
-long long rec(int in, bool less, int mask, bool L0) {
+string s; int64_t dp[N][2][1025][2];
+int64_t rec(int in, bool less, int mask, bool L0) {
     if (in == s.size()) return !mask;
     auto &res = dp[in][less][mask][l0];
     if (~res) return res; res = 0;
@@ -178,7 +178,7 @@ long long rec(int in, bool less, int mask, bool L0) {
 #include<bits/stdc++.h>
 using namespace std;
 
-#define ll long long
+#define ll int64_t
 #define eb emplace_back
 #define nl '\n'
 #define deb(x) cerr << #x" = " << x << nl

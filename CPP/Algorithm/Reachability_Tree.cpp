@@ -1,6 +1,6 @@
 // Note: The tree is also known as Kruskal Reconstruction Tree (KST) or DSU-tree
 
-long long par[N], n; vector<int> gp[N];
+int64_t par[N], n; vector<int> gp[N];
 void make() {
     for (int i = 0; i < n; ++i) par[i] = i;
 }

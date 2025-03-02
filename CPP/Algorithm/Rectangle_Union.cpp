@@ -9,8 +9,8 @@ struct Line {
     Line(int _x, int _ym, int _ymx, int _ty) { x = _x ; ymin = _ym ; ymax = _ymx ; ty = _ty ; }
     bool operator < (const Line &e) const { return x < e.x ; }
 };
-Line all[N * 2];
-long long t[N * 16], mp[N * 2], lazy[N * 16];
+Line all[N << 1];
+int64_t t[N << 4], mp[N << 1], lazy[N << 4];
 inline void push(int n, int b, int e) {
     if (!lazy[n]) return;
     t[n] = mp[e] - mp[b] - t[n];
@@ -49,7 +49,7 @@ int main() {
     sort(mp + 1, mp + m + 1);
     m = unique(mp + 1, mp + m + 1) - mp - 1;
     upd(1, 1, m, all[0].ymin, all[0].ymax, all[0].ty);
-    long long ans = 0 ; // sum of area covered by odd number of rectangles
+    int64_t ans = 0 ; // sum of area covered by odd number of rectangles
     for (int i = 1; i < n; i++) {
         ans += 1LL * t[1] * (all[i].x - all[i - 1].x);
         upd(1, 1, m, all[i].ymin, all[i].ymax, all[i].ty);

@@ -1,10 +1,10 @@
 // Complexity: O(n)
 
-long long ar[N], n, k, mx_sum = 0;
-long long sum() {
-    long long winsum = mx_sum;
+int64_t aa[N], n, k, mx_sum = 0;
+int64_t sum() {
+    int64_t winsum = mx_sum;
     for (int i = k; i < n; ++i) {
-        winsum += ar[i] - ar[i - k];
+        winsum += aa[i] - aa[i - k];
         mx_sum = max(mx_sum, winsum);
     }
     return mx_sum;
@@ -12,9 +12,9 @@ long long sum() {
 
 // Operation:
 cin >> n >> k;
-for (i = 0; i < n; ++i) {
-    cin >> ar[i];
-    mx_sum += ar[i];
+for (int i = 0; i < n; ++i) {
+    cin >> aa[i];
+    mx_sum += aa[i];
 }
 cout << sum();
 

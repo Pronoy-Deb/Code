@@ -1,7 +1,7 @@
 // Complexity: O(n * log(n))
 // Note: Uses Kasai Algorithm to calculate the LCP array of a string.
 
-long long suf[N], lcp[N], n; string s;
+int64_t suf[N], lcp[N], n; string s;
 void pre() {
 	map<string, int> mp; string sub;
 	for (int i = n - 1; i >= 0; --i) {

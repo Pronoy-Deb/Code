@@ -79,26 +79,26 @@ int main() {
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 105, mod = 1e9 + 7;
+const int64_t N = 105, mod = 1e9 + 7;
 
-int power(long long n, long long k) {
-    int ans = 1 % mod;
+int64_t power(int64_t n, int64_t k) {
+    int64_t ans = 1 % mod;
     n %= mod;
     if (n < 0)
         n += mod;
     while (k) {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = ans * n % mod;
+        n = n * n % mod;
         k >>= 1;
     }
     return ans;
 }
-int Gauss(vector<vector<int>> a, vector<int> &ans) {
+int Gauss(vector<vector<int64_t>> a, vector<int> &ans) {
     int n = a.size(), m = (int)a[0].size() - 1;
     vector<int> pos(m, -1);
     int free_var = 0;
-    const long long MODSQ = (long long)mod * mod;
+    const int64_t MODSQ = mod * mod;
     int det = 1, rank = 0;
     for (int col = 0, row = 0; col < m && row < n; col++) {
         int mx = row;
@@ -118,10 +118,10 @@ int Gauss(vector<vector<int>> a, vector<int> &ans) {
         int inv = power(a[row][col], mod - 2);
         for (int i = 0; i < n && inv; i++) {
             if (i != row && a[i][col]) {
-                int x = ((long long)a[i][col] * inv) % mod;
+                int x = (a[i][col] * inv) % mod;
                 for (int j = col; j <= m && x; j++) {
                     if (a[row][j])
-                        a[i][j] = (MODSQ + a[i][j] - ((long long)a[row][j] * x)) % mod;
+                        a[i][j] = (MODSQ + a[i][j] - (a[row][j] * x)) % mod;
                 }
             }
         }
@@ -133,12 +133,12 @@ int Gauss(vector<vector<int>> a, vector<int> &ans) {
         if (pos[i] == -1)
             free_var++;
         else
-            ans[i] = ((long long)a[pos[i]][m] * power(a[pos[i]][i], mod - 2)) % mod;
+            ans[i] = (a[pos[i]][m] * power(a[pos[i]][i], mod - 2)) % mod;
     }
     for (int i = 0; i < n; i++) {
-        long long val = 0;
+        int64_t val = 0;
         for (int j = 0; j < m; j++)
-            val = (val + ((long long)ans[j] * a[i][j])) % mod;
+            val = (val + (ans[j] * a[i][j])) % mod;
         if (val != a[i][m])
             return -1; // no solution
     }

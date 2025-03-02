@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
-ll power(ll n, ll k, const ll mod)
+int64_t power(int64_t n, int64_t k, const int64_t mod)
 {
-    ll res = 1;
+    int64_t res = 1;
     while (k)
     {
         if (k & 1)
@@ -14,10 +13,10 @@ ll power(ll n, ll k, const ll mod)
     }
     return res;
 }
-ll totient(ll n)
+int64_t totient(int64_t n)
 {
-    ll ans = n;
-    for (ll i = 2; i * i <= n; i++)
+    int64_t ans = n;
+    for (int64_t i = 2; i * i <= n; i++)
     {
         if (n % i == 0)
         {
@@ -36,16 +35,16 @@ ll totient(ll n)
 // it always exists if a and mod are coprime
 // O((log(mod)^2)) + sqrt(mod) for calculating totient
 // it can still be optimized. Check: https://brilliant.org/wiki/carmichaels-lambda-function/
-ll multiplicative_order(ll a, ll mod)
+int64_t multiplicative_order(int64_t a, int64_t mod)
 {
     if (__gcd(a, mod) != 1)
         return -1;
-    ll m = totient(mod), p = m;
-    ll ans = 2e18;
+    int64_t m = totient(mod), p = m;
+    int64_t ans = 2e18;
     if (power(a, p, mod) == 1)
         ans = p;
-    vector<ll> fac;
-    for (ll i = 2; i * i <= m; i++)
+    vector<int64_t> fac;
+    for (int64_t i = 2; i * i <= m; i++)
     {
         if (m % i == 0)
         {
@@ -72,10 +71,10 @@ int32_t main()
     cin >> t;
     while (t--)
     {
-        ll x, m;
+        int64_t x, m;
         cin >> x >> m;
-        ll nw = x, st = x;
-        ll mul = 1;
+        int64_t nw = x, st = x;
+        int64_t mul = 1;
         while (x > 0)
         {
             x /= 10;
@@ -83,7 +82,7 @@ int32_t main()
         }
         m *= mul - 1;
         m /= __gcd(m, st);
-        ll ans = multiplicative_order(mul, m);
+        int64_t ans = multiplicative_order(mul, m);
         cout << ans << '\n';
     }
     return 0;

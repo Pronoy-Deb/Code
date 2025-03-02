@@ -7,14 +7,14 @@ struct trygub_num
     const int K = 30;
     const int b = 2;
     const int base = 1 << K;  // for base b use b^K base to make the computation faster
-    map<int, long long> digs; // tracks digits in (-base, base)
+    map<int, int64_t> digs; // tracks digits in (-base, base)
     void clear()
     {
         digs.clear();
     }
     // add x * b^e to this number: x, e both can be negative
     // O(log_b(n)^2 / K) amortized
-    void add(long long x, int e)
+    void add(int64_t x, int e)
     {
         if (e >= 0)
         {
@@ -28,7 +28,7 @@ struct trygub_num
             e = e / K - (e % K != 0);
         }
         digs[e] += x;
-        long long t;
+        int64_t t;
         do
         {
             t = digs[e] / base;

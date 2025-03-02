@@ -2,10 +2,9 @@
 using namespace std;
 
 const int mod = 1e9 + 7;
-using ll = long long;
-ll power(ll n, ll k, const ll mod)
+int64_t power(int64_t n, int64_t k, const int64_t mod)
 {
-    ll ans = 1 % mod;
+    int64_t ans = 1 % mod;
     n %= mod;
     while (k)
     {
@@ -20,22 +19,22 @@ namespace PollardRho
 {
     mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     const int P = 1e6 + 9;
-    ll seq[P];
+    int64_t seq[P];
     int primes[P], spf[P];
-    inline ll add_mod(ll x, ll y, ll m)
+    inline int64_t add_mod(int64_t x, int64_t y, int64_t m)
     {
         return (x += y) < m ? x : x - m;
     }
-    inline ll mul_mod(ll x, ll y, ll m)
+    inline int64_t mul_mod(int64_t x, int64_t y, int64_t m)
     {
-        ll res = __int128(x) * y % m;
+        int64_t res = __int128(x) * y % m;
         return res;
-        // ll res = x * y - (ll)((long double)x * y / m + 0.5) * m;
+        // int64_t res = x * y - (int64_t)((long double)x * y / m + 0.5) * m;
         // return res < 0 ? res + m : res;
     }
-    inline ll pow_mod(ll x, ll n, ll m)
+    inline int64_t pow_mod(int64_t x, int64_t n, int64_t m)
     {
-        ll res = 1 % m;
+        int64_t res = 1 % m;
         for (; n; n >>= 1)
         {
             if (n & 1)
@@ -45,13 +44,13 @@ namespace PollardRho
         return res;
     }
     // O(it * (logn)^3), it = number of rounds performed
-    inline bool miller_rabin(ll n)
+    inline bool miller_rabin(int64_t n)
     {
         if (n <= 2 || (n & 1 ^ 1))
             return (n == 2);
         if (n < P)
             return spf[n] == n;
-        ll c, d, s = 0, r = n - 1;
+        int64_t c, d, s = 0, r = n - 1;
         for (; !(r & 1); r >>= 1, s++)
         {
         }
@@ -87,12 +86,12 @@ namespace PollardRho
         }
     }
     // returns O(n^(1/4))
-    ll pollard_rho(ll n)
+    int64_t pollard_rho(int64_t n)
     {
         while (1)
         {
-            ll x = rnd() % n, y = x, c = rnd() % n, u = 1, v, t = 0;
-            ll *px = seq, *py = seq;
+            int64_t x = rnd() % n, y = x, c = rnd() % n, u = 1, v, t = 0;
+            int64_t *px = seq, *py = seq;
             while (1)
             {
                 *py++ = y = add_mod(mul_mod(y, y, n), c, n);
@@ -114,13 +113,13 @@ namespace PollardRho
                 return u;
         }
     }
-    vector<ll> factorize(ll n)
+    vector<int64_t> factorize(int64_t n)
     {
         if (n == 1)
-            return vector<ll>();
+            return vector<int64_t>();
         if (miller_rabin(n))
-            return vector<ll>{n};
-        vector<ll> v, w;
+            return vector<int64_t>{n};
+        vector<int64_t> v, w;
         while (n > 1 && n < P)
         {
             v.push_back(spf[n]);
@@ -128,7 +127,7 @@ namespace PollardRho
         }
         if (n >= P)
         {
-            ll x = pollard_rho(n);
+            int64_t x = pollard_rho(n);
             v = factorize(x);
             w = factorize(n / x);
             v.insert(v.end(), w.begin(), w.end());
@@ -136,22 +135,22 @@ namespace PollardRho
         return v;
     }
 }
-ll fib(ll n, ll mod)
+int64_t fib(int64_t n, int64_t mod)
 {
     if (n <= 1)
         return n;
-    ll a = 0;
-    ll b = 1;
-    ll i = 1ll << (63 - __builtin_clzll(n) - 1);
+    int64_t a = 0;
+    int64_t b = 1;
+    int64_t i = 1ll << (63 - __builtin_clzll(n) - 1);
     for (; i; i >>= 1)
     {
-        ll na = (__int128(a) * a % mod + __int128(b) * b % mod) % mod;
-        ll nb = __int128(2ll * a + b) * b % mod;
+        int64_t na = (__int128(a) * a % mod + __int128(b) * b % mod) % mod;
+        int64_t nb = __int128(2ll * a + b) * b % mod;
         a = na;
         b = nb;
         if (n & i)
         {
-            ll c = a + b;
+            int64_t c = a + b;
             if (c >= mod)
                 c -= mod;
             a = b;
@@ -160,24 +159,24 @@ ll fib(ll n, ll mod)
     }
     return b;
 }
-ll pisano_period_prime(ll p)
+int64_t pisano_period_prime(int64_t p)
 {
     if (p == 2)
         return 3;
     if (p == 5)
         return 20;
-    ll x = p % 5 == 1 or p % 5 == 4 ? p - 1 : 2 * p + 2;
+    int64_t x = p % 5 == 1 or p % 5 == 4 ? p - 1 : 2 * p + 2;
     auto v = PollardRho::factorize(x);
-    map<ll, int> mp;
+    map<int64_t, int> mp;
     for (auto x : v)
     {
         mp[x]++;
     }
-    vector<ll> d;
+    vector<int64_t> d;
     d.push_back(1);
     for (auto [p, e] : mp)
     {
-        ll cur = 1;
+        int64_t cur = 1;
         int sz = d.size();
         for (int i = 0; i < e; i++)
         {
@@ -200,18 +199,18 @@ ll pisano_period_prime(ll p)
     return -1;
 }
 // returns pisano period of n i.e. the period with which the sequence of Fibonacci numbers taken modulo n repeats
-ll pisano_period(ll n)
+int64_t pisano_period(int64_t n)
 {
     auto v = PollardRho::factorize(n);
-    map<ll, int> mp;
+    map<int64_t, int> mp;
     for (auto x : v)
     {
         mp[x]++;
     }
-    ll ans = 1;
+    int64_t ans = 1;
     for (auto [p, e] : mp)
     {
-        ll cur = pisano_period_prime(p);
+        int64_t cur = pisano_period_prime(p);
         for (int i = 1; i < e; i++)
         {
             cur *= p;
@@ -221,9 +220,9 @@ ll pisano_period(ll n)
     return ans;
 }
 // returns k s.t. fib(i * k) (for i >= 0) are the only fib numbers which are divisible by n
-ll divisor_gap(ll n)
+int64_t divisor_gap(int64_t n)
 {
-    ll k = pisano_period(n);
+    int64_t k = pisano_period(n);
     if (k % 4 == 0 and fib(k / 4, n) == 0)
         return k / 4;
     if (k % 2 == 0 and fib(k / 2, n) == 0)
@@ -239,10 +238,10 @@ int32_t main()
     cin >> t;
     while (t--)
     {
-        ll a, b, n;
+        int64_t a, b, n;
         cin >> a >> b >> n;
-        ll k = divisor_gap(n);
-        ll ans = power(a, b, mod) - power(a, b, k) % mod;
+        int64_t k = divisor_gap(n);
+        int64_t ans = power(a, b, mod) - power(a, b, k) % mod;
         ans = (ans + mod) % mod;
         ans = ans * power(k, mod - 2, mod);
         ans = (ans + 1) % mod;

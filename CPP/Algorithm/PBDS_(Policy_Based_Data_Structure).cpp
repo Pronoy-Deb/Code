@@ -11,11 +11,11 @@ using namespace __gnu_pbds;
 
 template<class T> using oset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-// Declaration: oset<long long> st;
+// Declaration: oset<int64_t> st;
 
 // OR,
 
-typedef tree<long long, null_type, less<>, rb_tree_tag, tree_order_statistics_node_update> oset;
+typedef tree<int64_t, null_type, less<>, rb_tree_tag, tree_order_statistics_node_update> oset;
 
 // Declaration: oset st;
 
@@ -27,12 +27,12 @@ template <typename T, typename R> using omap = tree<T, R, less<T>, rb_tree_tag, 
 
 // For using as minheap:
 
-using minheap = priority_queue<long long, vector<long long>, greater<long long>>;
+using minheap = priority_queue<int64_t, vector<int64_t>, greater<int64_t>>;
 typedef tree<int, null_type, greater_equal<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
 // Operation:
     for (int i = 1; i <= 10; ++i) {
-        long long a; cin >> a; st.insert(a);
+        int64_t a; cin >> a; st.insert(a);
     }
 
     // Deleting 2 from only the SET if it exists

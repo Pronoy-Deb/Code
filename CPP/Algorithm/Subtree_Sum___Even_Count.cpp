@@ -1,7 +1,7 @@
 // Complexity:
 // Work: Sums up and Count the value of vertices
 
-vector<long long> tre[N]; long long ssum[N], sevn[N];
+vector<int64_t> tre[N]; int64_t ssum[N], sevn[N];
 auto dfs(auto ver, auto par = 0) {
     if (~ver & 1) ++sevn[ver];
     ssum[ver] += ver;

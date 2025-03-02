@@ -17,14 +17,14 @@ struct query {
     void order() { ord = hilbertOrder(l, r); }
     bool operator<(const query &x) const { return ord < x.ord; }
 } Q[N];
-long long ar[N], ans[N], cnt[N];
+int64_t aa[N], ans[N], cnt[N];
 void mo(int q) {
-    sort(Q + 1, Q + q + 1); long long l = 1, r = 0, res = 0;
+    sort(Q + 1, Q + q + 1); int64_t l = 1, r = 0, res = 0;
     auto add = [&](int i){
-        res += (++cnt[ar[i]] == 1);
+        res += (++cnt[aa[i]] == 1);
     };
     auto rem = [&](int i) {
-        res -= (--cnt[ar[i]] == 0);
+        res -= (--cnt[aa[i]] == 0);
     };
     for (int i = 1; i <= q; ++i) {
         int L = Q[i].l, R = Q[i].r;
@@ -48,12 +48,12 @@ void mo(int q) {
     cin >> n >> q;
     unordered_map<int, int> mp;
     for (i = 1; i <= n; ++i) {
-        cin >> ar[i];
-        auto it = mp.find(ar[i]);
+        cin >> aa[i];
+        auto it = mp.find(aa[i]);
         if (it == mp.end()) {
-            mp[ar[i]] = ++c; ar[i] = c;
+            mp[aa[i]] = ++c; aa[i] = c;
         }
-        else ar[i] = it->second;
+        else aa[i] = it->second;
     }
     for (i = 1; i <= q; ++i) {
         cin >> Q[i].l >> Q[i].r; Q[i].id = i;
@@ -65,7 +65,7 @@ void mo(int q) {
 https://codeforces.com/contest/86/problem/D
 
 const int B = 450;
-long long sum, cnt[N], ar[N], ans[N];
+int64_t sum, cnt[N], aa[N], ans[N];
 struct query {
     int l, r, id;
     bool operator < (const query &x) const {
@@ -74,10 +74,10 @@ struct query {
     }
 } Q[N];
 inline void add(int i) {
-    sum += ((cnt[ar[i]]++ << 1) + 1) * ar[i];
+    sum += ((cnt[aa[i]]++ << 1) + 1) * aa[i];
 }
 inline void rem(int i) {
-    sum -= ((cnt[ar[i]]-- << 1) - 1) * ar[i];
+    sum -= ((cnt[aa[i]]-- << 1) - 1) * aa[i];
 }
 void mo(int q) {
     sort(Q + 1, Q + q + 1); int l = 1, r = 0;
@@ -101,7 +101,7 @@ void mo(int q) {
 
 // Operation:
     cin >> n >> q;
-    for (i = 1; i <= n; ++i) cin >> ar[i];
+    for (i = 1; i <= n; ++i) cin >> aa[i];
     for (i = 1; i <= q; ++i) {
         cin >> Q[i].l >> Q[i].r; Q[i].id = i;
     }
@@ -127,26 +127,26 @@ struct MEX {
         int i = 1; while (f[i]) ++i; return i;
     }
 } t[(C * (C + 1) >> 1) + 10], ds;
-int st[C], en[C], BC = 0, ar[N], I[N];
+int st[C], en[C], BC = 0, aa[N], I[N];
 int get(int l, int r) {
     int L = l / B, R = r / B;
     if (r != en[R]) --R; if (l != st[L]) ++L;
     if (R < L) {
-        for (int i = l; i <= r; ++i) ds.add(ar[i]);
+        for (int i = l; i <= r; ++i) ds.add(aa[i]);
         int ans = ds.mex();
-        for (int i = l; i <= r; ++i) ds.rem(ar[i]);
+        for (int i = l; i <= r; ++i) ds.rem(aa[i]);
         return ans;
     }
     int id = I[L * BC + R];
-    for (int i = l; i < st[L]; ++i) t[id].add(ar[i]);
-    for (int i = en[R] + 1; i <= r; ++i) t[id].add(ar[i]);
+    for (int i = l; i < st[L]; ++i) t[id].add(aa[i]);
+    for (int i = en[R] + 1; i <= r; ++i) t[id].add(aa[i]);
     int ans = t[id].mex();
-    for (int i = l; i < st[L]; ++i) t[id].rem(ar[i]);
-    for (int i = en[R] + 1; i <= r; ++i) t[id].rem(ar[i]);
+    for (int i = l; i < st[L]; ++i) t[id].rem(aa[i]);
+    for (int i = en[R] + 1; i <= r; ++i) t[id].rem(aa[i]);
     return ans;
 }
 inline void up(int id, int in, int val) {
-    t[id].rem(ar[in]); t[id].add(val);
+    t[id].rem(aa[in]); t[id].add(val);
 }
 unordered_map<int, int> mp; int cv = 0;
 int com(int x) {
@@ -157,7 +157,7 @@ int com(int x) {
 // Operation:
     cin >> n >> q;
     for (i = 0; i < n; ++i) {
-        cin >> ar[i]; ar[i] = com(ar[i]);
+        cin >> aa[i]; aa[i] = com(aa[i]);
         if (i % B == 0) st[i / B] = i, ++BC;
         if (i % B == B - 1 || i == n - 1) en[i / B] = i;
     }
@@ -165,7 +165,7 @@ int com(int x) {
     for (i = 0; i < BC; ++i) {
         for (j = i; j < BC; ++j) {
             int id = nw; I[i * BC + j] = nw++;
-            for (k = st[i]; k <= en[j]; ++k) t[id].add(ar[k]);
+            for (k = st[i]; k <= en[j]; ++k) t[id].add(aa[k]);
         }
     }
     while (q--) {
@@ -182,7 +182,7 @@ int com(int x) {
                     if (st[i] <= in && in <= en[j]) up(I[i * BC + j], in, val);
                 }
             }
-            ar[in] = val;
+            aa[in] = val;
         }
     }
 
@@ -204,12 +204,12 @@ int lca(int u, int v) {
     for (int k = 19; k >= 0; --k) if (par[u][k] != par[v][k]) u = par[u][k], v = par[v][k];
     return par[u][0];
 }
-int cnt[N], ar[N], ans;
+int cnt[N], aa[N], ans;
 inline void add(int u) {
-    ans += (cnt[ar[u]]++ == 0);
+    ans += (cnt[aa[u]]++ == 0);
 }
 inline void rem(int u) {
-    ans -= (--cnt[ar[u]] == 0);
+    ans -= (--cnt[aa[u]] == 0);
 }
 bool vis[N];
 inline void yo(int u) {
@@ -256,9 +256,9 @@ void reset(int n) {
     cin >> n >> q;
     unordered_map<int, int> mp;
     for (i = 1; i <= n; ++i) {
-        cin >> ar[i];
-        if (!mp[ar[i]]) mp[ar[i]] = ++c;
-        ar[i] = mp[ar[i]];
+        cin >> aa[i];
+        if (!mp[aa[i]]) mp[aa[i]] = ++c;
+        aa[i] = mp[aa[i]];
     }
     for (i = 1; i < n; ++i) {
         int u, v; cin >> u >> v;
@@ -334,11 +334,11 @@ struct edge {
     int u, v; edge() { u = v = 0; }
     edge(int _u, int _v) { u = _u; v = _v; }
 };
-int n, ed, m; edge ar[N]; query q[N];
+int n, ed, m; edge aa[N]; query q[N];
 void read() {
     cin >> n >> ed >> m;
     for (int i = 1; i <= ed; ++i) {
-        int u, v; cin >> u >> v; ar[i] = edge(u, v);
+        int u, v; cin >> u >> v; aa[i] = edge(u, v);
     }
 }
 int rt, cnt_q; persistent_dsu d;
@@ -347,7 +347,7 @@ bool cmp(query fir, query sec) {
     return fir.r < sec.r;
 }
 int answer[N];
-void add(int idx) { d.uni(ar[idx].u, ar[idx].v); }
+void add(int idx) { d.uni(aa[idx].u, aa[idx].v); }
 
 // Operation:
     read();
@@ -391,18 +391,18 @@ struct query {
     }
 } Q[N];
 struct upd { int pos, old, cur; } U[N];
-int ar[N], org[N << 1], cnt[N << 1], l, r, t; long long ans[N], res;
+int aa[N], org[N << 1], cnt[N << 1], l, r, t; int64_t ans[N], res;
 inline void add(int i) {
-    res += (++cnt[ar[i]] == 1 ? org[ar[i]] : 0);
+    res += (++cnt[aa[i]] == 1 ? org[aa[i]] : 0);
 }
 inline void rem(int i) {
-    res -= (--cnt[ar[i]] == 0 ? org[ar[i]] : 0);
+    res -= (--cnt[aa[i]] == 0 ? org[aa[i]] : 0);
 }
 inline void up(int pos, int cval) {
     if (l <= pos && pos <= r) {
-        rem(pos); ar[pos] = cval; add(pos);
+        rem(pos); aa[pos] = cval; add(pos);
     }
-    else ar[pos] = cval;
+    else aa[pos] = cval;
 }
 void mo(int nq) {
     sort(Q + 1, Q + nq + 1); l = 1; r = res = 0;
@@ -435,13 +435,13 @@ int com(int val) {
 
 // Operation:
     cin >> n;
-    for (i = 1; i <= n; ++i) { cin >> ar[i]; ar[i] = com(ar[i]); }
+    for (i = 1; i <= n; ++i) { cin >> aa[i]; aa[i] = com(aa[i]); }
     cin >> q;
     int nq = 0, nu = 0;
     for (i = 1; i <= q; ++i) {
         char ty; cin >> ty >> l >> r;
         if (ty == 'Q') Q[++nq] = {l, r, nu, nq};
-        else U[++nu] = {l, ar[l], com(r)}, ar[l] = U[nu].cur;
+        else U[++nu] = {l, aa[l], com(r)}, aa[l] = U[nu].cur;
     }
     t = nu; mo(nq);
     for (i = 1; i <= nq; ++i) cout << ans[i] << '\n';
@@ -460,7 +460,7 @@ struct query {
     }
 } Q[N];
 struct upd { int pos, old, cur; } U[N];
-int ar[N], cnt[N << 1], f[N << 1], ans[N], l, r, t;
+int aa[N], cnt[N << 1], f[N << 1], ans[N], l, r, t;
 inline void add(int x) {
     --f[cnt[x]], ++cnt[x], ++f[cnt[x]];
 }
@@ -469,9 +469,9 @@ inline void rem(int x) {
 }
 inline void up(int pos, int x) {
     if (l <= pos && pos <= r) {
-        rem(ar[pos]); add(x);
+        rem(aa[pos]); add(x);
     }
-    ar[pos] = x;
+    aa[pos] = x;
 }
 unordered_map<int, int> mp; int cv = 0;
 int com(int x) {
@@ -484,16 +484,16 @@ void mo(int nq) {
         while (t < T) ++t, up(U[t].pos, U[t].cur);
         while (t > T) up(U[t].pos, U[t].old), --t;
         if (R < l) {
-            while (l > L) add(ar[--l]);
-            while (l < L) rem(ar[l++]);
-            while (r < R) add(ar[++r]);
-            while (r > R) rem(ar[r--]);
+            while (l > L) add(aa[--l]);
+            while (l < L) rem(aa[l++]);
+            while (r < R) add(aa[++r]);
+            while (r > R) rem(aa[r--]);
         }
         else {
-            while (r < R) add(ar[++r]);
-            while (r > R) rem(ar[r--]);
-            while (l > L) add(ar[--l]);
-            while (l < L) rem(ar[l++]);
+            while (r < R) add(aa[++r]);
+            while (r > R) rem(aa[r--]);
+            while (l > L) add(aa[--l]);
+            while (l < L) rem(aa[l++]);
         }
         int cur = 1; while (f[cur]) ++cur;
         ans[Q[i].id] = cur;
@@ -507,13 +507,13 @@ void reset(int n) {
 // Operation:
     cin >> n >> q;
     for (i = 1; i <= n; ++i) {
-        cin >> ar[i]; ar[i] = com(ar[i]);
+        cin >> aa[i]; aa[i] = com(aa[i]);
     }
     int nq = 0, nu = 0;
     for (i = 1; i <= q; ++i) {
         int ty, l, r; cin >> ty >> l >> r;
         if (ty == 1) Q[++nq] = {l, r, nu, nq};
-        else U[++nu].pos = l, U[nu].old = ar[l], ar[l] = com(r), U[nu].cur = ar[l];
+        else U[++nu].pos = l, U[nu].old = aa[l], aa[l] = com(r), U[nu].cur = aa[l];
     }
     t = nu; mo(nq);
     for (i = 1; i <= nq; ++i) cout << ans[i] << '\n';
@@ -560,16 +560,16 @@ struct query {
         return a < b;
     }
 } Q[N];
-int st[N], en[N], T, ar[N], A[N], ans[N]; vector<int> gp[N];
+int st[N], en[N], T, aa[N], A[N], ans[N]; vector<int> gp[N];
 void dfs(int u, int p = 0) {
-    st[u] = ++T; ar[T] = A[u];
+    st[u] = ++T; aa[T] = A[u];
     for (auto &v : gp[u]) {
         if (v ^ p) dfs(v, u);
     }
     en[u] = T;
 }
-inline void add(int i) { tre.add(ar[i]); }
-inline void rem(int i) { tre.rem(ar[i]); }
+inline void add(int i) { tre.add(aa[i]); }
+inline void rem(int i) { tre.rem(aa[i]); }
 void mo(int q) {
     sort(Q + 1, Q + q + 1);
     int cl1 = 1, cr1 = 1, cl2 = 1, cr2 = 1;

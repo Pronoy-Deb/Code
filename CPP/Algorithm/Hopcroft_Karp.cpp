@@ -15,39 +15,39 @@
 using namespace std;
 
 namespace HopcroftKarp {
-    const long long maxN = 1e5 + 7, maxM = 1e5 + 7;     ///Check
-    long long n, m, match, lvl[maxN], ml[maxN], mr[maxM]; bool vis[maxN];
-    vector<long long> edge[maxN];   /// constructing edges for left part only
+    const int64_t maxN = 1e5 + 7, maxM = 1e5 + 7;     ///Check
+    int64_t n, m, match, lvl[maxN], ml[maxN], mr[maxM]; bool vis[maxN];
+    vector<int64_t> edge[maxN];   /// constructing edges for left part only
     void init(int N, int M) {      /// N = nodes in left part, M = nodes in right part
         n = N, m = M;
         for (int i = 1; i <= n; ++i) edge[i].clear(), ml[i] = -1;
         for (int i = 1; i <= m; ++i) mr[i] = -1; match = 0;
     }
-    void add(long long u, long long v) {
+    void add(int64_t u, int64_t v) {
         edge[u].push_back(v);
         if (ml[u] == -1 && mr[v] == -1) ml[u] = v, mr[v] = u, match++;
     }
-    bool dfs(long long u) {
+    bool dfs(int64_t u) {
         vis[u] = true;
         for (auto &x: edge[u]) {
-            long long v = mr[x];
+            int64_t v = mr[x];
             if (v == -1 || (!vis[v] && lvl[u] < lvl[v] && dfs(v))) {
                 ml[u] = x; mr[x] = u; return true;
             }
         }
         return false;
     }
-    long long matching() {
+    int64_t matching() {
         while (true) {
-            queue<long long> q;
+            queue<int64_t> q;
             for (int i = 1; i <= n; ++i) {
                 if (ml[i] == -1)    lvl[i] = 0, q.push(i);
                 else                lvl[i] = -1;
             }
             while (!q.empty()) {
-                long long u = q.front(); q.pop();
+                int64_t u = q.front(); q.pop();
                 for (auto &x : edge[u]) {
-                    long long v = mr[x];
+                    int64_t v = mr[x];
                     if (v != -1 && lvl[v] < 0) {
                         lvl[v] = lvl[u] + 1; q.push(v);
                     }
@@ -68,7 +68,7 @@ namespace HopcroftKarp {
     cin >> n >> m >> k;
     HopcroftKarp::init(n, m);
     while (k--) {
-        long long a, b; cin >> a >> b;
+        int64_t a, b; cin >> a >> b;
         HopcroftKarp::add(++a, ++b);
     }
     cout << HopcroftKarp::matching() << '\n';
@@ -84,71 +84,71 @@ using namespace std;
 const int N = 3e5 + 9;
 
 struct HopcroftKarp {
-  static const int inf = 1e9;
-  int n;
-  vector<int> l, r, d;
-  vector<vector<int>> g;
-  HopcroftKarp(int _n, int _m) {
+static const int inf = 1e9;
+int n;
+vector<int> l, r, d;
+vector<vector<int>> g;
+HopcroftKarp(int _n, int _m) {
     n = _n;
     int p = _n + _m + 1;
     g.resize(p);
     l.resize(p, 0);
     r.resize(p, 0);
     d.resize(p, 0);
-  }
-  void add_edge(int u, int v) {
+}
+void add_edge(int u, int v) {
     g[u].push_back(v + n); //right id is increased by n, so is l[u]
-  }
-  bool bfs() {
+}
+bool bfs() {
     queue<int> q;
     for (int u = 1; u <= n; u++) {
-      if (!l[u]) d[u] = 0, q.push(u);
-      else d[u] = inf;
+    if (!l[u]) d[u] = 0, q.push(u);
+    else d[u] = inf;
     }
     d[0] = inf;
     while (!q.empty()) {
-      int u = q.front();
-      q.pop();
-      for (auto v : g[u]) {
+    int u = q.front();
+    q.pop();
+    for (auto v : g[u]) {
         if (d[r[v]] == inf) {
-          d[r[v]] = d[u] + 1;
-          q.push(r[v]);
+        d[r[v]] = d[u] + 1;
+        q.push(r[v]);
         }
-      }
+    }
     }
     return d[0] != inf;
-  }
-  bool dfs(int u) {
+}
+bool dfs(int u) {
     if (!u) return true;
     for (auto v : g[u]) {
-      if(d[r[v]] == d[u] + 1 && dfs(r[v])) {
+    if(d[r[v]] == d[u] + 1 && dfs(r[v])) {
         l[u] = v;
         r[v] = u;
         return true;
-      }
+    }
     }
     d[u] = inf;
     return false;
-  }
-  int maximum_matching() {
+}
+int maximum_matching() {
     int ans = 0;
     while (bfs()) {
-      for(int u = 1; u <= n; u++) if (!l[u] && dfs(u)) ans++;
+    for(int u = 1; u <= n; u++) if (!l[u] && dfs(u)) ans++;
     }
     return ans;
-  }
+}
 };
 int32_t main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  int n, m, q;
-  cin >> n >> m >> q;
-  HopcroftKarp M(n, m);
-  while (q--) {
+ios_base::sync_with_stdio(0);
+cin.tie(0);
+int n, m, q;
+cin >> n >> m >> q;
+HopcroftKarp M(n, m);
+while (q--) {
     int u, v;
     cin >> u >> v;
     M.add_edge(u, v);
-  }
-  cout << M.maximum_matching() << '\n';
-  return 0;
+}
+cout << M.maximum_matching() << '\n';
+return 0;
 }

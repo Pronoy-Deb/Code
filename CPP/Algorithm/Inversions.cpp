@@ -23,7 +23,7 @@ int32_t main()
             cin >> a[i];
         }
         o_set<int> se;
-        long long ans = 0;
+        int64_t ans = 0;
         for (int i = n; i >= 1; i--)
         {
             ans += se.order_of_key(a[i]);

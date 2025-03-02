@@ -10,9 +10,9 @@ int lim, rev[N], w[N], wn[N], inv_lim;
 void reduce(int &x) { x = (x + mod) % mod; }
 int POW(int x, int y, int ans = 1)
 {
-    for (; y; y >>= 1, x = (long long)x * x % mod)
+    for (; y; y >>= 1, x = (int64_t)x * x % mod)
         if (y & 1)
-            ans = (long long)ans * x % mod;
+            ans = (int64_t)ans * x % mod;
     return ans;
 }
 void precompute(int len)
@@ -26,7 +26,7 @@ void precompute(int len)
     const int g = POW(root, (mod - 1) / lim);
     inv_lim = POW(lim, mod - 2);
     for (int i = 1; i < lim; ++i)
-        wn[i] = (long long)wn[i - 1] * g % mod;
+        wn[i] = (int64_t)wn[i - 1] * g % mod;
 }
 void ntt(vector<int> &a, int typ)
 {
@@ -41,7 +41,7 @@ void ntt(vector<int> &a, int typ)
         {
             for (int k = 0; k < i; ++k)
             {
-                const int x = a[k + j], y = (long long)a[k + j + i] * w[k] % mod;
+                const int x = a[k + j], y = (int64_t)a[k + j + i] * w[k] % mod;
                 reduce(a[k + j] += y - mod), reduce(a[k + j + i] = x - y);
             }
         }
@@ -50,7 +50,7 @@ void ntt(vector<int> &a, int typ)
     {
         reverse(a.begin() + 1, a.begin() + lim);
         for (int i = 0; i < lim; ++i)
-            a[i] = (long long)a[i] * inv_lim % mod;
+            a[i] = (int64_t)a[i] * inv_lim % mod;
     }
 }
 vector<int> multiply(vector<int> &f, vector<int> &g)
@@ -62,7 +62,7 @@ vector<int> multiply(vector<int> &f, vector<int> &g)
     b.resize(lim);
     ntt(a, 1), ntt(b, 1);
     for (int i = 0; i < lim; ++i)
-        a[i] = (long long)a[i] * b[i] % mod;
+        a[i] = (int64_t)a[i] * b[i] % mod;
     ntt(a, 0);
     a.resize(n + 1);
     return a;
@@ -104,9 +104,9 @@ int lim, rev[N], w[N], wn[N], inv_lim;
 void reduce(int &x) { x = (x + mod) % mod; }
 int POW(int x, int y, int ans = 1)
 {
-    for (; y; y >>= 1, x = (long long)x * x % mod)
+    for (; y; y >>= 1, x = (int64_t)x * x % mod)
         if (y & 1)
-            ans = (long long)ans * x % mod;
+            ans = (int64_t)ans * x % mod;
     return ans;
 }
 void precompute(int len)
@@ -120,7 +120,7 @@ void precompute(int len)
     const int g = POW(root, (mod - 1) / lim);
     inv_lim = POW(lim, mod - 2);
     for (int i = 1; i < lim; ++i)
-        wn[i] = (long long)wn[i - 1] * g % mod;
+        wn[i] = (int64_t)wn[i - 1] * g % mod;
 }
 void ntt(vector<int> &a, int typ)
 {
@@ -135,7 +135,7 @@ void ntt(vector<int> &a, int typ)
         {
             for (int k = 0; k < i; ++k)
             {
-                const int x = a[k + j], y = (long long)a[k + j + i] * w[k] % mod;
+                const int x = a[k + j], y = (int64_t)a[k + j + i] * w[k] % mod;
                 reduce(a[k + j] += y - mod), reduce(a[k + j + i] = x - y);
             }
         }
@@ -144,7 +144,7 @@ void ntt(vector<int> &a, int typ)
     {
         reverse(a.begin() + 1, a.begin() + lim);
         for (int i = 0; i < lim; ++i)
-            a[i] = (long long)a[i] * inv_lim % mod;
+            a[i] = (int64_t)a[i] * inv_lim % mod;
     }
 }
 // a is of size n * n
@@ -283,9 +283,9 @@ int lim, rev[N], w[N], wn[N], inv_lim;
 void reduce(int &x) { x = (x + mod) % mod; }
 int POW(int x, int y, int ans = 1)
 {
-    for (; y; y >>= 1, x = (long long)x * x % mod)
+    for (; y; y >>= 1, x = (int64_t)x * x % mod)
         if (y & 1)
-            ans = (long long)ans * x % mod;
+            ans = (int64_t)ans * x % mod;
     return ans;
 }
 void precompute(int len)
@@ -299,7 +299,7 @@ void precompute(int len)
     const int g = POW(root, (mod - 1) / lim);
     inv_lim = POW(lim, mod - 2);
     for (int i = 1; i < lim; ++i)
-        wn[i] = (long long)wn[i - 1] * g % mod;
+        wn[i] = (int64_t)wn[i - 1] * g % mod;
 }
 void ntt(vector<int> &a, int typ)
 {
@@ -314,7 +314,7 @@ void ntt(vector<int> &a, int typ)
         {
             for (int k = 0; k < i; ++k)
             {
-                const int x = a[k + j], y = (long long)a[k + j + i] * w[k] % mod;
+                const int x = a[k + j], y = (int64_t)a[k + j + i] * w[k] % mod;
                 reduce(a[k + j] += y - mod), reduce(a[k + j + i] = x - y);
             }
         }
@@ -323,7 +323,7 @@ void ntt(vector<int> &a, int typ)
     {
         reverse(a.begin() + 1, a.begin() + lim);
         for (int i = 0; i < lim; ++i)
-            a[i] = (long long)a[i] * inv_lim % mod;
+            a[i] = (int64_t)a[i] * inv_lim % mod;
     }
 }
 vector<int> multiply(vector<int> &f, vector<int> &g)
@@ -335,7 +335,7 @@ vector<int> multiply(vector<int> &f, vector<int> &g)
     b.resize(lim);
     ntt(a, 1), ntt(b, 1);
     for (int i = 0; i < lim; ++i)
-        a[i] = (long long)a[i] * b[i] % mod;
+        a[i] = (int64_t)a[i] * b[i] % mod;
     ntt(a, 0);
     return a;
 }
@@ -522,9 +522,9 @@ vector<int> multiply(vector<int> &a, vector<int> &b, int eq = 0)
     vector<int> res(need);
     for (int i = 0; i < need; i++)
     {
-        long long aa = A[i].x + 0.5;
-        long long bb = B[i].x + 0.5;
-        long long cc = A[i].y + 0.5;
+        int64_t aa = A[i].x + 0.5;
+        int64_t bb = B[i].x + 0.5;
+        int64_t cc = A[i].y + 0.5;
         res[i] = (aa + ((bb % mod) << 15) + ((cc % mod) << 30)) % mod;
     }
     return res;
@@ -720,9 +720,9 @@ vector<int> multiply(vector<int> &a, vector<int> &b, int eq = 0)
     vector<int> res(need);
     for (int i = 0; i < need; i++)
     {
-        long long aa = A[i].x + 0.5;
-        long long bb = B[i].x + 0.5;
-        long long cc = A[i].y + 0.5;
+        int64_t aa = A[i].x + 0.5;
+        int64_t bb = B[i].x + 0.5;
+        int64_t cc = A[i].y + 0.5;
         res[i] = (aa + ((bb % mod) << 15) + ((cc % mod) << 30)) % mod;
     }
     return res;

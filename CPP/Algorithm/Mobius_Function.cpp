@@ -3,12 +3,12 @@
 // M(n) = 1 if n is a square-free positive integer with an even number of prime factors
 // M(n) = -1 if n is a square-free positive integer with an odd number of prime factors
 
-int mob(long long n) {
+int mob(int64_t n) {
 	int p = 0;
 	if (~n & 1) {
 		n >>= 1; ++p; if (~n & 1) return 0;
 	}
-	for (long long i = 3; i * i <= n; i += 2) {
+	for (int64_t i = 3; i * i <= n; i += 2) {
 		if (n % i == 0) {
 			n /= i; ++p; if (n % i == 0) return 0;
 		}
@@ -33,7 +33,7 @@ void mob() {
         }
     }
 }
-bool vis[N];
+bitset<N> vis;
 vector<int> d[N];
 int mul[N];
 void add(int x, int k)
@@ -72,7 +72,7 @@ int32_t main()
     {
         cin >> a[i];
     }
-    long long ans = 0;
+    int64_t ans = 0;
     while (q--)
     {
         int i;

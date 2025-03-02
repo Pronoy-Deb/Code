@@ -8,7 +8,7 @@ using namespace std;
 //#define static_assert(...)
 
 typedef double Tf;
-typedef double Ti;            /// use long long for exactness
+typedef double Ti;            /// use int64_t for exactness
 const Tf PI = acos(-1), EPS = 1e-9;
 int dcmp(Tf x) { return abs(x) < EPS ? 0 : (x<0 ? -1 : 1);}
 
@@ -18,7 +18,7 @@ struct Point {
 
     Point operator + (const Point& u) const { return Point(x + u.x, y + u.y); }
     Point operator - (const Point& u) const { return Point(x - u.x, y - u.y); }
-    Point operator * (const long long u) const { return Point(x * u, y * u); }
+    Point operator * (const int64_t u) const { return Point(x * u, y * u); }
     Point operator * (const Tf u) const { return Point(x * u, y * u); }
     Point operator / (const Tf u) const { return Point(x / u, y / u); }
 
@@ -2364,7 +2364,7 @@ int32_t main() {
 // #define static_assert(...)
 
 typedef double Tf;
-typedef double Ti;  /// use long long for exactness
+typedef double Ti;  /// use int64_t for exactness
 const Tf PI = acos(-1), EPS = 1e-9;
 int dcmp(Tf x) { return abs(x) < EPS ? 0 : (x < 0 ? -1 : 1); }
 
@@ -2374,7 +2374,7 @@ struct Point3 {
 
     Point3 operator+(const Point3 &u) const { return Point3(x + u.x, y + u.y, z + u.z); }
     Point3 operator-(const Point3 &u) const { return Point3(x - u.x, y - u.y, z - u.z); }
-    Point3 operator*(const long long u) const { return Point3(x * u, y * u, z * u); }
+    Point3 operator*(const int64_t u) const { return Point3(x * u, y * u, z * u); }
     Point3 operator*(const Tf u) const { return Point3(x * u, y * u, z * u); }
     Point3 operator/(const Tf u) const { return Point3(x / u, y / u, z / u); }
 

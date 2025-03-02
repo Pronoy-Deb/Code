@@ -2,9 +2,9 @@
 // RMQ for - Square Queries
 // K = side of the square is 2^k
 
-const long long N = 505, K = 10;
-long long st[N][N][K], n;
-long long bit(long long n) { return 1ll << n; }
+const int64_t N = 505, K = 10;
+int64_t st[N][N][K], n;
+int64_t bit(int64_t n) { return 1ll << n; }
 void pre() {
     for (int k = 1; bit(k) <= n; ++k) {
         for (int i = 1; i + bit(k) - 1 <= n; ++i) {
@@ -18,10 +18,10 @@ void pre() {
 }
 
 // upper left corner, size of a side
-long long get(int i, int j, int d) {
+int64_t get(int i, int j, int d) {
     int k = log2(d), x = i + d - 1, y = j + d - 1;
-    long long m1 = max(st[i][j][k], st[i][y - bit(k) + 1][k]);
-    long long m2 = max(st[x - bit(k) + 1][j][k], st[x - bit(k) + 1][y - bit(k) + 1][k]);
+    int64_t m1 = max(st[i][j][k], st[i][y - bit(k) + 1][k]);
+    int64_t m2 = max(st[x - bit(k) + 1][j][k], st[x - bit(k) + 1][y - bit(k) + 1][k]);
     return max(m1, m2);
 }
 
@@ -35,5 +35,5 @@ long long get(int i, int j, int d) {
         int x, y, l; cin >> x >> y >> l;
         cout << get(x, y, l) << "\n";
     }
-   
+
 // Problem: https://lightoj.com/problem/square-queries

@@ -40,7 +40,7 @@ vector<int> cen(int n) {
 https://cses.fi/problemset/task/2080/
 
 vector<int> gp[N]; bitset<N> vis;
-long long n, k, ans, sz[N], cnt[N]{1}, mxDep;
+int64_t n, k, ans, sz[N], cnt[N]{1}, mxDep;
 int subSize(int u, int p) {
     sz[u] = 1;
     for (auto i : gp[u]) if (!vis[i] && i != p) sz[u] += subSize(i, u);
@@ -78,7 +78,7 @@ void dcom(int u = 1) {
 https://cses.fi/problemset/task/2081
 
 vector<int> gp[N]; bitset<N> vis;
-long long k1, k2, ans, sz[N], cnt[N]{1}, ct[N], mxDep, subDep, n;
+int64_t k1, k2, ans, sz[N], cnt[N]{1}, ct[N], mxDep, subDep, n;
 int subSize(int u, int p) {
     sz[u] = 1;
     for (auto i : gp[u]) if (!vis[i] && i != p) sz[u] += subSize(i, u);
@@ -88,16 +88,16 @@ int centroid(int u, int p, int size) {
     for (auto v : gp[u]) if (!vis[v] && v != p && (sz[v] << 1) > size) return centroid(v, u, size);
     return u;
 }
-void go(int u, int p, long long dep = 1) {
+void go(int u, int p, int64_t dep = 1) {
     if (dep > k2) return; subDep = max(subDep, dep); ++ct[dep];
     for (auto &v : gp[u]) if (!vis[v] && v != p) go(v, u, dep + 1);
 }
 void dcom(int u = 1) {
     int size = subSize(u, u), c = centroid(u, u, size);
-    vis[c] = true, mxDep = 0; long long tot = (k1 == 1);
+    vis[c] = true, mxDep = 0; int64_t tot = (k1 == 1);
     for (auto i : gp[c]) {
         if (!vis[i]) {
-            subDep = 0; go(i, c); long long sum = tot;
+            subDep = 0; go(i, c); int64_t sum = tot;
             for (int d = 1; d <= subDep; ++d) {
                 ans += sum * ct[d]; int d1 = k2 - d, d2 = k1 - d - 1;
                 if (d1 >= 0) sum -= cnt[d1];
@@ -207,8 +207,8 @@ int find_cen(int u, int p) {
     }
     return u;
 }
-long long d[20][N << 1];
-void yo(int u, int p, long long nw, int l) {
+int64_t d[20][N << 1];
+void yo(int u, int p, int64_t nw, int l) {
     d[l][u] = nw;
     for(auto &[v, w] : gp[u]) {
         if (v == p || done[v]) continue;
@@ -218,7 +218,7 @@ void yo(int u, int p, long long nw, int l) {
 int st[N << 1], en[N << 1], DT;
 struct node {
     vector<int> ct; // adjacent edges in centroid tree
-    long long sum = 0, parsum = 0, level = 0, id = 0, cnt = 0;
+    int64_t sum = 0, parsum = 0, level = 0, id = 0, cnt = 0;
 } t[M];
 int dcom(int u, int p = 0, int l = 0) {
     tot = 0; calc_sz(u, p); int cen = find_cen(u, p);
@@ -247,8 +247,8 @@ int up(int cur, int u) { //update node u in cur tree
     }
     return cur;
 }
-long long query(int cur, int u) { // query on cur tree
-    long long ans = 0;
+int64_t query(int cur, int u) { // query on cur tree
+    int64_t ans = 0;
     while (t[cur].id != t[u].id) {
         int v = 0;
         for (auto x : t[cur].ct) if(insub(x, u)) v = x;
@@ -269,7 +269,7 @@ int ar[N], rt[N];
     }
     T = n; binarize(1); rt[0] = dcom(1);
     for(int i = 1; i <= n; ++i) rt[i] = up(rt[i - 1], a[i]);
-    long long ans = 0; const int mod = 1 << 30;
+    int64_t ans = 0; const int mod = 1 << 30;
     while(q--) {
         int ty; cin >> ty;
         if(ty == 1) {
@@ -289,59 +289,59 @@ int ar[N], rt[N];
 
 // Centroid Decomposition Tree:
 
-const long long K = 22, INF = 1e9 + 7;
-vector<long long> gp[N]; long long sub[N], par[N], anc[N][K], lvl[N], ans[N];
+const int64_t K = 22, INF = 1e9 + 7;
+vector<int64_t> gp[N]; int64_t sub[N], par[N], anc[N][K], lvl[N], ans[N];
 bool vis[N];
-void dfs(long long u, long long p) {
+void dfs(int64_t u, int64_t p) {
     lvl[u] = lvl[p] + 1; anc[u][0] = p;
-    for (long long k = 1; k < K; ++k) anc[u][k] = anc[anc[u][k - 1]][k - 1];
+    for (int64_t k = 1; k < K; ++k) anc[u][k] = anc[anc[u][k - 1]][k - 1];
     for (auto &v : gp[u]) if (v ^ p) dfs(v, u);
 }
-long long lca(long long u, long long v) {
+int64_t lca(int64_t u, int64_t v) {
     if (lvl[u] > lvl[v]) swap(u, v);
-    for (long long k = K - 1; k >= 0; --k)
+    for (int64_t k = K - 1; k >= 0; --k)
         if (lvl[u] + (1 << k) <= lvl[v]) v = anc[v][k];
     if (u == v) return u;
-    for (long long k = K - 1; k >= 0; --k)
+    for (int64_t k = K - 1; k >= 0; --k)
         if (anc[u][k] != anc[v][k]) u = anc[u][k], v = anc[v][k];
     return anc[u][0];
 }
-long long getanc(long long u, long long d) {
-    for (long long k = 0; k < K; ++k)
+int64_t getanc(int64_t u, int64_t d) {
+    for (int64_t k = 0; k < K; ++k)
         if (d & (1 << k)) u = anc[u][k];
     return u;
 }
-long long dis(long long u, long long v) {
-    long long g = lca(u, v);
+int64_t dis(int64_t u, int64_t v) {
+    int64_t g = lca(u, v);
     return lvl[u] + lvl[v] - (lvl[g] << 1);
 }
-void getsub(long long u, long long p) {
+void getsub(int64_t u, int64_t p) {
     sub[u] = 1;
     for (auto &v : gp[u])
         if (!vis[v] && v ^ p) getsub(v, u), sub[u] += sub[v];
 }
-long long centroid(long long u, long long p, long long r) {
+int64_t centroid(int64_t u, int64_t p, int64_t r) {
     for (auto &v : gp[u])
         if (!vis[v] && v ^ p)
             if (sub[v] > r) return centroid(v, u, r);
     return u;
 }
-void dcom(long long u, long long p) {
+void dcom(int64_t u, int64_t p) {
     getsub(u, u);
-    long long c = centroid(u, u, sub[u] >> 1);
+    int64_t c = centroid(u, u, sub[u] >> 1);
     vis[c] = 1, par[c] = p;
     for (auto &v : gp[c]) if (!vis[v]) dcom(v, c);
 }
 // update ans for all ancin the centroid tree
-void update(long long u) {
-    for (long long v = u; v > 0; v = par[v]) {
+void update(int64_t u) {
+    for (int64_t v = u; v > 0; v = par[v]) {
         ans[v] = min(ans[v], dis(v, u));
     }
 }
 // query through all the anc in the centroid tree
-long long query(long long u) {
-    long long ret = INF;
-    for (long long v = u; v > 0; v = par[v]) {
+int64_t query(int64_t u) {
+    int64_t ret = INF;
+    for (int64_t v = u; v > 0; v = par[v]) {
         ret = min(ret, ans[v] + dis(u, v));
     }
     return ret;
@@ -350,14 +350,14 @@ long long query(long long u) {
 // Operation:
     cin >> n >> m;
     for (i = 1; i < n; ++i) {
-        long long u, v; cin >> u >> v;
+        int64_t u, v; cin >> u >> v;
         gp[u].push_back(v); gp[v].push_back(u);
     }
     dfs(1, 0); dcom(1, 0);
     for (i = 1; i <= n; ++i) ans[i] = INF;
     update(1);
     while (m--) {
-        long long tp, u; cin >> tp >> u;
+        int64_t tp, u; cin >> tp >> u;
         if (tp == 1) update(u);
         else cout << query(u) << "\n";
     }
@@ -368,21 +368,21 @@ long long query(long long u) {
 
 // Rooted tree
 struct arborescence {
-    vector<vector<long long>> cld;
-    long long rt;
+    vector<vector<int64_t>> cld;
+    int64_t rt;
 };
-arborescence cdt(vector<vector<long long>> graph) {
-    long long n = graph.size(); vector<long long> subtree_size(n);
-    auto dfs = [&](long long u, auto&& self) -> long long {
+arborescence cdt(vector<vector<int64_t>> graph) {
+    int64_t n = graph.size(); vector<int64_t> subtree_size(n);
+    auto dfs = [&](int64_t u, auto&& self) -> int64_t {
         for (auto v : graph[u]) {
             remover(graph[v], u); subtree_size[u] += self(v, self);
         }
         return ++subtree_size[u];
     };
     dfs(0, dfs);
-    vector<vector<long long>> d_tre(n);
-    auto c_re = [&](long long u, auto&& self) -> long long {
-        long long N = subtree_size[u];
+    vector<vector<int64_t>> d_tre(n);
+    auto c_re = [&](int64_t u, auto&& self) -> int64_t {
+        int64_t N = subtree_size[u];
         for (bool found = 0; !found;) {
             found = 1;
             for (auto v : graph[u]) {
@@ -396,6 +396,6 @@ arborescence cdt(vector<vector<long long>> graph) {
         for (auto v : graph[u]) d_tre[u].push_back(self(v, self));
         return u;
     };
-    long long d_rt = c_re(0, c_re);
+    int64_t d_rt = c_re(0, c_re);
     return {move(d_tre), d_rt};
 }

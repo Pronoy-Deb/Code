@@ -41,8 +41,8 @@ int find_cen(int u, int p) {
     }
     return u;
 }
-long long d[20][N << 1];
-void yo(int u, int p, long long nw, int l) {
+int64_t d[20][N << 1];
+void yo(int u, int p, int64_t nw, int l) {
     d[l][u] = nw;
     for (auto &[f, s] : g[u]) {
         if (f == p || done[f]) continue;
@@ -52,7 +52,7 @@ void yo(int u, int p, long long nw, int l) {
 int st[N << 1], en[N << 1], DT;
 struct node {
     vector<int> ct; //adjacent edges in centroid tree
-    long long sum = 0, parsum = 0, level = 0, id = 0, cnt = 0;
+    int64_t sum = 0, parsum = 0, level = 0, id = 0, cnt = 0;
 }t[M];
 int decompose(int u, int p = 0, int l = 0) {
     tot = 0; calc_sz(u, p);
@@ -83,8 +83,8 @@ int up(int cur, int u) { //update node u in cur tree
     }
     return cur;
 }
-long long query(int cur, int u) { // query on cur tree
-    long long ans = 0;
+int64_t query(int cur, int u) { // query on cur tree
+    int64_t ans = 0;
     while (t[cur].id != t[u].id) {
         int v = 0;
         for (auto &x : t[cur].ct) if (insub(x, u)) v = x;
@@ -105,7 +105,7 @@ int ar[N], root[N];
     }
     T = n; binarize(1); root[0] = decompose(1);
     for (i = 1; i <= n; ++i) root[i] = up(root[i - 1], ar[i]);
-    long long ans = 0; const int mod = 1 << 30;
+    int64_t ans = 0; const int mod = 1 << 30;
     while (q--) {
         int ty; cin >> ty;
         if (ty == 1) {

@@ -1,19 +1,19 @@
 // 2 SAT:
 // Complexity: O(n + m)
 
-long long n;
-vector<vector<long long>> adj, adj_t;
+int64_t n;
+vector<vector<int64_t>> adj, adj_t;
 vector<bool> used, assignment;
-vector<long long> order, comp;
+vector<int64_t> order, comp;
 
-void dfs1(long long v) {
+void dfs1(int64_t v) {
     used[v] = true;
     for (auto &u : adj[v]) {
         if (!used[u]) dfs1(u);
     }
     order.push_back(v);
 }
-void dfs2(long long v, long long cl) {
+void dfs2(int64_t v, int64_t cl) {
     comp[v] = cl;
     for (auto &u : adj_t[v]) {
         if (comp[u] == -1) dfs2(u, cl);
@@ -27,7 +27,7 @@ bool sat() {
     }
     comp.assign(n, -1);
     for (int i = 0, j = 0; i < n; ++i) {
-        long long v = order[n - i - 1];
+        int64_t v = order[n - i - 1];
         if (comp[v] == -1) dfs2(v, j++);
     }
     assignment.assign(n >> 1, false);
@@ -37,10 +37,10 @@ bool sat() {
     }
     return true;
 }
-void add(long long a, bool na, long long b, bool nb) {
+void add(int64_t a, bool na, int64_t b, bool nb) {
     a = (a << 1) ^ na;
     b = (b << 1) ^ nb;
-    long long neg_a = a ^ 1, neg_b = b ^ 1;
+    int64_t neg_a = a ^ 1, neg_b = b ^ 1;
     adj[neg_a].push_back(b);
     adj[neg_b].push_back(a);
     adj_t[b].push_back(neg_a);

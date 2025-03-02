@@ -34,7 +34,7 @@ auto find(auto n) {
 
 // OR,
 
-long long ar[N][N], I[N][N];
+int64_t aa[N][N], I[N][N];
 void mul(auto A[][N], auto B[][N], auto dim) {
     int res[dim + 1][dim + 1];
     for (int i = 1; i <= dim; ++i) {
@@ -63,7 +63,7 @@ void power(auto A[][N], auto dim, auto n) {
     }
     for (int i = 1; i <= dim; ++i)
         for (int j = 1; j <= dim; ++j)
-            ar[i][j] = I[i][j];
+            aa[i][j] = I[i][j];
 }
 void print(auto A[][N], auto dim) {
     for (int i = 1; i <= dim; ++i) {
@@ -74,10 +74,10 @@ void print(auto A[][N], auto dim) {
 }
 
 // Operation:
-    long long dim; cin >> dim >> n;
+    int64_t dim; cin >> dim >> n;
     for (i = 1; i <= dim; ++i)
-        for (j = 1; j <= dim; ++j) cin >> ar[i][j];
-    power(ar, dim, n); print(ar, dim);
+        for (j = 1; j <= dim; ++j) cin >> aa[i][j];
+    power(aa, dim, n); print(aa, dim);
 
 // OR,
 
@@ -139,7 +139,7 @@ struct Mat {
         }
         return ans;
     }
-    inline Mat power(long long k) {
+    inline Mat power(int64_t k) {
         assert(n == m);
         Mat ans(n, n), t = a;
         ans.make_unit();
@@ -160,7 +160,7 @@ int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int n;
-    long long k;
+    int64_t k;
     cin >> n >> k;
     Mat a(n, n);
     for (int i = 0; i < n; ++i) {
@@ -190,9 +190,9 @@ const int root = 3;
 int lim, rev[N], w[N], wn[N], inv_lim;
 void reduce(int &x) { x = (x + mod) % mod; }
 int power(int x, int y, int ans = 1) {
-    for (; y; y >>= 1, x = (long long)x * x % mod)
+    for (; y; y >>= 1, x = (int64_t)x * x % mod)
         if (y & 1)
-            ans = (long long)ans * x % mod;
+            ans = (int64_t)ans * x % mod;
     return ans;
 }
 void pre(int len) {
@@ -205,7 +205,7 @@ void pre(int len) {
     const int g = power(root, (mod - 1) / lim);
     inv_lim = power(lim, mod - 2);
     for (int i = 1; i < lim; ++i)
-        wn[i] = (long long)wn[i - 1] * g % mod;
+        wn[i] = (int64_t)wn[i - 1] * g % mod;
 }
 void ntt(vector<int> &a, int typ) {
     for (int i = 0; i < lim; ++i)
@@ -216,7 +216,7 @@ void ntt(vector<int> &a, int typ) {
             w[j] = wn[j * t];
         for (int j = 0; j < lim; j += i << 1) {
             for (int k = 0; k < i; ++k) {
-                const int x = a[k + j], y = (long long)a[k + j + i] * w[k] % mod;
+                const int x = a[k + j], y = (int64_t)a[k + j + i] * w[k] % mod;
                 reduce(a[k + j] += y - mod), reduce(a[k + j + i] = x - y);
             }
         }
@@ -224,7 +224,7 @@ void ntt(vector<int> &a, int typ) {
     if (!typ) {
         reverse(a.begin() + 1, a.begin() + lim);
         for (int i = 0; i < lim; ++i)
-            a[i] = (long long)a[i] * inv_lim % mod;
+            a[i] = (int64_t)a[i] * inv_lim % mod;
     }
 }
 vector<int> multiply(vector<int> f, vector<int> g) {
@@ -235,7 +235,7 @@ vector<int> multiply(vector<int> f, vector<int> g) {
     b.resize(lim);
     ntt(a, 1), ntt(b, 1);
     for (int i = 0; i < lim; ++i)
-        a[i] = (long long)a[i] * b[i] % mod;
+        a[i] = (int64_t)a[i] * b[i] % mod;
     ntt(a, 0);
     return a;
 }
@@ -345,7 +345,7 @@ struct Mat {
             }
         }
     }
-    inline Mat power(long long k, int z) { // M^k % x^z
+    inline Mat power(int64_t k, int z) { // M^k % x^z
         assert(n == m);
         Mat ans(n, n), t = a;
         ans.make_unit();

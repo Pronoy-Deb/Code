@@ -2,13 +2,13 @@
 https://cses.fi/problemset/task/1138/
 
 vector<int> gp[N];
-long long sz[N], P[N], dep[N], tre[N << 1], id[N], tp[N], val[N], n;
-inline long long op(long long l, long long r) { return (l + r); }
-void up(int in, long long val) {
+int64_t sz[N], P[N], dep[N], tre[N << 1], id[N], tp[N], val[N], n;
+inline int64_t op(int64_t l, int64_t r) { return (l + r); }
+void up(int in, int64_t val) {
     for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = op(tre[in], tre[in ^ 1]);
 }
-long long get(int l, int r) {
-    long long res = 0;
+int64_t get(int l, int r) {
+    int64_t res = 0;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
         if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
@@ -38,8 +38,8 @@ void dfs_hld(int cur = 1, int par = 1, int top = 1) {
 		dfs_hld(chi, cur, chi);
 	}
 }
-long long path(int x, int y) {
-	long long ret = 0;
+int64_t path(int x, int y) {
+	int64_t ret = 0;
 	while (tp[x] != tp[y]) {
 		if (dep[tp[x]] < dep[tp[y]]) swap(x, y);
 		ret = op(ret, get(id[tp[x]], id[x])); x = P[tp[x]];
@@ -59,7 +59,7 @@ long long path(int x, int y) {
 	while (q--) {
         int tp; cin >> tp;
 		if (tp == 1) {
-			long long s, x; cin >> s >> x;
+			int64_t s, x; cin >> s >> x;
 			val[s] = x; up(id[s], val[s]);
 		}
         else {
@@ -71,9 +71,9 @@ long long path(int x, int y) {
 // OR,
 
 vector<int> gp[N];
-long long sz[N], P[N], dep[N], tre[N << 1], lz[N], id[N], tp[N], val[N], n;
-inline long long op(long long l, long long r) { return (l + r); }
-inline void apply(int in, long long val, int k) {
+int64_t sz[N], P[N], dep[N], tre[N << 1], lz[N], id[N], tp[N], val[N], n;
+inline int64_t op(int64_t l, int64_t r) { return (l + r); }
+inline void apply(int in, int64_t val, int k) {
     tre[in] += val * k; if (in < n) lz[in] += val;
 }
 void push(int l, int r) {
@@ -93,15 +93,15 @@ void rebuild(int l, int r) {
         for (int i = r; i >= l; --i) tre[i] = op(tre[i << 1], tre[i << 1 | 1]) + lz[i] * k;
     }
 }
-void add(int l, int r, long long val) {
+void add(int l, int r, int64_t val) {
     push(l, l + 1); push(r, ++r); int l0 = l, r0 = r, k = 1;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1, k <<= 1) {
         if (l & 1) apply(l++, val, k); if (r & 1) apply(--r, val, k);
     }
     rebuild(l0, l0 + 1); rebuild(r0 - 1, r0);
 }
-long long get(int l, int r) {
-    push(l, l + 1); push(r, ++r); long long res = 0;
+int64_t get(int l, int r) {
+    push(l, l + 1); push(r, ++r); int64_t res = 0;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
         if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
@@ -132,8 +132,8 @@ void dfs_hld(int cur = 1, int par = 1, int top = 1) {
 		dfs_hld(chi, cur, chi);
 	}
 }
-long long path(int x, int y) {
-	long long ret = 0;
+int64_t path(int x, int y) {
+	int64_t ret = 0;
 	while (tp[x] != tp[y]) {
 		if (dep[tp[x]] < dep[tp[y]]) swap(x, y);
 		ret = op(ret, get(id[tp[x]], id[x])); x = P[tp[x]];
@@ -153,7 +153,7 @@ long long path(int x, int y) {
 	while (q--) {
         int tp; cin >> tp;
 		if (tp == 1) {
-			long long s, x; cin >> s >> x; val[s] = x;
+			int64_t s, x; cin >> s >> x; val[s] = x;
             add(id[s], id[s], val[s] - get(id[s], id[s]));
 		}
         else {
@@ -161,15 +161,14 @@ long long path(int x, int y) {
 			cout << path(u, v) << '\n';
 		}
 	}
-}
 
 // OR,
 
 vector<int> gp[N];
-long long dep[N], par[N], pos[N], val[N], head[N], heavy[N], cnt;
-inline long long op(long long l, long long r) { return (l + r); }
+int64_t dep[N], par[N], pos[N], val[N], head[N], heavy[N], cnt;
+inline int64_t op(int64_t l, int64_t r) { return (l + r); }
 struct ST {
-    vector<long long> tre, lz;
+    vector<int64_t> tre, lz;
     ST() {};
     ST(int n) {
         tre.resize(n << 2, 0); lz.resize(n << 2, 0);
@@ -181,7 +180,7 @@ struct ST {
         }
         lz[u] = 0;
     }
-    void up(int u, int st, int en, int l, int r, long long x) {
+    void up(int u, int st, int en, int l, int r, int64_t x) {
         propagate(u, st, en); if (r < st || en < l) return;
         if (l <= st && en <= r) {
             lz[u] += x; propagate(u, st, en); return;
@@ -190,7 +189,7 @@ struct ST {
         up(lc, st, mid, l, r, x); up(rc, mid + 1, en, l, r, x);
         tre[u] = op(tre[lc], tre[rc]);
     }
-    long long get(int u, int st, int en, int l, int r) {
+    int64_t get(int u, int st, int en, int l, int r) {
         propagate(u, st, en); if (r < st || en < l) return 0;
         if (l <= st && en <= r) return tre[u];
         int mid = (st + en) >> 1, lc = u << 1, rc = lc | 1;
@@ -215,8 +214,8 @@ void dcom(int u, int h) {
         if (heavy[u] != v) dcom(v, v);
     }
 }
-long long get(int u, int v) {
-    long long ret = 0;
+int64_t get(int u, int v) {
+    int64_t ret = 0;
     for (; head[u] != head[v]; v = par[head[v]]) {
         if (dep[head[u]] > dep[head[v]]) swap(u, v);
         ret = op(ret, t.get(1, 1, cnt, pos[head[v]], pos[v]));
@@ -226,7 +225,7 @@ long long get(int u, int v) {
     ret = op(ret, t.get(1, 1, cnt, pos[u], pos[v])); // for node query
     return ret;
 }
-void up(int u, int v, long long x) {
+void up(int u, int v, int64_t x) {
     for (; head[u] != head[v]; v = par[head[v]]) {
         if (dep[head[u]] > dep[head[v]]) swap(u, v);
         t.up(1, 1, cnt, pos[head[v]], pos[v], x);
@@ -252,7 +251,7 @@ void make(int n, int root = 1) {
     while (q--) {
         int tp; cin >> tp;
         if (tp == 1) {
-            long long s, x; cin >> s >> x; up(s, s, x);
+            int64_t s, x; cin >> s >> x; up(s, s, x);
         }
         else {
             int u = 1, v; cin >> v;
@@ -264,13 +263,13 @@ void make(int n, int root = 1) {
 https://cses.fi/problemset/task/2134
 
 vector<int> gp[N];
-long long sz[N], P[N], dep[N], tre[N << 1], id[N], tp[N], val[N], n;
-inline long long op(long long l, long long r) { return max(l, r); }
-void up(int in, long long val) {
+int64_t sz[N], P[N], dep[N], tre[N << 1], id[N], tp[N], val[N], n;
+inline int64_t op(int64_t l, int64_t r) { return max(l, r); }
+void up(int in, int64_t val) {
     for (tre[in += n] = val; in > 1; in >>= 1) tre[in >> 1] = op(tre[in], tre[in ^ 1]);
 }
-long long get(int l, int r) {
-    long long res = 0;
+int64_t get(int l, int r) {
+    int64_t res = 0;
     for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
         if (l & 1) res = op(res, tre[l++]); if (r & 1) res = op(res, tre[--r]);
     }
@@ -300,8 +299,8 @@ void dfs_hld(int cur = 1, int par = 1, int top = 1) {
 		dfs_hld(chi, cur, chi);
 	}
 }
-long long path(int x, int y) {
-	long long ret = 0;
+int64_t path(int x, int y) {
+	int64_t ret = 0;
 	while (tp[x] != tp[y]) {
 		if (dep[tp[x]] < dep[tp[y]]) swap(x, y);
 		ret = op(ret, get(id[tp[x]], id[x])); x = P[tp[x]];
@@ -329,7 +328,7 @@ void reset() {
 	while (q--) {
         int tp; cin >> tp;
 		if (tp == 1) {
-			long long s, x; cin >> s >> x;
+			int64_t s, x; cin >> s >> x;
 			val[s] = x; up(id[s], val[s]);
 		}
         else {
@@ -341,15 +340,15 @@ void reset() {
 // OR,
 
 vector<int> gp[N];
-long long dep[N], par[N], pos[N], val[N], head[N], heavy[N], tre[N << 2], lz[N << 2], C;
-inline long long op(long long l, long long r) { return max(l, r); }
-void up(int in, long long val, int nd = 1, int s = 1, int e = C) {
+int64_t dep[N], par[N], pos[N], val[N], head[N], heavy[N], tre[N << 2], lz[N << 2], C;
+inline int64_t op(int64_t l, int64_t r) { return max(l, r); }
+void up(int in, int64_t val, int nd = 1, int s = 1, int e = C) {
     if (s == e) { tre[nd] = val; return; }
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
     if (in <= m) up(in, val, lc, s, m); else up(in, val, rc, m + 1, e);
     tre[nd] = op(tre[lc], tre[rc]);
 }
-long long get(int l, int r, int nd = 1, int s = 1, int e = C) {
+int64_t get(int l, int r, int nd = 1, int s = 1, int e = C) {
     if (s > e || s > r || e < l) return 0;
     if (s >= l && e <= r) return tre[nd];
     int m = (s + e) >> 1, lc = nd << 1, rc = lc | 1;
@@ -377,8 +376,8 @@ void make(int n, int root = 1) {
     for (int i = 1; i <= n; ++i) heavy[i] = -1;
     C = 0; dfs(root, 0); dcom(root, root);
 }
-long long path(int u, int v) {
-    long long ret = 0;
+int64_t path(int u, int v) {
+    int64_t ret = 0;
     for (; head[u] != head[v]; v = par[head[v]]) {
         if (dep[head[u]] > dep[head[v]]) swap(u, v);
         ret = op(ret, get(pos[head[v]], pos[v]));
@@ -400,7 +399,7 @@ long long path(int u, int v) {
     while (q--) {
         int tp; cin >> tp;
         if (tp == 1) {
-            long long s, x; cin >> s >> x; up(pos[s], x);
+            int64_t s, x; cin >> s >> x; up(pos[s], x);
         }
         else {
             int u, v; cin >> u >> v; cout << path(u, v) << ' ';
@@ -410,16 +409,16 @@ long long path(int u, int v) {
 
 https://www.spoj.com/problems/QTREE/
 
-vector<pair<long long, long long>> nd, gp[N];
-long long heavy[N], sub[N], chain[N], pa[N], head[N], costre[N], dep[N], tre[N << 2], pos[N], n;
-inline long long op(long long l, long long r) { return max(l, r); }
-void up(int x, long long val, int c = 1, int b = 1, int e = n) {
+vector<pair<int64_t, int64_t>> nd, gp[N];
+int64_t heavy[N], sub[N], chain[N], pa[N], head[N], costre[N], dep[N], tre[N << 2], pos[N], n;
+inline int64_t op(int64_t l, int64_t r) { return max(l, r); }
+void up(int x, int64_t val, int c = 1, int b = 1, int e = n) {
 	if (b == e) { tre[c] = val; return; }
 	int m = (b + e) >> 1, l = c << 1, r = l | 1;
 	if (x <= m) up(x, val, l, b, m); else up(x, val, r, m + 1, e);
 	tre[c] = op(tre[l], tre[r]);
 }
-long long get(int x, int y, int c = 1, int b = 1, int e = n) {
+int64_t get(int x, int y, int c = 1, int b = 1, int e = n) {
 	if (x <= b and e <= y) return tre[c];
 	if (y < b or e < x) return 0;
 	int m = (b + e) >> 1, l = c << 1, r = l | 1;
@@ -448,8 +447,8 @@ void pre() {
 		if (i != n && pa[nd[i].first] == nd[i].second) swap(nd[i].first, nd[i].second);
 	}
 }
-long long path(int u, int v) {
-	long long ans = 0;
+int64_t path(int u, int v) {
+	int64_t ans = 0;
 	while (chain[u] != chain[v]) {
 		if (dep[head[u]] > dep[head[v]]) swap(u, v);
 		ans = op(ans, get(pos[head[v]], pos[v]));
@@ -470,7 +469,7 @@ void reset() {
 	cin >> n;
 	nd.push_back({-1, -1});
 	for (i = 1; i < n; ++i) {
-		int u, v; long long w; cin >> u >> v >> w;
+		int u, v; int64_t w; cin >> u >> v >> w;
 		gp[u].push_back({v, w}); gp[v].push_back({u, w});
 		nd.push_back({u, v});
 	}

@@ -11,7 +11,7 @@ https://www.codechef.com/problems/SEGPROD
 
 int p;
 inline int op(const int &a, const int &b) { return (a * 1ll * b) % p; }
-int log2Up(long long n) { int b = 0; while ((1ll << b) < n) ++b; return b; }
+int log2Up(int64_t n) { int b = 0; while ((1ll << b) < n) ++b; return b; }
 struct srt {
     int n, lg, SZ; vector<int> v, clz, layers, onL;
     vector< vector<int> > pref, suf, b2in;
@@ -98,8 +98,8 @@ struct srt {
 
 // Operation:
     int n, q; cin >> n >> p >> q;
-    vector<int> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
-    srt t(ar); int sz = (q >> 6) + 2, x = 0, l = 0, r = 0;
+    vector<int> aa(n); for (int i = 0; i < n; ++i) { cin >> aa[i]; }
+    srt t(aa); int sz = (q >> 6) + 2, x = 0, l = 0, r = 0;
     int b[sz]; for (int i = 0; i < sz; ++i) cin >> b[i];
     for (int i = 0; i < q; ++i) {
         if (i % 64) l = (l + x) % n, r = (r + x) % n;
@@ -111,12 +111,12 @@ struct srt {
 
 https://cses.fi/problemset/task/1649
 
-inline long long op(const long long &a, const long long &b) { return min(a, b); }
-int log2Up(long long n) { int b = 0; while ((1ll << b) < n) ++b; return b; }
+inline int64_t op(const int64_t &a, const int64_t &b) { return min(a, b); }
+int log2Up(int64_t n) { int b = 0; while ((1ll << b) < n) ++b; return b; }
 struct srt {
-    int n, lg, SZ; vector<long long> v, clz, layers, onL;
-    vector<vector<long long>> pref, suf, b2in;
-    srt(const auto &ar) : n(ar.size()), lg(log2Up(n)), v(ar), clz(1 << lg), onL(lg + 1) {
+    int n, lg, SZ; vector<int64_t> v, clz, layers, onL;
+    vector<vector<int64_t>> pref, suf, b2in;
+    srt(const auto &aa) : n(aa.size()), lg(log2Up(n)), v(aa), clz(1 << lg), onL(lg + 1) {
         clz[0] = 0; for (int i = 1, sz = clz.size(); i < sz; ++i) clz[i] = clz[i >> 1] + 1;
         int tlg = lg;
         while (tlg > 1) {
@@ -127,9 +127,9 @@ struct srt {
         int b2inL = max(0, (int)layers.size() - 1);
         int bsl = (lg + 1) >> 1, bSz = 1 << bsl;
         SZ = (n + bSz - 1) >> bsl; v.resize(n + SZ);
-        pref.assign(layers.size(), vector<long long>(n + SZ));
-        suf.assign(layers.size(), vector<long long>(n + SZ));
-        b2in.assign(b2inL, vector<long long>((1 << lg) + bSz));
+        pref.assign(layers.size(), vector<int64_t>(n + SZ));
+        suf.assign(layers.size(), vector<int64_t>(n + SZ));
+        b2in.assign(b2inL, vector<int64_t>((1 << lg) + bSz));
         make(0, 0, n, 0);
     }
     void makeblk(int layer, int l, int r) {
@@ -143,8 +143,8 @@ struct srt {
         int bcl = layers[layer] >> 1, bSz = 1 << bsl;
         int bc = (R - L + bSz - 1) >> bsl;
         for (int i = 0; i < bc; ++i) {
-            for (long long j = i, ans = LLONG_MAX; j < bc; ++j) {
-                long long add = suf[layer][L + (j << bsl)];
+            for (int64_t j = i, ans = LLONG_MAX; j < bc; ++j) {
+                int64_t add = suf[layer][L + (j << bsl)];
                 ans = (i == j) ? add : op(ans, add);
                 b2in[layer-1][b2inof + L + (i << bcl) + j] = ans;
             }
@@ -178,17 +178,17 @@ struct srt {
         else makeb2in(layer, L, R, b2inof);
         up(layer + 1, l, r, b2inof, in);
     }
-    inline void up(int in, const long long &val) {
+    inline void up(int in, const int64_t &val) {
         v[in] = val; up(0, 0, n, 0, in);
     }
-    long long get(int l, int r, int b2inof = 0, int base = 0) {
+    int64_t get(int l, int r, int b2inof = 0, int base = 0) {
         if (l == r) return v[l];
         if (l + 1 == r) return op(v[l], v[r]);
         int layer = onL[clz[(l - base) ^ (r - base)]];
         int bsl = (layers[layer]+1) >> 1, bcl = layers[layer] >> 1;
         int L = (((l - base) >> layers[layer]) << layers[layer]) + base;
         int lb = ((l - L) >> bsl) + 1, rb = ((r - L) >> bsl) - 1;
-        long long ans = suf[layer][l];
+        int64_t ans = suf[layer][l];
         if (lb <= rb) {
             int add = (!layer) ? (get(n + lb, n + rb, (1 << lg) - n, n)) : (b2in[layer-1][b2inof + L + (lb << bcl) + rb]);
             ans = op(ans, add);
@@ -199,8 +199,8 @@ struct srt {
 
 // Operation:
     int n, q; cin >> n >> q;
-    vector<ll> ar(n); for (int i = 0; i < n; ++i) { cin >> ar[i]; }
-    srt t(ar);
+    vector<ll> aa(n); for (int i = 0; i < n; ++i) { cin >> aa[i]; }
+    srt t(aa);
     for (int i = 0; i < q; ++i) {
         int tp, l, r; cin >> tp >> l >> r; --l;
         if (tp == 1) t.up(l, r);

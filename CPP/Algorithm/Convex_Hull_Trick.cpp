@@ -11,15 +11,15 @@ Requirement:
 
 struct CHT
 {
-    vector<long long> M, C;
-    long long ptr = 0;
-    /// Use double comp if M, C is long long range
-    bool useless(long long l1, long long l2, long long l3)
+    vector<int64_t> M, C;
+    int64_t ptr = 0;
+    /// Use double comp if M, C is int64_t range
+    bool useless(int64_t l1, int64_t l2, int64_t l3)
     {
         return (1.0 * (C[l3] - C[l1]) * (M[l1] - M[l2]) >= 1.0 * (C[l2] - C[l1]) * (M[l1] - M[l3]));
     }
-    long long f(long long id, long long x) { return M[id] * x + C[id]; }
-    void add(long long m, long long c)
+    int64_t f(int64_t id, int64_t x) { return M[id] * x + C[id]; }
+    void add(int64_t m, int64_t c)
     {
         M.push_back(m);
         C.push_back(c);
@@ -31,7 +31,7 @@ struct CHT
             s--;
         }
     }
-    long long query(long long x)
+    int64_t query(int64_t x)
     {
         if (ptr >= M.size())
             ptr = M.size() - 1;
@@ -39,12 +39,12 @@ struct CHT
             ptr++; // change > to < for maximum
         return f(ptr, x);
     }
-    long long query2(long long x)
+    int64_t query2(int64_t x)
     {
-        long long lo = 0, hi = M.size() - 1;
+        int64_t lo = 0, hi = M.size() - 1;
         while (lo < hi)
         {
-            long long mid = (lo + hi) >> 1;
+            int64_t mid = (lo + hi) >> 1;
             if (f(mid, x) < f(mid + 1, x))
                 lo = mid + 1; // change > to < for maximum
             else
@@ -54,7 +54,7 @@ struct CHT
     }
 };
 
-long long a[N], p[N], s[N];
+int64_t a[N], p[N], s[N];
 
 // Operation:
 cin >> n;
@@ -66,7 +66,7 @@ for (i = 1; i <= n; ++i)
 }
 CHT cht;
 cht.add(0, 0);
-long long ans = 0;
+int64_t ans = 0;
 for (i = 1; i <= n; ++i)
 {
     ans = max(ans, cht.query2(p[i]) + s[i]);
@@ -79,7 +79,7 @@ cout << ans;
 #include <bits/stdc++.h>
 using namespace std;
 
-#define ll long long
+#define ll int64_t
 #define eb emplace_back
 #define nl '\n'
 #define deb(x) cerr << #x " = " << x << nl
@@ -175,10 +175,10 @@ int32_t main()
  * For minimization: insert(-m, -c) and negate the result
  */
 
-const long long IS_QUERY = -(1LL << 62);
+const int64_t IS_QUERY = -(1LL << 62);
 struct line
 {
-    long long m, b;
+    int64_t m, b;
     mutable function<const line *()> succ;
     bool operator<(const line &rhs) const
     {
@@ -187,7 +187,7 @@ struct line
         const line *s = succ();
         if (!s)
             return 0;
-        long long x = rhs.m;
+        int64_t x = rhs.m;
         return b - s->b < (s->m - m) * x;
     }
 };
@@ -208,7 +208,7 @@ struct HullDynamic : public multiset<line>
             return y->m == x->m && y->b <= x->b;
         return (1.0 * (x->b - y->b) * (z->m - y->m) >= 1.0 * (y->b - z->b) * (y->m - x->m));
     }
-    void insert_line(long long m, long long b)
+    void insert_line(int64_t m, int64_t b)
     {
         auto y = insert({m, b});
         y->succ = [=]
@@ -223,7 +223,7 @@ struct HullDynamic : public multiset<line>
         while (y != begin() && bad(prev(y)))
             erase(prev(y));
     }
-    long long eval(long long x)
+    int64_t eval(int64_t x)
     {
         auto l = *lower_bound((line){x, IS_QUERY});
         return l.m * x + l.b;
@@ -232,7 +232,7 @@ struct HullDynamic : public multiset<line>
 
 // Problem: https://codeforces.com/contest/660/problem/F
 
-long long a[N], p[N], s[N];
+int64_t a[N], p[N], s[N];
 
 // Operation:
 cin >> n;
@@ -244,7 +244,7 @@ for (i = 1; i <= n; ++i)
 }
 HullDynamic hull;
 hull.insert_line(0, 0);
-long long ans = 0;
+int64_t ans = 0;
 for (i = 1; i <= n; ++i)
 {
     ans = max(ans, hull.eval(p[i]) + s[i]);
@@ -271,8 +271,8 @@ struct PT {
         return PT(x - rhs.x, y - rhs.y);
     }
 };
-long long cross(PT a, PT b) {
-    return (long long) a.x * b.y - (long long) a.y * b.x;
+int64_t cross(PT a, PT b) {
+    return (int64_t) a.x * b.y - (int64_t) a.y * b.x;
 }
 inline int inside(set<pair<int, int>>& hull, const PT& p) { //border inclusive
     int x = p.x, y = p.y;
@@ -283,7 +283,7 @@ inline int inside(set<pair<int, int>>& hull, const PT& p) { //border inclusive
     iter p2(p1--);
     return cross(p - PT(p1), PT(p2) - p) >= 0;
 }
-inline void del(set<pair<int, int>>& hull, iter it, long long& scross) {
+inline void del(set<pair<int, int>>& hull, iter it, int64_t& scross) {
     if (hull.size() == 1) {
         hull.erase(it);
         return;
@@ -303,7 +303,7 @@ inline void del(set<pair<int, int>>& hull, iter it, long long& scross) {
     scross -= cross(p1, p2) + cross(p2, it) - cross(p1, it);
     hull.erase(p2);
 }
-inline void add(set<pair<int, int>>& hull, iter it, long long& scross) {
+inline void add(set<pair<int, int>>& hull, iter it, int64_t& scross) {
     if (hull.size() == 1) return;
     if (it == hull.begin()) {
         iter p1 = it++;
@@ -317,7 +317,7 @@ inline void add(set<pair<int, int>>& hull, iter it, long long& scross) {
     }
     scross += cross(p1, p2) + cross(p2, it) - cross(p1, it);
 }
-inline void add(set<pair<int, int>>& hull, const PT& p, long long& scross) { //no collinear PTs
+inline void add(set<pair<int, int>>& hull, const PT& p, int64_t& scross) { //no collinear PTs
     if (inside(hull, p)) return;
     int x = p.x, y = p.y;
     iter pnt = hull.insert(make_pair(x, y)).first, p1, p2;
@@ -338,7 +338,7 @@ inline void add(set<pair<int, int>>& hull, const PT& p, long long& scross) { //n
 }
 
 int main() {
-    long long ucross = 0, dcross = 0;
+    int64_t ucross = 0, dcross = 0;
     set<pair<int, int>> uhull, dhull;
     PT p[] = {PT(0, 0), PT(3, 0), PT(3, 3), PT(0, 3), PT(0, 1), PT(0, 2), PT(3, 1), PT(3, 2)};
     for (int i = 0; i < 5; i++) {

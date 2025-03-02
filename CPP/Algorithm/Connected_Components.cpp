@@ -1,6 +1,6 @@
 // Complexity: O(V + E)
 
-vector<long long> gp[N];
+vector<int64_t> gp[N];
 bool vis[N];
 void dfs(auto root) {
     vis[root] = true;
@@ -11,12 +11,12 @@ void dfs(auto root) {
 }
 
 // Operation:
-    long long vr, eg; cin >> vr >> eg;
+    int64_t vr, eg; cin >> vr >> eg;
     for (i = 0; i < eg; ++i) {
-        long long v1, v2; cin >> v1 >> v2;
+        int64_t v1, v2; cin >> v1 >> v2;
         gp[v1].push_back(v2); gp[v2].push_back(v1);
     }
-    long long ct = 0;
+    int64_t ct = 0;
     for (i = 1; i <= vr; ++i) {
         if (vis[i]) continue;
         dfs(i); ++ct;
@@ -25,7 +25,7 @@ void dfs(auto root) {
 
 // To store the connected components:
 
-vector<long long> gp[N], cur;
+vector<int64_t> gp[N], cur;
 bool vis[N];
 void dfs(auto root) {
     vis[root] = true;
@@ -37,12 +37,12 @@ void dfs(auto root) {
 }
 
 // Operation:
-    long long vr, eg; cin >> vr >> eg;
+    int64_t vr, eg; cin >> vr >> eg;
     for (i = 0; i < eg; ++i) {
-        long long v1, v2; cin >> v1 >> v2;
+        int64_t v1, v2; cin >> v1 >> v2;
         gp[v1].push_back(v2); gp[v2].push_back(v1);
     }
-    vector<vector<long long>> cc;
+    vector<vector<int64_t>> cc;
     for (i = 1; i <= vr; ++i) {
         if (vis[i]) continue;
         cur.clear(); dfs(i);
@@ -65,7 +65,7 @@ int yo(int i, int c, int sum, int ends) { //(id, components, sum, borders)
     int &ret = dp[i][c][sum][ends];
     if (ret != -1) return ret;
     int nsum = sum + (a[i] - a[i - 1]) * (2 * c - ends);
-    long long ans = 0;
+    int64_t ans = 0;
     if (c >= 2) ans += 1LL * (c - 1) * yo(i + 1, c - 1, nsum, ends); // merge two components
     if (c >= 1) ans += 1LL * (2 * c - ends) * yo(i + 1, c, nsum, ends); // add to a component's end
     ans += 1LL * (c + 1 - ends) * yo(i + 1, c + 1, nsum, ends); // create a new component

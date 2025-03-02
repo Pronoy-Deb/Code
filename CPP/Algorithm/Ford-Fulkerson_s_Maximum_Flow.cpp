@@ -2,7 +2,7 @@
 // Use: Used to determine the maximum flow from source to sink
 // Note: Dinic's algorithm is faster than it
 
-long long vr, eg, src, snk, gp[N][N], rgp[N][N], par[N];
+int64_t vr, eg, src, snk, gp[N][N], rgp[N][N], par[N];
 bool bfs() {  // added by Edmonds-Karp
 	bool vis[N] = {}; vis[src] = true; par[src] = -1;
 	queue<int> q; q.emplace(src);
@@ -19,10 +19,10 @@ bool bfs() {  // added by Edmonds-Karp
 	}
 	return false;
 }
-long long mflo() {
-	long long mx = 0;
+int64_t mflo() {
+	int64_t mx = 0;
 	while (bfs()) {
-		long long pflo = LLONG_MAX;
+		int64_t pflo = LLONG_MAX;
 		for (int v = snk; v != src; v = par[v])
 			pflo = min(pflo, rgp[par[v]][v]);
 		for (int v = snk; v != src; v = par[v]) {
@@ -36,7 +36,7 @@ long long mflo() {
 // Operation:
     cin >> vr >> eg >> src >> snk;
     for (i = 0; i < eg; ++i) {
-        long long u, v, w; cin >> u >> v >> w;
+        int64_t u, v, w; cin >> u >> v >> w;
         gp[u][v] = w; rgp[u][v] = w;
     }
 	cout << mflo();

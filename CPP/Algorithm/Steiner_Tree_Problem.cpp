@@ -11,11 +11,11 @@ Complexity: O(3^k * n + 2^k * m log m)
 
 int n, k, m;
 vector<int> imp; // k important nodes
-vector<pair<int, long long>> g[N];
-long long d[32][N]; //[2^k][edge count]
-const long long inf = LLONG_MAX / 3;
+vector<pair<int, int64_t>> g[N];
+int64_t d[32][N]; //[2^k][edge count]
+const int64_t inf = LLONG_MAX / 3;
 bool vis[N];
-long long MST()
+int64_t MST()
 {
     for (int i = 0; i < (1 << k); i++)
         fill(d[i], d[i] + N, inf);
@@ -23,7 +23,7 @@ long long MST()
     {
         d[1 << i][imp[i]] = 0;
     }
-    priority_queue<pair<long long, int>> q;
+    priority_queue<pair<int64_t, int>> q;
     for (int mask = 1; mask < (1 << k); ++mask)
     {
         for (int a = 0; a < mask; ++a)
@@ -48,7 +48,7 @@ long long MST()
 
         while (!q.empty())
         {
-            long long cost = -q.top().first;
+            int64_t cost = -q.top().first;
             int v = q.top().second;
             q.pop();
             if (vis[v])
@@ -56,7 +56,7 @@ long long MST()
             vis[v] = true;
             for (auto edge : g[v])
             {
-                long long ec = cost + edge.second;
+                int64_t ec = cost + edge.second;
                 if (ec < d[mask][edge.first])
                 {
                     d[mask][edge.first] = ec;
@@ -66,7 +66,7 @@ long long MST()
         }
     }
 
-    long long res = inf;
+    int64_t res = inf;
     for (int v = 0; v < n; ++v)
     {
         res = min(res, d[(1 << k) - 1][v]);
@@ -88,7 +88,7 @@ int main()
     for (int i = 0; i < m; ++i)
     {
         int u, v;
-        long long w;
+        int64_t w;
         cin >> u >> v >> w;
         --u;
         --v;

@@ -3,14 +3,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool op(string s)
-{
-    if (s == "*" or s == "+" or s == "-" or s == "/" or s == "^" or s == "&" or s == "|" or s == "==" or s == "=" or s == "!=" or s == ">" or s == "<" or
-        s == "<=" or s == ">=" or s == "," or s == "?" or s == ":" or s == "{" or s == "}" or s == "(" or s == ")" or s == "[" or s == "]" or s == ">>" or s == "<<" or s == "&=" or s == "|=" or s == "^=" or s == "+=" or s == "-=" or s == "*=" or s == "-=" or s == "/=")
-    {
-        return 1;
-    }
-    return 0;
+bool op(string &s) {
+    return (s == "*" || s == "+" || s == "-" || s == "/" || s == "^" || s == "&" || s == "|" || s == "==" || s == "=" || s == "!=" || s == ">" || s == "<" || s == "<=" || s == ">=" || s == "," || s == "?" || s == ":" || s == "{" || s == "}" || s == "(" || s == ")" || s == "[" || s == "]" || s == ">>" || s == "<<" || s == "&=" || s == "|=" || s == "^=" || s == "+=" || s == "-=" || s == "*=" || s == "-=" || s == "/=");
 }
 
 // Given a code it will congest the code but the code will remain compilable.
@@ -25,7 +19,7 @@ int32_t main()
         string p = "";
         for (int i = 0; i < s.size(); i++)
         {
-            if (s[i] == ' ' or s[i] == '\t')
+            if (s[i] == ' ' || s[i] == '\t')
             {
                 continue;
             }
@@ -52,7 +46,7 @@ int32_t main()
             }
         }
         s = p;
-        if (s.find("//") != -1 or s.find("include") != -1)
+        if (s.find("//") != -1 || s.find("include") != -1)
         {
             cout << s << '\n';
         }
@@ -63,7 +57,7 @@ int32_t main()
             stringstream ss(s);
             while (ss >> w)
             {
-                if (w == "or")
+                if (w == "||")
                     w = "||";
                 if (w == "and")
                     w = "&&";
@@ -73,9 +67,9 @@ int32_t main()
             {
                 if (i)
                 {
-                    if (op(v[i - 1]) or op(v[i]))
+                    if (op(v[i - 1]) || op(v[i]))
                         ;
-                    else if (v[i - 1].back() == ')' or v[i].front() == '(')
+                    else if (v[i - 1].back() == ')' || v[i].front() == '(')
                         ;
                     else
                         cout << ' ';

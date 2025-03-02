@@ -1,11 +1,11 @@
 // Note: Number of divisors of a number is equal to the product of (a + 1) where a is the power of each pri factor of that number.
 // Complexity: O(sqrt(n))
 
-auto div(long long n) {
-    vector<long long> v;
-    for (long long i = 1; i * i <= n; ++i) {
+auto div(int64_t n) {
+    vector<int64_t> v;
+    for (int64_t i = 1; i * i <= n; ++i) {
         if (!(n % i)) {
-            v.push_back(i); long long tmp = n / i;
+            v.push_back(i); int64_t tmp = n / i;
             if (i != tmp) v.push_back(tmp);
         }
     }
@@ -14,7 +14,7 @@ auto div(long long n) {
 
 // Number of divisors & sum of divisors: O(nlogn)
 
-long long nd[N], sd[N];
+int64_t nd[N], sd[N];
 void pre() {
     for (int i = 1; i < N; ++i) {
         for (int j = i; j < N; j += i) {
@@ -27,9 +27,9 @@ void pre() {
 https://cses.fi/problemset/task/2182
 
     cin >> n;
-    long long num = 1, sum = 1, pro = 1;
+    int64_t num = 1, sum = 1, pro = 1;
     while (n--) {
-        long long p, e; cin >> p >> e; // prime factor p with power e
+        int64_t p, e; cin >> p >> e; // prime factor p with power e
         num = (num * (e + 1)) % M;
         sum = (sum * (((bex(p, e + 1) - 1 + M) % M * bex(p - 1)) % M)) % M;
         pro = (bex(pro, e + 1) * bex(bex(p, e * (e + 1) >> 1), d)) % M;
@@ -40,7 +40,7 @@ https://cses.fi/problemset/task/2182
 // For number of divisors: // O(cbrt(n))
 // N = 1e6  + 5 for n = 1e18
 
-long long pri[N >> 3], spf[N];
+int64_t pri[N >> 3], spf[N];
 void pre() {
     for (int i = 2, c = 0; i < N; ++i) {
         if (!spf[i]) pri[c++] = spf[i] = i;
@@ -49,28 +49,28 @@ void pre() {
         }
     }
 }
-long long mmul(long long x, long long y, long long m) {
-    long long res = __int128(x) * y % m; return res;
-    // long long res = x * y - (long long)((long double)x * y / m + 0.5) * m;
+int64_t mmul(int64_t x, int64_t y, int64_t m) {
+    int64_t res = __int128(x) * y % m; return res;
+    // int64_t res = x * y - (int64_t)((long double)x * y / m + 0.5) * m;
     // return res < 0 ? res + m : res;
 }
-long long bex(long long x, long long n, long long m) {
-    long long res = 1 % m;
+int64_t bex(int64_t x, int64_t n, int64_t m) {
+    int64_t res = 1 % m;
     while (n) {
         if (n & 1) res = mmul(res, x, m);
         x = mmul(x, x, m); n >>= 1;
     }
     return res;
 }
-bool ip(long long n) {
+bool ip(int64_t n) {
 	if (n < 2 || (~n & 1) || !(n % 3)) return (n == 2 || n == 3);
     if (n < N) return spf[n] == n;
-    long long s = 0, r = n - 1;
+    int64_t s = 0, r = n - 1;
     while (~r & 1) { r >>= 1; ++s; }
     for (int i = 0; pri[i] < n && pri[i] < 32; ++i) {
-        long long c = bex(pri[i], r, n);
+        int64_t c = bex(pri[i], r, n);
         for (int j = 0; j < s; ++j) {
-            long long d = mmul(c, c, n);
+            int64_t d = mmul(c, c, n);
             if (d == 1 && c != 1 && c != (n - 1)) return false;
             c = d;
         }
@@ -78,12 +78,12 @@ bool ip(long long n) {
     }
     return true;
 }
-long long sr(long long x) {
-	long long p = sqrtl(0.5 + x); while (p * p < x) ++p;
+int64_t sr(int64_t x) {
+	int64_t p = sqrtl(0.5 + x); while (p * p < x) ++p;
 	while (p * p > x) --p; return (p * p == x ? p : -1);
 }
-long long div(long long n) {
-    long long d = 1, c = 0;
+int64_t div(int64_t n) {
+    int64_t d = 1, c = 0;
     for (int i = 0; pri[i] * pri[i] * pri[i] <= n; ++i, c = 0) {
         while (++c and !(n % pri[i]) and n > 1) n /= pri[i]; d *= c;
     }
@@ -92,10 +92,10 @@ long long div(long long n) {
 
 // For summation of divisors:
 
-long long dsum(long long n) {
-    long long res = 1;
-    for (long long i = 2; i * i <= n; ++i) {
-        long long csum = 1, cterm = 1;
+int64_t dsum(int64_t n) {
+    int64_t res = 1;
+    for (int64_t i = 2; i * i <= n; ++i) {
+        int64_t csum = 1, cterm = 1;
         while (!(n % i)) {
             n /= i; cterm *= i; csum += cterm;
         }
@@ -106,12 +106,12 @@ long long dsum(long long n) {
 
 // With Divisors:
 
-auto div(long long n) {
-    pair<vector<long long>, long long> pr;
-    for (long long i = 1; i * i <= n; ++i) {
+auto div(int64_t n) {
+    pair<vector<int64_t>, int64_t> pr;
+    for (int64_t i = 1; i * i <= n; ++i) {
         if (!(n % i)) {
             (pr.first).push_back(i); pr.second += i;
-            long long tmp = n / i;
+            int64_t tmp = n / i;
             if (i != tmp) {
                 (pr.first).push_back(tmp); pr.second += tmp;
             }
@@ -123,13 +123,13 @@ auto div(long long n) {
 // Sieve Approach:
 // Complexity: O(n * log(n))
 
-vector<long long> dv[N];
+vector<int64_t> dv[N];
 void div() {
     dv[1].push_back(1);
-    for (long long i = 2; i < N; ++i) {
+    for (int64_t i = 2; i < N; ++i) {
         dv[i].push_back(1);
-        for (long long j = i * i; j < N; j += i) {
-            dv[j].push_back(i); long long tmp = j / i;
+        for (int64_t j = i * i; j < N; j += i) {
+            dv[j].push_back(i); int64_t tmp = j / i;
             if (tmp != j) dv[j].push_back(tmp);
         }
         dv[i].push_back(i);
@@ -138,13 +138,13 @@ void div() {
 
 // For summation of divisors:
 
-vector<long long> dv[N]; long long sdv[N];
+vector<int64_t> dv[N]; int64_t sdv[N];
 void div() {
     dv[1].push_back(1); sdv[1] = 1;
-    for (long long i = 2; i < N; ++i) {
+    for (int64_t i = 2; i < N; ++i) {
         dv[i].push_back(1);
-        for (long long j = i * i; j < N; j += i) {
-            dv[j].push_back(i); sdv[j] += i; long long tmp = j / i;
+        for (int64_t j = i * i; j < N; j += i) {
+            dv[j].push_back(i); sdv[j] += i; int64_t tmp = j / i;
             if (i != tmp) {
                 dv[j].push_back(tmp); sdv[j] += tmp;
             }
@@ -164,7 +164,7 @@ using namespace std;
 #define pii pair<int, int>
 #define pll pair<ll, ll>
 #define eb emplace_back
-#define ll long long
+#define ll int64_t
 #define nl '\n'
 #define deb(x) cerr << #x " = " << x << nl
 #define in() ({ int a ; scanf("%d",&a); a; })
@@ -222,7 +222,7 @@ int32_t main()
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
+using ll = int64_t;
 namespace pcf
 {
 // initialize once by calling init()
@@ -274,7 +274,7 @@ namespace pcf
     // not divisible by any of the first k primes
     // recurrence --> yo(n, k) = yo(n, k-1) - yo(n / p_k , k-1)
     // for sum of primes yo(n, k) = yo(n, k-1) - p_k * yo(n / p_k , k-1)
-    long long yo(long long n, int k)
+    int64_t yo(int64_t n, int k)
     {
         if (n < PHI_N && k < PHI_K)
             return dp[n][k];
@@ -285,7 +285,7 @@ namespace pcf
         return yo(n, k - 1) - yo(n / primes[k - 1], k - 1);
     }
     // complexity: n^(2/3).(log n^(1/3))
-    long long Legendre(long long n)
+    int64_t Legendre(int64_t n)
     {
         if (n < MAXN)
             return pref[n];
@@ -294,11 +294,11 @@ namespace pcf
         return yo(n, k) + (k - 1);
     }
     // runs under 0.5s for n = 1e12
-    long long Lehmer(long long n)
+    int64_t Lehmer(int64_t n)
     {
         if (n < MAXN)
             return pref[n];
-        long long w, res = 0;
+        int64_t w, res = 0;
         int b = sqrt(n), c = Lehmer(cbrt(n)), a = Lehmer(sqrt(b));
         b = Lehmer(b);
         res = yo(n, a) + ((1LL * (b + a - 2) * (b - a + 1)) >> 1);
@@ -448,7 +448,7 @@ using namespace std;
 
 const int N = 1e6 + 9, mod = 1e9 + 7;
 
-int power(long long n, long long k)
+int power(int64_t n, int64_t k)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -457,8 +457,8 @@ int power(long long n, long long k)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;
@@ -479,9 +479,9 @@ void sieve()
     }
 }
 double lgp[N];
-vector<long long> v;
-unordered_map<long long, pair<double, int>> dp[100];
-pair<double, int> yo(int i, long long n)
+vector<int64_t> v;
+unordered_map<int64_t, pair<double, int>> dp[100];
+pair<double, int> yo(int i, int64_t n)
 { // it solves for odd divisors
     if (n == 1)
     {
@@ -523,7 +523,7 @@ int32_t main()
     cin >> t;
     while (t--)
     {
-        long long n;
+        int64_t n;
         cin >> n;
         ++n;
         if (n == 1)
@@ -557,7 +557,7 @@ int32_t main()
 using namespace std;
 
 using uint32 = unsigned int;
-using uint64 = unsigned long long;
+using uint64 = unsigned int64_t;
 using uint128 = __uint128_t;
 
 // credit: zimpha
@@ -631,7 +631,7 @@ int32_t main()
     cin >> t;
     while (t--)
     {
-        long long n;
+        int64_t n;
         cin >> n;
         auto ans = sum_sigma0(n);
         string s = "";

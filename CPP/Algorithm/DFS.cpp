@@ -1,7 +1,7 @@
 // Complexity: O(V + E)
 https://cses.fi/problemset/task/1666
 
-vector<int> gp[N]; bool vis[N];
+vector<int> gp[N]; bitset<N> vis;
 void dfs(int par = 1) {
 	vis[par] = true;
 	for (auto &cld : gp[par]) {

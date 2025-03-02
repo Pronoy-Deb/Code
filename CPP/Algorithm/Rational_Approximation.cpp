@@ -1,21 +1,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
 /**
 Given n and a real number x >= 0, returns the closest rational approximation p/q s.t. p, q <= n.
 It will obey that |p/q - x| is minimum for p, q <= n
 Time: O(log n)
 **/
+
 using ld = long double;
-pair<ll, ll> approximate(ld x, ll n)
+pair<int64_t, int64_t> approximate(ld x, int64_t n)
 {
-    ll LP = 0, LQ = 1, P = 1, Q = 0, inf = LLONG_MAX;
+    int64_t LP = 0, LQ = 1, P = 1, Q = 0, inf = LLONG_MAX;
     ld y = x;
     while (1)
     {
-        ll lim = min(P ? (n - LP) / P : inf, Q ? (n - LQ) / Q : inf),
-           a = (ll)floor(y), b = min(a, lim),
+        int64_t lim = min(P ? (n - LP) / P : inf, Q ? (n - LQ) / Q : inf),
+           a = (int64_t)floor(y), b = min(a, lim),
            NP = b * P + LP, NQ = b * Q + LQ;
         if (a > b)
         {
@@ -44,7 +44,7 @@ int32_t main()
     {
         long double x;
         cin >> x;
-        ll n = 1e9;
+        int64_t n = 1e9;
         auto ans = approximate(x, n);
         cout << ans.first << ' ' << ans.second << '\n';
     }

@@ -23,7 +23,7 @@ namespace FFA
         }
         return ret;
     }
-    inline int power(int a, long long k)
+    inline int power(int a, int64_t k)
     {
         int ret = 1;
         while (k)

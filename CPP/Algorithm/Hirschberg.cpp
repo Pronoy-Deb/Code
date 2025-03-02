@@ -23,9 +23,9 @@ int main()
         scanf("%d", &u[i]);
     for (int i = 0; i < w; i++)
         scanf("%d", &v[i]);
-    function<long long(int, int)> get_val = [&](int i, int j)
+    function<int64_t(int, int)> get_val = [&](int i, int j)
     {
-        return (long long)(u[i] + j + 1) ^ (long long)(v[j] + i + 1);
+        return (int64_t)(u[i] + j + 1) ^ (int64_t)(v[j] + i + 1);
     };
     // Hirschberg
     vector<pair<int, int>> pos;
@@ -44,7 +44,7 @@ int main()
         }
         // left
         int w_left = mid - lj + 1;
-        vector<vector<long long>> dp(2, vector<long long>(height));
+        vector<vector<int64_t>> dp(2, vector<int64_t>(height));
         dp[0][0] = get_val(li, lj);
         for (int i = 1; i < height; i++)
         {
@@ -67,7 +67,7 @@ int main()
             f = !f;
         }
         f = !f;
-        vector<long long> m1(height);
+        vector<int64_t> m1(height);
         for (int i = 0; i < height; i++)
         {
             m1[i] = dp[f][i];
@@ -88,7 +88,7 @@ int main()
             }
             for (int i = 0; i < height; i++)
             {
-                long long val = get_val(ri - i, rj - j);
+                int64_t val = get_val(ri - i, rj - j);
                 amin(dp[f][i], dp[!f][i] + val);
                 if (i - 1 >= 0)
                     amin(dp[f][i], dp[f][i - 1] + val);
@@ -96,17 +96,17 @@ int main()
             f = !f;
         }
         f = !f;
-        vector<long long> m2(height);
+        vector<int64_t> m2(height);
         for (int i = 0; i < height; i++)
         {
             m2[height - i - 1] = dp[f][i];
         }
         //
-        long long mi = 1LL << 60;
+        int64_t mi = 1LL << 60;
         int res = -1;
         for (int i = 0; i < height; i++)
         {
-            long long sum = m1[i] + m2[i];
+            int64_t sum = m1[i] + m2[i];
             if (sum < mi)
             {
                 mi = sum;

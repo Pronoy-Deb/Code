@@ -3,7 +3,7 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-const double PI = acos(-1);
+const double M_PI = acos(-1);
 struct base
 {
     double a, b;
@@ -33,7 +33,7 @@ void fft(vector<base> &p, bool inv = 0)
     }
     for (int l = 1, m; (m = l << 1) <= n; l <<= 1)
     {
-        double ang = 2 * PI / m;
+        double ang = 2 * M_PI / m;
         base wn = base(cos(ang), (inv ? 1. : -1.) * sin(ang)), w;
         for (int i = 0, j, k; i < n; i += m)
         {
@@ -49,7 +49,7 @@ void fft(vector<base> &p, bool inv = 0)
         for (int i = 0; i < n; ++i)
             p[i].a /= n, p[i].b /= n;
 }
-vector<long long> multiply(vector<int> &a, vector<int> &b)
+vector<int64_t> multiply(vector<int> &a, vector<int> &b)
 {
     int n = a.size(), m = b.size(), t = n + m - 1, sz = 1;
     while (sz < t)
@@ -64,15 +64,15 @@ vector<long long> multiply(vector<int> &a, vector<int> &b)
     for (int i = 0; i < sz; ++i)
         z[i] = x[i] * y[i];
     fft(z, 1);
-    vector<long long> ret(sz);
+    vector<int64_t> ret(sz);
     for (int i = 0; i < sz; ++i)
-        ret[i] = (long long)round(z[i].a);
+        ret[i] = (int64_t)round(z[i].a);
     while ((int)ret.size() > 1 && ret.back() == 0)
         ret.pop_back();
     return ret;
 }
 
-long long ans[N];
+int64_t ans[N];
 int32_t main()
 {
     ios_base::sync_with_stdio(0);
@@ -83,7 +83,7 @@ int32_t main()
     int nw = 0;
     a[0]++;
     b[n]++;
-    long long z = 0;
+    int64_t z = 0;
     for (int i = 1; i <= n; i++)
     {
         int k;
@@ -110,13 +110,7 @@ int32_t main()
 // String Matching with FFT:
 
 // https://www.informatika.bg/resources/StringMatchingWithFFT.pdf
-#include <bits/stdc++.h>
-using namespace std;
 
-const int N = 3e5 + 9;
-const int mod = 1e9 + 7;
-
-const double PI = acos(-1);
 struct base
 {
     double a, b;
@@ -146,7 +140,7 @@ void fft(vector<base> &p, bool inv = 0)
     }
     for (int l = 1, m; (m = l << 1) <= n; l <<= 1)
     {
-        double ang = 2 * PI / m;
+        double ang = 2 * M_PI / m;
         base wn = base(cos(ang), (inv ? 1. : -1.) * sin(ang)), w;
         for (int i = 0, j, k; i < n; i += m)
         {
@@ -218,6 +212,7 @@ vector<int> string_matching(string &s, string &t)
             oc.push_back(i - m + 1);
     return oc;
 }
+
 int32_t main()
 {
     ios_base::sync_with_stdio(0);

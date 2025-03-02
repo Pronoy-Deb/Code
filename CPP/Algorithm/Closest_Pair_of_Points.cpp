@@ -4,7 +4,7 @@ using namespace std;
 const int N = 3e5 + 9;
 #define x first
 #define y second
-long long dist2(pair<int, int> a, pair<int, int> b) {
+int64_t dist2(pair<int, int> a, pair<int, int> b) {
 	return 1LL * (a.x - b.x) * (a.x - b.x) + 1LL * (a.y - b.y) * (a.y - b.y);
 }
 pair<int, int> closest_pair(vector<pair<int, int>> a) {
@@ -14,12 +14,12 @@ pair<int, int> closest_pair(vector<pair<int, int>> a) {
 	for (int i = 0; i < n; i++) p[i] = {a[i], i};
 	sort(p.begin(), p.end());
 	int l = 0, r = 2;
-	long long ans = dist2(p[0].x, p[1].x);
+	int64_t ans = dist2(p[0].x, p[1].x);
 	pair<int, int> ret = {p[0].y, p[1].y};
 	while (r < n) {
 		while (l < r && 1LL * (p[r].x.x - p[l].x.x) * (p[r].x.x - p[l].x.x) >= ans) l++;
 		for (int i = l; i < r; i++) {
-			long long nw = dist2(p[i].x, p[r].x);
+			int64_t nw = dist2(p[i].x, p[r].x);
 			if (nw < ans) {
 				ans = nw;
 				ret = {p[i].y, p[r].y};

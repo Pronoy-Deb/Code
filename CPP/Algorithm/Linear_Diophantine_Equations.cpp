@@ -1,7 +1,7 @@
 // Complexity: O(log(min(a, b)))
 // Note: Used to determine whether there is an integer solution (x, y) to the equation ax + by = c. For example: 2x + 5y = 1 -> sol: (3, -1) or (-2, 1)
 
-long long lde(long long a, long long b, long long c) {
+int64_t lde(int64_t a, int64_t b, int64_t c) {
 	return !(c % gcd(a, b));
 }
 // Linear Diophantine Equation Three Variables with Nonnegative Solutions:
@@ -146,7 +146,7 @@ int32_t main()
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
+using ll = int64_t;
 const ll inf = 1e18;
 
 struct LDE
@@ -223,7 +223,7 @@ int32_t main()
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
+using ll = int64_t;
 ll extended_euclid(ll a, ll b, ll &x, ll &y)
 {
 	ll xx = y = 0;
@@ -342,7 +342,7 @@ int32_t main()
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
+using ll = int64_t;
 
 /**
 given are a[i], b[i], p and q:

@@ -28,12 +28,12 @@ namespace FermatRepresent {
         while (r * r > k) r--;
         return r;
     }
-    long long func(long long p) {
+    int64_t func(int64_t p) {
         srand(2311);
         while (1) {
-            long long u = (long long) rand() * rand() % p;
+            int64_t u = (int64_t) rand() * rand() % p;
             if (fpow(u, (p - 1) / 2, p) == p - 1) {
-                long long res = fpow(u, (p - 1) / 4, p);
+                int64_t res = fpow(u, (p - 1) / 4, p);
                 return max(res, p - res);
             }
         }
@@ -41,9 +41,9 @@ namespace FermatRepresent {
     // given an odd prime p
     // returns (a, b) s.t. a^2 + b^2 = p
     // p % 4 = 1, otherwise no solution exists
-    pair<int, int> calc(long long p) {
-        long long a = p, b = func(p);
-        long long ip = isqrt(p);
+    pair<int, int> calc(int64_t p) {
+        int64_t a = p, b = func(p);
+        int64_t ip = isqrt(p);
         while (b > ip) {
             a %= b;
             swap(a, b);

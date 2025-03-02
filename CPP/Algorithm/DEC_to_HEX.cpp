@@ -2,7 +2,7 @@
 // ASCII: 48 = '0', 55 = 'A', 97 = 'a'
 // Built-in: cout << hex << n;  // In Lowercase
 
-auto hex(auto n) {
+auto hex(int64_t n) {
     string s;
     while(n) {
         int tmp = n % 16;

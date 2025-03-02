@@ -3,27 +3,27 @@
 bitset<N> ip;
 void pre() {
 	ip[2] = true; for (int i = 3; i < N; i += 2) ip[i] = true;
-    for (long long i = 3, j; (j = i * i) < N; i += 2) {
+    for (int64_t i = 3, j; (j = i * i) < N; i += 2) {
         for (; ip[i] && j < N; j += (i << 1)) ip[j] = false;
     }
 }
 
 // To store the primes:
 
-bitset<N> ip; vector<long long> pri;
+bitset<N> ip; vector<int64_t> pri;
 void pre() {
 	pri.push_back(2);
-	for (long long i = 3; i < N; i += 2) {
+	for (int64_t i = 3; i < N; i += 2) {
 		if (!ip[i]) {
 			pri.push_back(i);
-			for (long long j = i * i; j < N; j += (i << 1)) ip[j] = 1;
+			for (int64_t j = i * i; j < N; j += (i << 1)) ip[j] = 1;
 		}
 	}
 }
 
 // Comlexity: O(n)
 
-long long pri[N], spf[N];
+int64_t pri[N], spf[N];
 void pre() {
     for (int i = 2, c = 0; i < N; ++i) {
         if (!spf[i]) pri[c++] = spf[i] = i;
@@ -35,13 +35,13 @@ void pre() {
 
 // Bitwise Sieve: if (ip(n)) --> prime
 
-long long sv[(N >> 5) + 2];
+int64_t sv[(N >> 5) + 2];
 bool ip(auto n) { return !(sv[n >> 5] & (1 << (n & 31))); }
 void pre() {
 	for (int i = 4; i <= N; i += 2) sv[i >> 5] = (sv[i >> 5] = sv[i >> 5] | (1 << (i & 31)));
-	for (long long i = 3; i * i <= N; i += 2) {
+	for (int64_t i = 3; i * i <= N; i += 2) {
 		if (ip(i)) {
-			for (long long j = i * i; j <= N; j += (i << 1))
+			for (int64_t j = i * i; j <= N; j += (i << 1))
 				sv[j >> 5] = (sv[j >> 5] = sv[j >> 5] | (1 << (j & 31)));
 		}
 	}
@@ -49,13 +49,13 @@ void pre() {
 
 // Segmented Sieve:
 
-bitset<N> ip; vector<long long> pri;
+bitset<N> ip; vector<int64_t> pri;
 void pre() {
 	pri.push_back(2);
-	for (long long i = 3; i < N; i += 2) {
+	for (int64_t i = 3; i < N; i += 2) {
 		if (!ip[i]) {
 			pri.push_back(i);
-			for (long long j = i * i; j < N; j += (i << 1)) ip[j] = 1;
+			for (int64_t j = i * i; j < N; j += (i << 1)) ip[j] = 1;
 		}
 	}
 }
@@ -64,9 +64,9 @@ auto seg(int l, int r) {
 	for (int i = 0; i < r - l + 1; ++i) sv[i] = true;
 	if (l == 1) sv[0] = false;
 	for (int i = 0; pri[i] * pri[i] <= r; ++i) {
-		long long cur = pri[i], base = (l / cur) * cur;
+		int64_t cur = pri[i], base = (l / cur) * cur;
 		if (base < l) base += cur;
-		for (long long j = base; j <= r; j += cur) sv[j - l] = false;
+		for (int64_t j = base; j <= r; j += cur) sv[j - l] = false;
 		if (base == cur) sv[base - l] = true;
 	}
 	vector<int> v;

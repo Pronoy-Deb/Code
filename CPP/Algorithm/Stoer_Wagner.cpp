@@ -8,17 +8,17 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 struct StoerWagner
 {
     int n;
-    long long G[N][N], dis[N];
+    int64_t G[N][N], dis[N];
     int idx[N];
     bool vis[N];
-    const long long inf = 1e18;
+    const int64_t inf = 1e18;
     StoerWagner() {}
     StoerWagner(int _n)
     {
         n = _n;
         memset(G, 0, sizeof G);
     }
-    void add_edge(int u, int v, long long w)
+    void add_edge(int u, int v, int64_t w)
     { // undirected edge, multiple edges are merged into one edge
         if (u != v)
         {
@@ -26,9 +26,9 @@ struct StoerWagner
             G[v][u] += w;
         }
     }
-    long long solve()
+    int64_t solve()
     {
-        long long ans = inf;
+        int64_t ans = inf;
         for (int i = 0; i < n; ++i)
             idx[i] = i + 1;
         shuffle(idx, idx + n, rnd);

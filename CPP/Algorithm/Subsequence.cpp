@@ -1,7 +1,6 @@
 // Subsequence Generation:
 // Note: Number of subsequences of a string : 2^n - 1
-// Bitmasking Approach:
-// Complexity: O(2^n)  // n = inp.size()
+// Bitmasking Approach: O(2^n)  // n = inp.size()
 
 vector<string> res;
 void sseq(auto &inp) {
@@ -15,8 +14,7 @@ void sseq(auto &inp) {
     }
 }
 
-// Recursive Approach:
-// Complexity: O(2^n)  // n = inp.size()
+// Recursive Approach: O(2^n)  // n = inp.size()
 
 vector<string> res;
 auto sseq(auto &inp, auto &sub, auto i) {

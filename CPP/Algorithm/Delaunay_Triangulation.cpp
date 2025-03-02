@@ -3,19 +3,19 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-int sign(long long x) { return (x > 0) - (x < 0); }
+int sign(int64_t x) { return (x > 0) - (x < 0); }
 struct PT {
-    long long x, y;
+    int64_t x, y;
     PT() { x = 0, y = 0; }
-    PT(long long x, long long y) : x(x), y(y) {}
+    PT(int64_t x, int64_t y) : x(x), y(y) {}
     PT(const PT &p) : x(p.x), y(p.y)    {}
     PT operator + (const PT &a) const { return PT(x + a.x, y + a.y); }
     PT operator - (const PT &a) const { return PT(x - a.x, y - a.y); }
     bool operator == (PT a) const { return sign(a.x - x) == 0 && sign(a.y - y) == 0; }
     bool operator < (PT a) const { return sign(a.x - x) == 0 ? y < a.y : x < a.x; }
-    long long norm2() { return x * x + y * y; }
-    long long cross(PT p) const { return x * p.y - y * p.x; }
-	long long cross(PT a, PT b) const { return (a - *this).cross(b - *this); }
+    int64_t norm2() { return x * x + y * y; }
+    int64_t cross(PT p) const { return x * p.y - y * p.x; }
+	int64_t cross(PT a, PT b) const { return (a - *this).cross(b - *this); }
 };
 // Each circumcircle contains none of the input points.
 // There must be no duplicate points.

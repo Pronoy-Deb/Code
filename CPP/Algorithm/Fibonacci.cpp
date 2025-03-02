@@ -2,7 +2,7 @@
 // Complexity: O(logn)
 
 void mul(auto a[3][3], auto b[3][3]) {
-	long long mul[3][3];
+	int64_t mul[3][3];
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
 			mul[i][j] = 0;
@@ -13,21 +13,21 @@ void mul(auto a[3][3], auto b[3][3]) {
 		for (int j = 0; j < 3; ++j) a[i][j] = mul[i][j];
 	}
 }
-long long power(auto F[3][3], auto n) {
-	long long M[3][3] = {{1, 1, 0}, {1, 0, 0}, {0, 1, 0}};
+int64_t power(auto F[3][3], auto n) {
+	int64_t M[3][3] = {{1, 1, 0}, {1, 0, 0}, {0, 1, 0}};
 	if (n == 1) return F[0][0] + F[0][1];
 	power(F, n >> 1); mul(F, F);
 	if (n & 1) mul(F, M); return F[0][0] + F[0][1];
 }
-long long fib(auto n) {
-	long long F[3][3] = {{1, 1, 0}, {1, 0, 0}, {0, 1, 0}};
+int64_t fib(auto n) {
+	int64_t F[3][3] = {{1, 1, 0}, {1, 0, 0}, {0, 1, 0}};
 	return (!n ? 0 : n <= 2 ? 1 : power(F, n - 2));
 }
 
 // Using DP: Complexity: O(n)
 // Bottom Up Approach:
 
-long long fib[N];
+int64_t fib[N];
 void pre() {
 	fib[0] = 0; fib[1] = 1;
 	for (int i = 2; i < N; ++i) fib[i] = fib[i - 1] + fib[i - 2];
@@ -35,8 +35,8 @@ void pre() {
 
 // Top Down Approach:
 
-long long dp[N];
-long long fib(auto n) {
+int64_t dp[N];
+int64_t fib(auto n) {
 	if (!n || n == 1) return n;
 	if (~dp[n]) return dp[n];
 	return dp[n] = fib(n - 1) + fib(n - 2);
@@ -47,12 +47,12 @@ long long fib(auto n) {
 #include <bits/stdc++.h>
 using namespace std;
 
-int fib(long long n, int mod) {
+int fib(int64_t n, int mod) {
 	assert(n >= 0); if (n <= 1) return n;
 	int a = 0, b = 1;
-	long long i = 1ll << (63 - __builtin_clzll(n) - 1);
+	int64_t i = 1ll << (63 - __builtin_clzll(n) - 1);
 	for (; i; i >>= 1) {
-		int na = (a * (long long)a + b * (long long)b) % mod;
+		int na = (a * (int64_t)a + b * (int64_t)b) % mod;
 		int nb = (2ll * a + b) * b % mod;
 		a = na; b = nb;
 		if (n & i) {
@@ -77,28 +77,28 @@ using namespace std;
 
 const int N = 3e5 + 9, mod = 1e9 + 7;
 
-int power(long long n, long long k) {
+int power(int64_t n, int64_t k) {
 	int ans = 1 % mod;
 	n %= mod;
 	if (n < 0)
 		n += mod;
 	while (k) {
 		if (k & 1)
-			ans = (long long)ans * n % mod;
-		n = (long long)n * n % mod;
+			ans = (int64_t)ans * n % mod;
+		n = (int64_t)n * n % mod;
 		k >>= 1;
 	}
 	return ans;
 }
-int fib(long long n) {
+int fib(int64_t n) {
 	assert(n >= 0);
 	if (n <= 1)
 		return n;
 	int a = 0;
 	int b = 1;
-	long long i = 1ll << (63 - __builtin_clzll(n) - 1);
+	int64_t i = 1ll << (63 - __builtin_clzll(n) - 1);
 	for (; i; i >>= 1) {
-		int na = (a * (long long)a + b * (long long)b) % mod;
+		int na = (a * (int64_t)a + b * (int64_t)b) % mod;
 		int nb = (2ll * a + b) * b % mod;
 		a = na;
 		b = nb;
@@ -132,7 +132,7 @@ int yo(vector<int> a) {
 	if (dp.count(a))
 		return fib[a];
 	vector<int> b(a.begin(), a.end() - 1);
-	long long res = yo(b);
+	int64_t res = yo(b);
 	for (int i = 0; i < b.size(); ++i)
 		b[i] = __gcd(b[i], a.back());
 	res = res * fib(a.back()) % mod * power(yo(b), mod - 2) % mod;

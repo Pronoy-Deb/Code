@@ -2,19 +2,19 @@
 using namespace std;
 
 const int N = 3e4 + 9;
-int sgn(long long x) { return (x > 0) - (x < 0); }
+int sgn(int64_t x) { return (x > 0) - (x < 0); }
 struct P {
-    long long x, y;
+    int64_t x, y;
     P() { x = 0, y = 0; }
-    P(long long x, long long y) : x(x), y(y) {}
+    P(int64_t x, int64_t y) : x(x), y(y) {}
     P(const P &p) : x(p.x), y(p.y)    {}
     P operator + (const P &a) const { return P(x + a.x, y + a.y); }
     P operator - (const P &a) const { return P(x - a.x, y - a.y); }
     bool operator == (P a) const { return sgn(a.x - x) == 0 && sgn(a.y - y) == 0; }
     bool operator < (P a) const { return sgn(a.x - x) == 0 ? y < a.y : x < a.x; }
-    long long norm2() { return x * x + y * y; }
-    long long cross(P p) const { return x * p.y - y * p.x; }
-	long long cross(P a, P b) const { return (a - *this).cross(b - *this); }
+    int64_t norm2() { return x * x + y * y; }
+    int64_t cross(P p) const { return x * p.y - y * p.x; }
+	int64_t cross(P a, P b) const { return (a - *this).cross(b - *this); }
 };
 // Each circumcircle contains none of the input points.
 // There must be no duplicate points.

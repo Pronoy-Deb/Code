@@ -5,13 +5,13 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-const long long inf = 1LL << 61;
+const int64_t inf = 1LL << 61;
 struct Dinic
 {
     struct edge
     {
         int to, rev;
-        long long flow, w;
+        int64_t flow, w;
         int id;
     };
     int n, s, t, mxid;
@@ -25,7 +25,7 @@ struct Dinic
         mxid = 0;
         g.resize(n);
     }
-    void add_edge(int u, int v, long long w, int id = -1)
+    void add_edge(int u, int v, int64_t w, int id = -1)
     {
         edge a = {v, (int)g[v].size(), 0, w, id};
         edge b = {u, (int)g[u].size(), 0, 0, -1}; // for bidirectional edges cap(b) = w
@@ -52,7 +52,7 @@ struct Dinic
         }
         return d[t] != -1;
     }
-    long long dfs(int u, long long flow)
+    int64_t dfs(int u, int64_t flow)
     {
         if (u == t)
             return flow;
@@ -64,7 +64,7 @@ struct Dinic
             int v = e.to;
             if (d[v] == d[u] + 1)
             {
-                long long nw = dfs(v, min(flow, e.w - e.flow));
+                int64_t nw = dfs(v, min(flow, e.w - e.flow));
                 if (nw > 0)
                 {
                     e.flow += nw;
@@ -75,15 +75,15 @@ struct Dinic
         }
         return 0;
     }
-    long long max_flow(int _s, int _t)
+    int64_t max_flow(int _s, int _t)
     {
         s = _s;
         t = _t;
-        long long flow = 0;
+        int64_t flow = 0;
         while (bfs())
         {
             done.assign(n, 0);
-            while (long long nw = dfs(s, inf))
+            while (int64_t nw = dfs(s, inf))
                 flow += nw;
         }
         flow_through.assign(mxid + 10, 0);
@@ -122,7 +122,7 @@ struct LR_Flow
         if (L != -1)
             edges.push_back({_t, _s, L, R, -1});
         F = Dinic(n);
-        long long target = 0;
+        int64_t target = 0;
         for (auto e : edges)
         {
             int u = e.u, v = e.v, l = e.l, r = e.r, id = e.id;
@@ -246,7 +246,7 @@ int32_t main()
     int c = F.max_flow(s, t);
     if (c == -1)
         return cout << -1 << '\n', 0;
-    long long ans = 1LL * c * r + 1LL * (n - c) * b;
+    int64_t ans = 1LL * c * r + 1LL * (n - c) * b;
     cout << ans << '\n';
     for (int i = 1; i <= n; i++)
     {
@@ -268,7 +268,7 @@ const int N = 3e5 + 9;
 // doesn't work for negative cycles
 // for undirected edges just make the directed flag false
 // Complexity: O(min(E^2 * V log V, E logV * flow))
-using T = long long;
+using T = int64_t;
 const T inf = 1LL << 61;
 struct MCMF
 {

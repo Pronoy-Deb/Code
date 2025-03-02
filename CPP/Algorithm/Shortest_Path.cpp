@@ -2,11 +2,11 @@
 // Use: Used to determine the shortest distance between source and destination vertex
 // Note: Does not work for negative (-ve) value of weights, use Bellman-Ford instead
 
-vector<pair<int, long long>> gp[N];
-bitset<N> vis; long long path[N], dis[N];
+vector<pair<int, int64_t>> gp[N];
+bitset<N> vis; int64_t path[N], dis[N];
 void dij(int src) {
     fill(dis, dis + N, LLONG_MAX);
-    dis[src] = 0; set<pair<long long, int>> st;
+    dis[src] = 0; set<pair<int64_t, int>> st;
     st.emplace(0, src);
     while (!st.empty()) {
         int nd = (*st.begin()).second; st.erase(st.begin());
@@ -65,7 +65,7 @@ void dij(int src) {
         gp[u].push_back({v, w});
     }
     int cnt[n + 5]{};
-    multiset<pair<long long, int>> st;
+    multiset<pair<int64_t, int>> st;
     st.emplace(0, 1);
     while (!st.empty()) {
         auto [d, u] = *st.begin();
@@ -89,10 +89,10 @@ const int N = 3e5 + 9, mod = 998244353;
 
 int n, m;
 vector<pair<int, int>> g[N], r[N];
-vector<long long> dijkstra(int s, int t, vector<int> &cnt) {
-    const long long inf = 1e18;
-    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> q;
-    vector<long long> d(n + 1, inf);
+vector<int64_t> dijkstra(int s, int t, vector<int> &cnt) {
+    const int64_t inf = 1e18;
+    priority_queue<pair<int64_t, int>, vector<pair<int64_t, int>>, greater<pair<int64_t, int>>> q;
+    vector<int64_t> d(n + 1, inf);
     vector<bool> vis(n + 1, 0);
     q.push({0, s});
     d[s] = 0;
@@ -107,7 +107,7 @@ vector<long long> dijkstra(int s, int t, vector<int> &cnt) {
         vis[u] = 1;
         for (auto y : g[u]) {
             int v = y.first;
-            long long w = y.second;
+            int64_t w = y.second;
             if (d[u] + w < d[v]) {
                 d[v] = d[u] + w;
                 q.push({d[v], v});
@@ -135,10 +135,10 @@ int32_t main() {
     auto d1 = dijkstra(s, t, cnt1);
     auto d2 = dijkstra(t, s, cnt2);
 
-    long long ans = d1[t];
+    int64_t ans = d1[t];
     for (int i = 1; i <= m; i++) {
         int x = u[i], y = v[i];
-        long long nw = d1[x] + w[i] + d2[y];
+        int64_t nw = d1[x] + w[i] + d2[y];
         if (nw == ans && 1LL * cnt1[x] * cnt2[y] % mod == cnt1[t])
             cout << "YES\n";
         else if (nw - ans + 1 < w[i])
@@ -185,10 +185,10 @@ void upd(int n, int b, int e, int i, int j, int dir, int u, int w) {
     upd(2 * n + 1, mid + 1, e, i, j, dir, u, w);
 }
 
-vector<long long> dijkstra(int s) {
-    const long long inf = 1e18;
-    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> q;
-    vector<long long> d(9 * N + 1, inf);
+vector<int64_t> dijkstra(int s) {
+    const int64_t inf = 1e18;
+    priority_queue<pair<int64_t, int>, vector<pair<int64_t, int>>, greater<pair<int64_t, int>>> q;
+    vector<int64_t> d(9 * N + 1, inf);
     vector<bool> vis(9 * N + 1, 0);
     q.push({0, s});
     d[s] = 0;
@@ -201,7 +201,7 @@ vector<long long> dijkstra(int s) {
         vis[u] = 1;
         for (auto y : g[u]) {
             int v = y.first;
-            long long w = y.second;
+            int64_t w = y.second;
             if (d[u] + w < d[v]) {
                 d[v] = d[u] + w;
                 q.push({d[v], v});
@@ -210,7 +210,7 @@ vector<long long> dijkstra(int s) {
     }
     return d;
 }
-long long ans[N];
+int64_t ans[N];
 int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
@@ -242,7 +242,7 @@ int32_t main() {
 
 // Shortest Path that does not pass through each edge:
 
-using ll = long long;
+using ll = int64_t;
 const ll inf = 1e18;
 using T = pair<ll, int>;
 
@@ -417,12 +417,12 @@ int32_t main() {
 // Bellman Ford (Single Source Shortest Distance with (-ve) Cost): O(V * E)
 
 bool bmf(auto src, auto &gp, auto &dis) {
-    long long V = dis.size();
+    int64_t V = dis.size();
     dis[src] = 0;
     bool updated;
     do {
         updated = false;
-        priority_queue<pair<long long, long long>, vector<pair<long long, long long>>, greater<pair<long long, long long>>> pq;
+        priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>, greater<pair<int64_t, int64_t>>> pq;
         for (int u = 0; u < V; ++u)
             if (dis[u] != LONG_LONG_MAX) pq.emplace(dis[u], u);
         while (!pq.empty()) {
@@ -443,14 +443,14 @@ bool bmf(auto src, auto &gp, auto &dis) {
 
 // Operation:
     int vr, eg; cin >> vr >> eg;
-    vector<vector<pair<long long, long long>>> gp(vr + 50);
-    vector<long long> dis(vr + 5, LLONG_MAX);
+    vector<vector<pair<int64_t, int64_t>>> gp(vr + 50);
+    vector<int64_t> dis(vr + 5, LLONG_MAX);
     for (i = 0; i < eg; ++i) {
-        long long u, v, w;
+        int64_t u, v, w;
         cin >> u >> v >> w;
         gp[u].emplace_back(v, w);
     }
-    long long src;
+    int64_t src;
     cin >> src;  // specify the source
     if (bmf(src, gp, dis)) {
         cout << -1 << '\n';
@@ -468,7 +468,7 @@ https://cses.fi/problemset/task/1197
         cin >> u >> v >> w;
         gp.emplace_back(u, v, w);
     }
-    long long dis[n + 5], par[n + 5];
+    int64_t dis[n + 5], par[n + 5];
     fill(dis, dis + n + 5, M * M);
     int lst;
     dis[1] = 0;
@@ -546,7 +546,7 @@ int32_t main() {
 https://atcoder.jp/contests/abc375/tasks/abc375_f
 
 const ll N = 3e2 + 5, M = 1e12;
-long long dis[N][N], n;
+int64_t dis[N][N], n;
 void reset() {
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) dis[i][j] = (i == j ? 0 : M);
@@ -560,7 +560,7 @@ void pre() {
         }
     }
 }
-void add(int a, int b, long long c) { // add a new edge from a <--> b with cost c
+void add(int a, int b, int64_t c) { // add a new edge from a <--> b with cost c
     dis[a][b] = min(dis[a][b], c); dis[b][a] = min(dis[b][a], c);
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) {
@@ -589,7 +589,7 @@ void add(int a, int b, long long c) { // add a new edge from a <--> b with cost 
             int x, y; cin >> x >> y; qr[i] = {2, x, y};
         }
     }
-    pre(); vector<long long> ans;
+    pre(); vector<int64_t> ans;
     for (i = q - 1; i >= 0; --i) {
         if (qr[i][0] == 2) {
             int x = qr[i][1], y = qr[i][2];
@@ -598,7 +598,7 @@ void add(int a, int b, long long c) { // add a new edge from a <--> b with cost 
         }
         else {
             int in = qr[i][1], a = eg[in][0], b = eg[in][1];
-            long long c = eg[in][2]; add(a, b, c);
+            int64_t c = eg[in][2]; add(a, b, c);
         }
     }
     for (i = ans.size() - 1; i >= 0; --i) cout << ans[i] << '\n';
@@ -608,16 +608,16 @@ void add(int a, int b, long long c) { // add a new edge from a <--> b with cost 
 // Johnson's algorithm for all pair shortest paths with negative edges
 // Complexity: O(N * M) + O(N * M * log(N))
 
-const long long INF = 1e18;
+const int64_t INF = 1e18;
 
 struct edge {
     int u, v;
-    long long w;
+    int64_t w;
     edge() {}
-    edge(int u, int v, long long w) : u(u), v(v), w(w) {}
+    edge(int u, int v, int64_t w) : u(u), v(v), w(w) {}
 };
 
-bool bellman_ford(int n, int s, vector<struct edge> ed, vector<long long> &d) {
+bool bellman_ford(int n, int s, vector<struct edge> ed, vector<int64_t> &d) {
     d[s] = 0;
     for (int i = 0; i <= n; i++) {
         int flag = 0;
@@ -633,13 +633,13 @@ bool bellman_ford(int n, int s, vector<struct edge> ed, vector<long long> &d) {
     return 0;
 }
 
-vector<long long> dijkstra(int n, int s, vector<struct edge> ed, vector<long long> &h) {
-    vector<pair<int, long long>> g[n + 1];
-    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> q;
+vector<int64_t> dijkstra(int n, int s, vector<struct edge> ed, vector<int64_t> &h) {
+    vector<pair<int, int64_t>> g[n + 1];
+    priority_queue<pair<int64_t, int>, vector<pair<int64_t, int>>, greater<pair<int64_t, int>>> q;
     for (auto e : ed) {
         g[e.u].push_back({e.v, e.w + h[e.u] - h[e.v]});
     }
-    vector<long long> d(n + 1, INF);
+    vector<int64_t> d(n + 1, INF);
     vector<bool> vis(n + 1, 0);
     q.push({0, s});
     d[s] = 0;
@@ -652,7 +652,7 @@ vector<long long> dijkstra(int n, int s, vector<struct edge> ed, vector<long lon
         vis[u] = 1;
         for (auto e : g[u]) {
             int v = e.first;
-            long long w = e.second;
+            int64_t w = e.second;
             if (d[u] + w < d[v]) {
                 d[v] = d[u] + w;
                 q.push({d[v], v});
@@ -665,9 +665,9 @@ vector<long long> dijkstra(int n, int s, vector<struct edge> ed, vector<long lon
     return d;
 }
 
-long long ans[N][N];
+int64_t ans[N][N];
 int johnson(int n, vector<struct edge> ed) {
-    vector<long long> potential(n + 1, INF);
+    vector<int64_t> potential(n + 1, INF);
     for (int i = 1; i <= n; i++)
         ed.push_back(edge(0, i, 0));
     if (bellman_ford(n, 0, ed, potential) == 0)
@@ -682,7 +682,7 @@ int johnson(int n, vector<struct edge> ed) {
     for (int i = 1; i <= n; i++)
         ed.pop_back();
     for (int i = 1; i <= n; i++) {
-        vector<long long> d = dijkstra(n, i, ed, potential);
+        vector<int64_t> d = dijkstra(n, i, ed, potential);
         for (int j = 1; j <= n; j++)
             ans[i][j] = d[j];
     }

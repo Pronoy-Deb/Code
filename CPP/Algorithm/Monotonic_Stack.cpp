@@ -1,9 +1,9 @@
 // Index of Next Nearest Greater Element: O(n)
 
-auto nng(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1); stack<long long> sk;
+auto nng(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1); stack<int64_t> sk;
     for (int i = 0; i < n; ++i) {
-        while(!sk.empty() && ar[i] > ar[sk.top()]) {
+        while(!sk.empty() && aa[i] > aa[sk.top()]) {
             v[sk.top()] = i; sk.pop();
         }
         sk.push(i);
@@ -13,10 +13,10 @@ auto nng(auto &ar) {
 
 // Index of Next Nearest Smaller Element: O(n)
 
-auto nns(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1); stack<long long> sk;
+auto nns(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1); stack<int64_t> sk;
     for (int i = 0; i < n; ++i) {
-        while(!sk.empty() && ar[i] < ar[sk.top()]) {
+        while(!sk.empty() && aa[i] < aa[sk.top()]) {
             v[sk.top()] = i; sk.pop();
         }
         sk.push(i);
@@ -25,16 +25,16 @@ auto nns(auto &ar) {
 
 // Index of Next Farthest Greater Element: O(n*logn)
 
-auto nfg(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1);
+auto nfg(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1);
 	map<int, stack<int>> mp;
-	for (int i = 0; i < n; ++i) mp[ar[i]].push(i);
+	for (int i = 0; i < n; ++i) mp[aa[i]].push(i);
 	for (int i = n - 1; i >= 0; --i) {
 		if (mp.empty()) break;
         auto it = mp.begin();
         while (it != mp.end()) {
             auto &[f, s] = *it;
-            if (f >= ar[i]) break;
+            if (f >= aa[i]) break;
             while (!s.empty()) {
                 v[s.top()] = i; s.pop();
             }
@@ -42,9 +42,9 @@ auto nfg(auto &ar) {
             else ++it;
         }
         if (v[i] == -1) {
-            int sz = mp[ar[i]].size();
-            if (sz > 0) mp[ar[i]].pop();
-            if (sz == 1) mp.erase(ar[i]);
+            int sz = mp[aa[i]].size();
+            if (sz > 0) mp[aa[i]].pop();
+            if (sz == 1) mp.erase(aa[i]);
         }
     }
     return v;
@@ -52,16 +52,16 @@ auto nfg(auto &ar) {
 
 // Index of Next Farthest Smaller Element: O(n*logn)
 
-auto nfs(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1);
+auto nfs(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1);
 	map<int, stack<int>, greater<>> mp;
-	for (int i = 0; i < n; ++i) mp[ar[i]].push(i);
+	for (int i = 0; i < n; ++i) mp[aa[i]].push(i);
 	for (int i = n - 1; i >= 0; --i) {
 		if (mp.empty()) break;
         auto it = mp.begin();
         while (it != mp.end()) {
             auto &[f, s] = *it;
-            if (f <= ar[i]) break;
+            if (f <= aa[i]) break;
             while (!s.empty()) {
                 v[s.top()] = i; s.pop();
             }
@@ -69,9 +69,9 @@ auto nfs(auto &ar) {
             else ++it;
         }
         if (v[i] == -1) {
-            int sz = mp[ar[i]].size();
-            if (sz > 0) mp[ar[i]].pop();
-            if (sz == 1) mp.erase(ar[i]);
+            int sz = mp[aa[i]].size();
+            if (sz > 0) mp[aa[i]].pop();
+            if (sz == 1) mp.erase(aa[i]);
         }
     }
     return v;
@@ -79,10 +79,10 @@ auto nfs(auto &ar) {
 
 // Index of Previous Nearest Greater Element: O(n)
 
-auto png(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1); stack<long long> sk;
+auto png(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1); stack<int64_t> sk;
     for (int i = n - 1; i >= 0; --i) {
-        while (!sk.empty() && ar[i] > ar[sk.top()]) {
+        while (!sk.empty() && aa[i] > aa[sk.top()]) {
             v[sk.top()] = i; sk.pop();
         }
         sk.push(i);
@@ -92,10 +92,10 @@ auto png(auto &ar) {
 
 // Index of Previous Nearest Smaller Element: O(n)
 
-auto pns(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1); stack<long long> sk;
+auto pns(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1); stack<int64_t> sk;
     for (int i = n - 1; i >= 0; --i) {
-        while (!sk.empty() && ar[i] < ar[sk.top()]) {
+        while (!sk.empty() && aa[i] < aa[sk.top()]) {
             v[sk.top()] = i; sk.pop();
         }
         sk.push(i);
@@ -105,16 +105,16 @@ auto pns(auto &ar) {
 
 // Index of Previous Farthest Greater Element: O(n*logn)
 
-auto pfg(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1);
+auto pfg(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1);
 	map<int, stack<int>> mp;
-	for (int i = n - 1; i >= 0; --i) mp[ar[i]].push(i);
+	for (int i = n - 1; i >= 0; --i) mp[aa[i]].push(i);
 	for (int i = 0; i < n; ++i) {
 		if (mp.empty()) break;
         auto it = mp.begin();
         while (it != mp.end()) {
             auto &[f, s] = *it;
-            if (f >= ar[i]) break;
+            if (f >= aa[i]) break;
             while (!s.empty()) {
                 v[s.top()] = i; s.pop();
             }
@@ -122,9 +122,9 @@ auto pfg(auto &ar) {
             else ++it;
         }
         if (v[i] == -1) {
-            int sz = mp[ar[i]].size();
-            if (sz > 0) mp[ar[i]].pop();
-            if (sz == 1) mp.erase(ar[i]);
+            int sz = mp[aa[i]].size();
+            if (sz > 0) mp[aa[i]].pop();
+            if (sz == 1) mp.erase(aa[i]);
         }
     }
     return v;
@@ -132,16 +132,16 @@ auto pfg(auto &ar) {
 
 // Index of Previous Farthest Smaller Element: O(n*logn)
 
-auto pfs(auto &ar) {
-    int n = ar.size(); vector<int> v(n, -1);
+auto pfs(auto &aa) {
+    int n = aa.size(); vector<int> v(n, -1);
 	map<int, stack<int>, greater<>> mp;
-	for (int i = n - 1; i >= 0; --i) mp[ar[i]].push(i);
+	for (int i = n - 1; i >= 0; --i) mp[aa[i]].push(i);
 	for (int i = 0; i < n; ++i) {
 		if (mp.empty()) break;
         auto it = mp.begin();
         while (it != mp.end()) {
             auto &[f, s] = *it;
-            if (f <= ar[i]) break;
+            if (f <= aa[i]) break;
             while (!s.empty()) {
                 v[s.top()] = i; s.pop();
             }
@@ -149,9 +149,9 @@ auto pfs(auto &ar) {
             else ++it;
         }
         if (v[i] == -1) {
-            int sz = mp[ar[i]].size();
-            if (sz > 0) mp[ar[i]].pop();
-            if (sz == 1) mp.erase(ar[i]);
+            int sz = mp[aa[i]].size();
+            if (sz > 0) mp[aa[i]].pop();
+            if (sz == 1) mp.erase(aa[i]);
         }
     }
     return v;
@@ -159,18 +159,18 @@ auto pfs(auto &ar) {
 
 // Next Smaller of Next Greater: O(n)
 
-auto nge(auto &ar, char ord) {
-	stack<int> S; int n = ar.size(); vector<int> next(n);
+auto nge(auto &aa, char ord) {
+	stack<int> S; int n = aa.size(); vector<int> next(n);
 	for (int i = n - 1; i >= 0; --i) {
-        while (!S.empty() && ((ord == 'G') ? ar[S.top()] <= ar[i] : ar[S.top()] >= ar[i])) S.pop();
+        while (!S.empty() && ((ord == 'G') ? aa[S.top()] <= aa[i] : aa[S.top()] >= aa[i])) S.pop();
 		next[i] = S.empty() ? -1 : S.top(); S.push(i);
 	}
     return next;
 }
-auto nsng(auto &ar) {
-    auto ng = nge(ar, 'G'), rs = nge(ar, 'S');
-    int n = ar.size(); vector<int> ans(n);
-	for (int i = 0; i < n; ++i) ans[i] = (ng[i] != -1 && rs[ng[i]] != -1) ? ar[rs[ng[i]]] : -1;
+auto nsng(auto &aa) {
+    auto ng = nge(aa, 'G'), rs = nge(aa, 'S');
+    int n = aa.size(); vector<int> ans(n);
+	for (int i = 0; i < n; ++i) ans[i] = (ng[i] != -1 && rs[ng[i]] != -1) ? aa[rs[ng[i]]] : -1;
     return ans;
 }
 

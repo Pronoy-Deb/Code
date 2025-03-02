@@ -1,6 +1,6 @@
 // Xor from 1 to n: O(1)
 
-long long xor(long long n) {
+int64_t xor(int64_t n) {
     int rem = n % 4;
     return !rem ? n : (rem == 1) ? 1 : (rem == 2) ? n + 1 : 0;
 }
@@ -9,24 +9,24 @@ long long xor(long long n) {
 // Note: 1-based indexing
 https://cses.fi/problemset/task/1650
 
-long long pxr[N], ar[N];
+int64_t pxr[N], aa[N];
 void pre() {
-	for (int i = 1; i < N; ++i) pxr[i] = pxr[i - 1] ^ ar[i - 1];
+	for (int i = 1; i < N; ++i) pxr[i] = pxr[i - 1] ^ aa[i - 1];
 }
-long long xr(int l, int r) { return pxr[r] ^ pxr[l - 1]; }
+int64_t xr(int l, int r) { return pxr[r] ^ pxr[l - 1]; }
 
 // OR,
     cin >> n >> q;
-    ll ar[n + 1][32];
-    for (i = 0; i < 32; ++i) ar[0][i] = 0;
-    for (i = 1; i <= n; ++i) {
+    ll aa[n + 1][32];
+    for (int i = 0; i < 32; ++i) aa[0][i] = 0;
+    for (int i = 1; i <= n; ++i) {
         cin >> a;
-        for (j = 0; j < 32; ++j) ar[i][j] = ar[i - 1][j] + (bool)(a & (1 << j));
+        for (j = 0; j < 32; ++j) aa[i][j] = aa[i - 1][j] + (bool)(a & (1 << j));
     }
     while (q--) {
         cin >> a >> b; c = 0;
-        for (i = 0; i < 32; ++i) {
-            d = ar[b][i] - ar[a - 1][i];
+        for (int i = 0; i < 32; ++i) {
+            d = aa[b][i] - aa[a - 1][i];
             if (d & 1) c |= (1 << i);
         }
         cout << c << '\n';
@@ -36,19 +36,19 @@ long long xr(int l, int r) { return pxr[r] ^ pxr[l - 1]; }
 https://cses.fi/problemset/task/1655
 
 const int L = 30;
-long long trie[N * L][2], c = 0;
-void up(long long x) {
-    long long nd = 0;
+int64_t trie[N * L][2], c = 0;
+void up(int64_t x) {
+    int64_t nd = 0;
     for (int i = L; i >= 0; --i) {
-        long long y = x >> i & 1;
+        int64_t y = x >> i & 1;
         if (!trie[nd][y]) trie[nd][y] = ++c;
         nd = trie[nd][y];
     }
 }
-long long get(long long x) {
-    long long ans = 0, nd = 0;
+int64_t get(int64_t x) {
+    int64_t ans = 0, nd = 0;
     for (int i = L; i >= 0; --i) {
-        long long y = x >> i & 1;
+        int64_t y = x >> i & 1;
         if (trie[nd][y ^ 1]) {
             nd = trie[nd][y ^ 1]; ans += (1 << i);
         }
@@ -60,9 +60,9 @@ void reset(int n) { for (int i = 0; i <= n; ++i) trie[i][0] = trie[i][1] = 0; }
 
 // Operation:
     cin >> n;
-    long long xr = 0, mx = 0; up(xr);
-    for (i = 0; i < n; ++i) {
-        long long x; cin >> x; xr ^= x; up(xr);
+    int64_t xr = 0, mx = 0; up(xr);
+    for (int i = 0; i < n; ++i) {
+        int64_t x; cin >> x; xr ^= x; up(xr);
         mx = max(get(xr), mx);
     }
     cout << mx;
@@ -71,10 +71,10 @@ void reset(int n) { for (int i = 0; i <= n; ++i) trie[i][0] = trie[i][1] = 0; }
 
 // NOT CORRECTED YET
 
-// long long mxxor(auto &v) {
+// int64_t mxxor(auto &v) {
 //     int n = v.size(), ind = 0;
 //     for (int i = 31; i >= 0; --i) {
-//         long long mx = LLONG_MIN, mxind = ind;
+//         int64_t mx = LLONG_MIN, mxind = ind;
 //         for (int j = ind; j < n; ++j) {
 //             if (v[j] & (1 << i) && v[j] > mx) {
 //                 mxind = j; mx = v[j];
@@ -87,18 +87,18 @@ void reset(int n) { for (int i = 0; i <= n; ++i) trie[i][0] = trie[i][1] = 0; }
 //         }
 //         ++ind;
 //     }
-//     long long ans = 0; for (int i = 0; i < n; ++i) ans ^= v[i];
+//     int64_t ans = 0; for (int i = 0; i < n; ++i) ans ^= v[i];
 //     return ans;
 // }
 
 // XOR Segment Tree:
 https://codeforces.com/contest/1654/problem/F
 
-long long a[N];
+int64_t aa[N];
 struct XORSegmentTree {
     // the length of the array should be 2^LOG for some LOG
-    vector<long long> t[4 * N]; // O(LOG 2^LOG) memory
-    long long lazy[4 * N];
+    vector<int64_t> t[4 * N]; // O(LOG 2^LOG) memory
+    int64_t lazy[4 * N];
     XORSegmentTree() {
         for (int i = 0; i < 4 * N; i++) {
             t[i].clear();
@@ -111,24 +111,24 @@ struct XORSegmentTree {
     lazy[n] = 0;
     t[n].clear();
     if (b == e) {
-        t[n].push_back(a[b]);
+        t[n].push_back(aa[b]);
         return;
     }
     int mid = (b + e) >> 1, l = n << 1, r = l | 1;
     build(l, b, mid);
     build(r, mid + 1, e);
     int len = e - b + 1;
-    // t[n][i] = sum of a[p ^ i] over all b <= p <= e
+    // t[n][i] = sum of aa[p ^ i] over all b <= p <= e
     t[n].resize(len);
     for (int i = 0; i < len; i++) {
         if (i < (len >> 1)) t[n][i] = t[l][i] + t[r][i];
         else t[n][i] = t[r][i - (len >> 1)] + t[l][i - (len >> 1)];
     }
     }
-    // add x to a[i], basically the change occurs for all t[n][i] where n is a candidate node
+    // add x to aa[i], basically the change occurs for all t[n][i] where n is a candidate node
     // so we just create a lazy array to remember the change for each node
     // O(LOG)
-    void upd(int n, int b, int e, int i, long long x) {
+    void upd(int n, int b, int e, int i, int64_t x) {
     if (b > i || e < i) return;
     lazy[n] += x;
     if (b == e && b == i) {
@@ -139,9 +139,9 @@ struct XORSegmentTree {
     upd(r, mid + 1, e, i, x);
     }
     // layer = LOG - 1
-    // return sum of a[p ^ x] over all i <= p <= j
+    // return sum of aa[p ^ x] over all i <= p <= j
     // O(LOG)
-    long long query(int n, int b, int e, int i, int j, int x, int layer) {
+    int64_t query(int n, int b, int e, int i, int j, int x, int layer) {
     if (i > j or b > j or e < i) return 0;
     if (b >= i and e <= j) return lazy[n] + (layer == -1 ? t[n][0] : t[n][x & ((1 << layer + 1) - 1)]);
     int mid = (b + e) >> 1, l = n << 1, r = l | 1;
@@ -159,7 +159,7 @@ int32_t main() {
   cin.tie(0);
   int k = 17, n = (1 << k);
   for (int i = 0; i < n; i++) {
-    a[i] = ran() % 1000000000;
+    aa[i] = ran() % 1000000000;
   }
   t.build(1, 0, n - 1);
   int q = 1000;
@@ -167,12 +167,12 @@ int32_t main() {
     int l = ran() % n, r = ran() % (n - l) + l, x = ran() % (1 << k);
     int z = ran() % n, add = ran() % 100;
     t.upd(1, 0, n - 1, z, add);
-    a[z] += add;
-    long long sum = 0;
+    aa[z] += add;
+    int64_t sum = 0;
     for (int i = l; i <= r; i++) {
-      sum += a[i ^ x];
+      sum += aa[i ^ x];
     }
-    long long res = t.query(1, 0, n - 1, l, r, x, k - 1);
+    int64_t res = t.query(1, 0, n - 1, l, r, x, k - 1);
     cout << sum << ' ' << res << '\n';
     assert(sum == res);
   }
@@ -182,7 +182,7 @@ int32_t main() {
 // XOR Equation:
 
 const int N = 55, mod = 1000000003;
-int k, Z, dp[N][2][2]; vector<long long> A;
+int k, Z, dp[N][2][2]; vector<int64_t> A;
 // par = parity of the number of kth bits which are on
 // f = if we have offed any kth bit
 int yo(int i, int par, int f) {
@@ -192,9 +192,9 @@ int yo(int i, int par, int f) {
     if (ret != -1)
         return ret;
     ret = 0;
-    if (A[i] >> k & 1)
+    if (Aa[i] >> k & 1)
     {
-        ret += 1LL * yo(i - 1, par ^ 1, f) * ((A[i] - (1LL << k) + 1) % mod) % mod; // keep it on
+        ret += 1LL * yo(i - 1, par ^ 1, f) * ((Aa[i] - (1LL << k) + 1) % mod) % mod; // keep it on
         ret %= mod;
         // make it off
         if (f)
@@ -210,7 +210,7 @@ int yo(int i, int par, int f) {
     }
     else
     {
-        ret += 1LL * yo(i - 1, par, f) * ((A[i] + 1) % mod) % mod;
+        ret += 1LL * yo(i - 1, par, f) * ((Aa[i] + 1) % mod) % mod;
         ret %= mod;
     }
     return ret;
@@ -218,19 +218,19 @@ int yo(int i, int par, int f) {
 
 // number of solutions of the equation x0 xor x1 xor ... x(n - 1) = x s.t. 0 <= xi <= ai
 // O(n * log(MAX))
-int solve(vector<long long> a, long long x, int K)
+int solve(vector<int64_t> a, int64_t x, int K)
 {
     int n = a.size();
     k = K;
     bool allzero = true;
     for (int i = 0; i < n; ++i)
-        allzero &= a[i] == 0;
+        allzero &= aa[i] == 0;
     if (allzero)
         return x == 0;
     int cnt = 0;
     for (int i = 0; i < n; ++i)
     {
-        long long x = a[i];
+        int64_t x = aa[i];
         cnt += x >> k & 1;
     }
     memset(dp, -1, sizeof dp);
@@ -241,7 +241,7 @@ int solve(vector<long long> a, long long x, int K)
     {
         for (int i = 0; i < n; ++i)
         {
-            long long &x = a[i];
+            int64_t &x = aa[i];
             if (x >> k & 1)
                 x ^= 1 << k;
         }
@@ -257,12 +257,12 @@ int main()
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int n;
-    long long x;
+    int64_t x;
     while (cin >> n >> x and n)
     {
-        vector<long long> a(n);
+        vector<int64_t> a(n);
         for (int i = 0; i < n; ++i)
-            cin >> a[i];
+            cin >> aa[i];
         cout << solve(a, x, 30) << '\n';
     }
     return 0;
@@ -277,7 +277,7 @@ using namespace std;
 
 const int N = 1030;
 
-int a[N][N], p[N], n, vis[N];
+int aa[N][N], p[N], n, vis[N];
 void yo(int cur)
 {
     if (vis[cur])
@@ -287,7 +287,7 @@ void yo(int cur)
     {
         for (int j = i + 1; j <= n; j++)
         {
-            int nxt = cur ^ a[i][p[i]] ^ a[j][p[j]] ^ a[i][p[j]] ^ a[j][p[i]];
+            int nxt = cur ^ aa[i][p[i]] ^ aa[j][p[j]] ^ aa[i][p[j]] ^ aa[j][p[i]];
             swap(p[i], p[j]);
             yo(nxt);
             swap(p[i], p[j]);
@@ -308,9 +308,9 @@ int32_t main()
         {
             for (int j = 1; j <= n; j++)
             {
-                cin >> a[i][j];
+                cin >> aa[i][j];
                 if (i == j)
-                    p[i] = i, cur ^= a[i][i];
+                    p[i] = i, cur ^= aa[i][i];
             }
         }
         memset(vis, 0, sizeof vis);
@@ -328,7 +328,7 @@ int32_t main()
 
 const int N = 55, mod = 1000000003;
 int k, Z, dp[N][2][2];
-vector<long long> A;
+vector<int64_t> A;
 // par = parity of the number of kth bits which are on
 // f = if we have offed any kth bit
 int yo(int i, int par, int f)
@@ -341,9 +341,9 @@ int yo(int i, int par, int f)
     if (ret != -1)
         return ret;
     ret = 0;
-    if (A[i] >> k & 1)
+    if (Aa[i] >> k & 1)
     {
-        ret += 1LL * yo(i - 1, par ^ 1, f) * ((A[i] - (1LL << k) + 1) % mod) % mod; // keep it on
+        ret += 1LL * yo(i - 1, par ^ 1, f) * ((Aa[i] - (1LL << k) + 1) % mod) % mod; // keep it on
         ret %= mod;
         // make it off
         if (f)
@@ -359,7 +359,7 @@ int yo(int i, int par, int f)
     }
     else
     {
-        ret += 1LL * yo(i - 1, par, f) * ((A[i] + 1) % mod) % mod;
+        ret += 1LL * yo(i - 1, par, f) * ((Aa[i] + 1) % mod) % mod;
         ret %= mod;
     }
     return ret;
@@ -367,21 +367,21 @@ int yo(int i, int par, int f)
 
 // number of solutions of the equation x0 xor x1 xor ... x(n - 1) = x s.t. 0 <= xi <= ai
 // O(n * log(MAX))
-int solve(vector<long long> a, long long x, int K)
+int solve(vector<int64_t> a, int64_t x, int K)
 {
     int n = a.size();
     k = K;
     bool allzero = true;
     for (int i = 0; i < n; i++)
     {
-        allzero &= a[i] == 0;
+        allzero &= aa[i] == 0;
     }
     if (allzero)
         return x == 0;
     int cnt = 0;
     for (int i = 0; i < n; i++)
     {
-        long long x = a[i];
+        int64_t x = aa[i];
         cnt += x >> k & 1;
     }
     memset(dp, -1, sizeof dp);
@@ -392,7 +392,7 @@ int solve(vector<long long> a, long long x, int K)
     {
         for (int i = 0; i < n; i++)
         {
-            long long &x = a[i];
+            int64_t &x = aa[i];
             if (x >> k & 1)
                 x ^= 1 << k;
         }
@@ -408,13 +408,13 @@ int main()
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int n;
-    long long x;
+    int64_t x;
     while (cin >> n >> x and n)
     {
-        vector<long long> a(n);
+        vector<int64_t> a(n);
         for (int i = 0; i < n; i++)
         {
-            cin >> a[i];
+            cin >> aa[i];
         }
         cout << solve(a, x, 30) << '\n';
     }

@@ -2,18 +2,18 @@
 // Use: Solves the equation: ax + by = gcd(a, b) and determines gcd(a, b), x and y
 // Note: The equation ax + by = gcd(a, b) has a solution if and only if gcd(a, b) divides c (c is the gcd of a and b) and the equation is known as linear diophantine equation
 
-long long ee(long long a, long long b, auto &x, auto &y) {
+int64_t ee(int64_t a, int64_t b, auto &x, auto &y) {
 	if (!a) { x = 0; y = 1; return b; }
-	long long x1, y1, gcd = ee(b % a, a, x1, y1);
+	int64_t x1, y1, gcd = ee(b % a, a, x1, y1);
 	x = y1 - (b / a) * x1; y = x1; return gcd;
 }
-long long inv(long long a, long long m) {
-	long long x, y, g = ee(a, m, x, y);
+int64_t inv(int64_t a, int64_t m) {
+	int64_t x, y, g = ee(a, m, x, y);
 	if (g != 1) return -1; return (x % m + m) % m;
 }
 
 // Operation:
-long long a, b, x, y;
+int64_t a, b, x, y;
 cin >> a >> b;
 cout << ee(a, b, x, y) << x << y;
 
@@ -22,8 +22,7 @@ cout << ee(a, b, x, y) << x << y;
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll = long long;
-ll extended_euclid(ll a, ll b, ll &x, ll &y)
+int64_t extended_euclid(int64_t a, int64_t b, int64_t &x, int64_t &y)
 {
 	if (b == 0)
 	{
@@ -31,16 +30,16 @@ ll extended_euclid(ll a, ll b, ll &x, ll &y)
 		y = 0;
 		return a;
 	}
-	ll x1, y1;
-	ll d = extended_euclid(b, a % b, x1, y1);
+	int64_t x1, y1;
+	int64_t d = extended_euclid(b, a % b, x1, y1);
 	x = y1;
 	y = x1 - y1 * (a / b);
 	return d;
 }
-ll inverse(ll a, ll m)
+int64_t inverse(int64_t a, int64_t m)
 {
-	ll x, y;
-	ll g = extended_euclid(a, m, x, y);
+	int64_t x, y;
+	int64_t g = extended_euclid(a, m, x, y);
 	if (g != 1)
 		return -1;
 	return (x % m + m) % m;
@@ -49,7 +48,7 @@ int32_t main()
 {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-	ll x = 100, m = 37;
+	int64_t x = 100, m = 37;
 	cout << inverse(x, m) << '\n';
 	return 0;
 }

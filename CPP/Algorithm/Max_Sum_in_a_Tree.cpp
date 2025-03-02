@@ -4,8 +4,7 @@
 using namespace std;
 
 const int N = 1e5 + 9;
-using ll = long long;
-const ll inf = 1e18;
+const int64_t inf = 1e18;
 
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 struct node
@@ -13,9 +12,9 @@ struct node
     node *l, *r;
     int prior;
     int sz;
-    ll val;
-    ll lazy_a, lazy_d;
-    node(ll id)
+    int64_t val;
+    int64_t lazy_a, lazy_d;
+    node(int64_t id)
     {
         l = r = nullptr;
         sz = 1;
@@ -44,7 +43,7 @@ struct treap
             return;
         t->sz = (t->l ? t->l->sz : 0) + 1 + (t->r ? t->r->sz : 0);
     }
-    void add(node *t, ll a, ll d)
+    void add(node *t, int64_t a, int64_t d)
     {
         if (!t)
             return;
@@ -58,7 +57,7 @@ struct treap
         add(t->r, t->lazy_a + ((t->l ? t->l->sz : 0) + 1) * t->lazy_d, t->lazy_d);
         t->lazy_a = t->lazy_d = 0;
     }
-    void split(node *t, ll x, node *&l, node *&r)
+    void split(node *t, int64_t x, node *&l, node *&r)
     {
         if (t == nullptr)
         {
@@ -113,7 +112,7 @@ struct treap
         pull(l);
         return l;
     }
-    void insert(ll id)
+    void insert(int64_t id)
     {
         node *l, *r;
         split(root, id, l, r);
@@ -123,11 +122,11 @@ struct treap
     { // combine with another treap
         root = merge_treap(root, x);
     }
-    void add_arithmetic_progression(ll a, ll d)
+    void add_arithmetic_progression(int64_t a, int64_t d)
     {
         add(root, a, d);
     }
-    vector<ll> ans;
+    vector<int64_t> ans;
     void dfs(node *cur)
     {
         if (!cur)
@@ -137,7 +136,7 @@ struct treap
         ans.push_back(cur->val);
         dfs(cur->r);
     }
-    vector<ll> get()
+    vector<int64_t> get()
     {
         ans.clear();
         dfs(root);
@@ -193,7 +192,7 @@ int32_t main()
     dfs(1);
     // f[u][k] = sum of dp[u][i] such that i <= k
     auto v = dp[1].get();
-    ll ans = 0;
+    int64_t ans = 0;
     for (int i = 0; i < k; i++)
     {
         ans += v[i];

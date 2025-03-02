@@ -23,7 +23,6 @@ void sol() {
     cout << x1 << i1 << '\n';
     cout << x2 << i2 << '\n';
 
-
 // Cubic Equation: a*x^3 + b*x^2 + c*x + d = 0;
 // Complexity:
 

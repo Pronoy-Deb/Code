@@ -4,7 +4,7 @@
 using namespace std;
 
 const int N = 3e5 + 9, mod = 1e9 + 7;
-int power(long long n, long long k, const int mod)
+int power(int64_t n, int64_t k, const int mod)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -13,8 +13,8 @@ int power(long long n, long long k, const int mod)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;
@@ -360,7 +360,7 @@ using namespace std;
 
 const int N = 20;
 
-long long dp[1 << N];
+int64_t dp[1 << N];
 int n, a[N][N];
 int32_t main()
 {

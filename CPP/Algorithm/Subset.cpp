@@ -2,11 +2,11 @@
 // Bitmasking Approach:
 // Complexity: O(2^n)  // n = inp.size()
 
-vector<vector<long long>> res;
+vector<vector<int64_t>> res;
 auto sset(auto &inp) {
     int sz = inp.size(), n = (1 << sz);
     for (int i = 0; i < n; ++i) {
-        vector<long long> sub;
+        vector<int64_t> sub;
         int j = 0, hi = __builtin_popcount(i);
         while (hi) {
             if (i & (1 << j)) {
@@ -22,7 +22,7 @@ auto sset(auto &inp) {
 // Complexity: O(2^n)  // n = inp.size()
 // Note: if(!sub.empty()) condition in the 24th line to remove the NULL subset
 
-vector<vector<long long>> res;
+vector<vector<int64_t>> res;
 auto sset(auto &inp, auto &sub, auto i) {
     if (i == (int)inp.size()) {
         res.emplace_back(sub); return;
@@ -34,7 +34,7 @@ auto sset(auto &inp, auto &sub, auto i) {
 }
 
 // Operation:
-vector<long long> inp = {1, 2, 3}, sub;
+vector<int64_t> inp = {1, 2, 3}, sub;
 sset(inp, sub, 0);
 
 // Subset Union of Bitsets:
@@ -106,11 +106,11 @@ int32_t main() {
 // Subset Sum Generation:
 https://cses.fi/problemset/task/1623
 
-long long ar[N], n;
+int64_t ar[N], n;
 auto ssum() {
-    int sz = (1 << n); vector<long long> res(sz);
+    int sz = (1 << n); vector<int64_t> res(sz);
     for (int i = 0; i < sz; ++i, int j = 0) {
-        long long sum = 0, hi = __builtin_popcount(i);
+        int64_t sum = 0, hi = __builtin_popcount(i);
         while (hi) {
             if (i & (1 << j++)) {
                 sum += ar[j - 1]; --hi;
@@ -123,7 +123,7 @@ auto ssum() {
 
 OR, https://leetcode.com/problems/partition-equal-subset-sum/
 
-long long dp[N][N], ar[N];
+int64_t dp[N][N], ar[N];
 auto ssum(auto i, auto sum) {
     if (!sum) return true;
     if (i < 0) return false;
@@ -134,16 +134,16 @@ auto ssum(auto i, auto sum) {
 }
 auto psbl() {
     memset(dp, -1, sizeof dp);
-    long long sum = accumulate(ar, ar + N, 0ll);
+    int64_t sum = accumulate(ar, ar + N, 0ll);
     if (sum & 1) return false;
     return ssum(N - 1, sum >> 1);
 }
 
 // No of non-overlapping subsets with sum equal to given value: O(n*logn)
 
-long long sub(auto &v, long long val) {
-	long long cnt = 0, in = -1, csum = 0, n = v.size();
-	map<long long, long long> mp; mp[0] = -1;
+int64_t sub(auto &v, int64_t val) {
+	int64_t cnt = 0, in = -1, csum = 0, n = v.size();
+	map<int64_t, int64_t> mp; mp[0] = -1;
 	for (int i = 0; i < n; ++i) {
 		csum += v[i];
 		if (mp.find(csum - val) != mp.end() && mp[csum - val] >= in) {
@@ -386,9 +386,9 @@ vector<int> multiply(vector<int> &a, vector<int> &b, int eq = 0)
     vector<int> res(need);
     for (int i = 0; i < need; i++)
     {
-        long long aa = A[i].x + 0.5;
-        long long bb = B[i].x + 0.5;
-        long long cc = A[i].y + 0.5;
+        int64_t aa = A[i].x + 0.5;
+        int64_t bb = B[i].x + 0.5;
+        int64_t cc = A[i].y + 0.5;
         res[i] = (aa + ((bb % mod) << 15) + ((cc % mod) << 30)) % mod;
     }
     return res;

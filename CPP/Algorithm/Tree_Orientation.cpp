@@ -4,14 +4,14 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-vector<int> g[N];
+vector<int> gp[N];
 int sz[N];
 int tot, done[N];
 void calc_sz(int u, int p)
 {
     tot++;
     sz[u] = 1;
-    for (auto v : g[u])
+    for (auto v : gp[u])
     {
         if (v == p || done[v])
             continue;
@@ -21,7 +21,7 @@ void calc_sz(int u, int p)
 }
 int find_cen(int u, int p)
 {
-    for (auto v : g[u])
+    for (auto v : gp[u])
     {
         if (v == p || done[v])
             continue;
@@ -71,11 +71,11 @@ vector<int> subset_sum(vector<int> a)
     return dp;
 }
 
-long long cur;
+int64_t cur;
 void dfs(int u, int p = 0)
 {
     sz[u] = 1;
-    for (auto v : g[u])
+    for (auto v : gp[u])
     {
         if (v ^ p)
         {
@@ -96,15 +96,15 @@ int32_t main()
     {
         int u, v;
         cin >> u >> v;
-        g[u].push_back(v);
-        g[v].push_back(u);
+        gp[u].push_back(v);
+        gp[v].push_back(u);
     }
     calc_sz(1, 0);
     int r = find_cen(1, 0);
     dfs(r);
     vector<int> v;
-    long long ans = 0;
-    for (auto u : g[r])
+    int64_t ans = 0;
+    for (auto u : gp[r])
     {
         v.push_back(sz[u]);
     }

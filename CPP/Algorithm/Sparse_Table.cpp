@@ -1,16 +1,16 @@
 // Range Summation Query:
 
 const int L = 21;
-long long tab[N][L], ar[N], n;
-inline auto op(long long &x, long long &y) { return x + y; }
+int64_t tab[N][L], aa[N], n;
+inline auto op(int64_t &x, int64_t &y) { return x + y; }
 void make() {
-	for (int i = 1; i <= n; ++i) tab[i][0] = ar[i];
+	for (int i = 1; i <= n; ++i) tab[i][0] = aa[i];
 	for (int k = 1; k < L; ++k) {
 		for (int i = 1; i + (1 << k) - 1 <= n; ++i)
 			tab[i][k] = op(tab[i][k - 1], tab[i + (1 << (k - 1))][k - 1]);
 	}
 }
-long long get(int l, int r) {
+int64_t get(int l, int r) {
     if (l > r) return -1;
 	int k = 31 - __builtin_clz(r - l + 1);
 	return op(tab[l][k], tab[r - (1 << k) + 1][k]);
@@ -19,29 +19,29 @@ long long get(int l, int r) {
 // Disjoint Sparse Table: O(n*logn) preprocessing, O(1) query
 // Range Product Query:
 
-const long long L = 21, MP = (1 << L);
-long long n, P, Q, ar[MP], tab[L][MP], mxlvl, sz;
+const int64_t L = 21, MP = (1 << L);
+int64_t n, P, Q, aa[MP], tab[L][MP], mxlvl, sz;
 void pre() {
 	sz = n; mxlvl = __builtin_clz(n) ^ 31;  // floor(log_2(n))
 	if ((1 << mxlvl) != n) sz = (1 << ++mxlvl);
 }
 void make(int lvl = 0, int l = 0, int r = sz) {
-    int m = (l + r) >> 1; tab[lvl][m] = ar[m] % P;
+    int m = (l + r) >> 1; tab[lvl][m] = aa[m] % P;
     for (int i = m - 1; i >= l; i--)
-        tab[lvl][i] = tab[lvl][i + 1] * ar[i] % P;
+        tab[lvl][i] = tab[lvl][i + 1] * aa[i] % P;
     if (m + 1 < r) {
-        tab[lvl][m + 1] = ar[m + 1] % P;
+        tab[lvl][m + 1] = aa[m + 1] % P;
         for (int i = m + 2; i < r; i++)
-            tab[lvl][i] = tab[lvl][i - 1] * ar[i] % P;
+            tab[lvl][i] = tab[lvl][i - 1] * aa[i] % P;
     }
     if (l + 1 != r) {
         make(lvl + 1, l, m); make(lvl + 1, m, r);
     }
 }
-long long get(int l, int r) {
-    if (l == r) return ar[l] % P;
+int64_t get(int l, int r) {
+    if (l == r) return aa[l] % P;
     int k2 = __builtin_clz(l ^ r) ^ 31, lvl = mxlvl - 1 - k2;
-    long long ans = tab[lvl][l];
+    int64_t ans = tab[lvl][l];
 	if (r & ((1 << k2) - 1)) ans = ans * tab[lvl][r] % P;
     return ans;
 }
@@ -50,32 +50,32 @@ long long get(int l, int r) {
 
 int mod;
 struct DST {
-    vector<vector<long long>> left, right;
+    vector<vector<int64_t>> left, right;
     int k, n;
-    DST(auto &ar) {
-        n = ar.sz();
+    DST(auto &aa) {
+        n = aa.sz();
         k = log2(n) + 2;
-        left.assign(k + 1, vector<long long>(n));
-        right.assign(k + 1, vector<long long>(n));
+        left.assign(k + 1, vector<int64_t>(n));
+        right.assign(k + 1, vector<int64_t>(n));
         for (int j = 0; (1ll << j) <= n; ++j) {
-            long long mask = (1ll << j) - 1, nw = 1;  // neutral
+            int64_t mask = (1ll << j) - 1, nw = 1;  // neutral
             for (int i = 0; i < n; ++i) {
-                nw = nw * ar[i] % mod;  // prefix value
+                nw = nw * aa[i] % mod;  // prefix value
                 left[j][i] = nw;
                 if ((i & mask) == mask) nw = 1;  // neutral
             }
             nw = 1;  // neutral
             for (int i = n - 1; i >= 0; --i) {
-                nw = nw * ar[i] % mod;  // prefix value
+                nw = nw * aa[i] % mod;  // prefix value
                 right[j][i] = nw;
                 if ((i & mask) == 0) nw = 1;  // neutral
             }
         }
     }
-    long long get(int l, int r) {
+    int64_t get(int l, int r) {
         // if (l > r) return -1;
         if (l == r) return left[0][l];
-        long long i = 31 - __builtin_clz(l ^ r), uno = left[i][r], dos = right[i][l];
+        int64_t i = 31 - __builtin_clz(l ^ r), uno = left[i][r], dos = right[i][l];
         return uno * dos % mod;
     }
 };
@@ -84,8 +84,8 @@ struct DST {
 	int p;
 	cin >> n >> p >> q;
 	mod = p;
-	vector<int> ar(n);
-	for (i = 0; i < n; ++i) cin >> ar[i];
+	vector<int> aa(n);
+	for (i = 0; i < n; ++i) cin >> aa[i];
 	DST t(a);
 	vector<int> b((q >> 6) + 2);
 	for (i = 0; i < (int)b.sz(); ++i) cin >> b[i];
@@ -108,7 +108,7 @@ struct DST {
 https :  // www.codechef.com/problems/CENS20B
 
 const int L = 10;
-int st[N][N][L][L], ar[N][N], lg2[N];
+int st[N][N][L][L], aa[N][N], lg2[N];
 int go(int x1, int y1, int x2, int y2) {
     ++x2; ++y2;
     int a = lg2[x2 - x1], b = lg2[y2 - y1];
@@ -117,7 +117,7 @@ int go(int x1, int y1, int x2, int y2) {
 void make(int n, int m) {
     for (int i = 2; i < N; ++i) lg2[i] = lg2[i >> 1] + 1;
     for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) st[i][j][0][0] = ar[i][j];
+        for (int j = 0; j < m; ++j) st[i][j][0][0] = aa[i][j];
     }
     for (int a = 0; a < L; ++a) {
         for (int b = 0; b < L; ++b) {
@@ -167,7 +167,7 @@ void test(int tc) {
                 else
                     break;
             }
-            ar[i][j] = nw;
+            aa[i][j] = nw;
         }
     }
     make(n, m);

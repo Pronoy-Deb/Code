@@ -10,11 +10,11 @@ add -cost and return -matching()
 1-indexed */
 struct Hungarian
 {
-    long long c[N][N], fx[N], fy[N], d[N];
+    int64_t c[N][N], fx[N], fy[N], d[N];
     int l[N], r[N], arg[N], trace[N];
     queue<int> q;
     int start, finish, n;
-    const long long inf = 1e18;
+    const int64_t inf = 1e18;
     Hungarian() {}
     Hungarian(int n1, int n2) : n(max(n1, n2))
     {
@@ -25,11 +25,11 @@ struct Hungarian
                 c[i][j] = inf; // make it 0 for maximum cost matching (not necessarily with max count of matching)
         }
     }
-    void add_edge(int u, int v, long long cost)
+    void add_edge(int u, int v, int64_t cost)
     {
         c[u][v] = min(c[u][v], cost);
     }
-    inline long long getC(int u, int v)
+    inline int64_t getC(int u, int v)
     {
         return c[u][v] - fx[u] - fy[v];
     }
@@ -56,7 +56,7 @@ struct Hungarian
             for (int v = 1; v <= n; ++v)
                 if (!trace[v])
                 {
-                    long long w = getC(u, v);
+                    int64_t w = getC(u, v);
                     if (!w)
                     {
                         trace[v] = u;
@@ -77,7 +77,7 @@ struct Hungarian
     }
     void subX_addY()
     {
-        long long delta = inf;
+        int64_t delta = inf;
         for (int v = 1; v <= n; ++v)
             if (trace[v] == 0 && d[v] < delta)
             {
@@ -117,7 +117,7 @@ struct Hungarian
             finish = nxt;
         } while (finish);
     }
-    long long maximum_matching()
+    int64_t maximum_matching()
     {
         for (int u = 1; u <= n; ++u)
         {
@@ -147,7 +147,7 @@ struct Hungarian
             }
             Enlarge();
         }
-        long long ans = 0;
+        int64_t ans = 0;
         for (int i = 1; i <= n; ++i)
         {
             if (c[i][l[i]] != inf)

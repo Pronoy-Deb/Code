@@ -13,7 +13,7 @@ const int N = 1e5 + 9;
 // d --> -2f[y] + f[z]
 // e --> f[x] - 2f[y] + f[z]
 struct node {
-    long long a = 0, b = 0, c = 0, d = 0, e = 0;
+    int64_t a = 0, b = 0, c = 0, d = 0, e = 0;
     node operator + (const node &oth) const {
         node ret;
         ret.a = max(a, oth.a); ret.b = max(b, oth.b);
@@ -26,14 +26,14 @@ struct node {
 struct ST {
     #define lc (n << 1)
     #define rc ((n << 1) | 1)
-    long long lz[N << 3];
+    int64_t lz[N << 3];
     node t[N << 3];
     ST() {
         memset(lz, 0, sizeof lz);
     }
     inline void push(int n, int b, int e) {
         if(lz[n] == 0) return;
-        long long v = lz[n];
+        int64_t v = lz[n];
         t[n].a += v, t[n].b -= v + v, t[n].c -= v, t[n].d -= v;
         if (b != e) lz[lc] += v, lz[rc] += v;
         lz[n] = 0;
@@ -41,7 +41,7 @@ struct ST {
     inline void pull(int n) {
         t[n] = t[lc] + t[rc];
     }
-    void up(int n, int b, int e, int i, int j, long long v) {
+    void up(int n, int b, int e, int i, int j, int64_t v) {
         push(n, b, e);
         if(j < b || e < i) return;
         if(i <= b && e <= j) {
@@ -55,7 +55,7 @@ struct ST {
 }t;
 
 vector<pair<int, int>> g[N];
-long long W[N], T, st[n << 1], en[n << 1], pos[N];
+int64_t W[N], T, st[n << 1], en[n << 1], pos[N];
 void dfs (int u, int p = 0) {
     st[u] = ++T;
     for (auto e : g[u]) {
@@ -66,17 +66,17 @@ void dfs (int u, int p = 0) {
     en[u] = T;
 }
 int32_t main() {
-    int n, q; long long mod; cin >> n >> q >> mod;
+    int n, q; int64_t mod; cin >> n >> q >> mod;
     for (int i = 1; i < n; ++i) {
-        int u, v; long long w; cin >> u >> v >> w;
+        int u, v; int64_t w; cin >> u >> v >> w;
         g[u].push_back({v, i});  g[v].push_back({u, i});
         W[i] = w;
     }
     dfs(1);
     for (int i = 1; i < n; ++i) t.up(1, 1, T, st[pos[i]], en[pos[i]], W[i]);
-    long long last = 0;
+    int64_t last = 0;
     while (q--) {
-        int d; long long e; cin >> d >> e;
+        int d; int64_t e; cin >> d >> e;
         d = 1 + (d + last) % (n - 1); e = (e + last) % mod;
         t.up(1, 1, T, st[pos[d]], en[pos[d]], e - W[d]);
         last = t.t[1].e, W[d] = e; cout << last << '\n';

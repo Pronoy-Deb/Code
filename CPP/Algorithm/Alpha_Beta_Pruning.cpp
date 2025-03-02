@@ -3,7 +3,7 @@ using namespace std;
 
 const int N = 3e7 + 9, mod = 1e9 + 7, inf = mod;
 
-int power(long long n, long long k)
+int power(int64_t n, int64_t k)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -12,8 +12,8 @@ int power(long long n, long long k)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;

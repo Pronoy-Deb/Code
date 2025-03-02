@@ -117,9 +117,9 @@ vector<int> multiply(vector<int> &a, vector<int> &b, int eq = 0)
     vector<int> res(need);
     for (int i = 0; i < need; i++)
     {
-        long long aa = A[i].x + 0.5;
-        long long bb = B[i].x + 0.5;
-        long long cc = A[i].y + 0.5;
+        int64_t aa = A[i].x + 0.5;
+        int64_t bb = B[i].x + 0.5;
+        int64_t cc = A[i].y + 0.5;
         res[i] = (aa + ((bb % mod) << 15) + ((cc % mod) << 30)) % mod;
     }
     return res;

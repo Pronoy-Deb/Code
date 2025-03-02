@@ -47,15 +47,15 @@ void mul(auto &s, auto &s1, auto &pro) {
     reverse(pro.begin(), pro.end());
 }
 
-// Division: O((n * m)!) // Results the Qoutient without remainder
+// Division: O((n * m)!) // Results the Qoutient without rm
 // Calling: string s = "32", ans; qnt(s, 3, ans); // ans = "10"
 
-void qnt(auto &dividend, int divisor, auto &ans) {
-	int in = 0, tmp = dividend[in] - 48, sz = dividend.size();
-	while (tmp < divisor) tmp = tmp * 10 + (dividend[++in] - 48);
+void qnt(auto &dnd, int dsr, auto &ans) {
+	int in = 0, tmp = dnd[in] - 48, sz = dnd.size();
+	while (tmp < dsr) tmp = tmp * 10 + (dnd[++in] - 48);
 	while (sz > in) {
-		ans += ((tmp / divisor) + 48);
-		tmp = (tmp % divisor) * 10 + dividend[++in] - 48;
+		ans += ((tmp / dsr) + 48);
+		tmp = (tmp % dsr) * 10 + dnd[++in] - 48;
 	}
     if (ans.empty()) ans += "0";
 }
@@ -64,14 +64,14 @@ void qnt(auto &dividend, int divisor, auto &ans) {
 
 int rem(string &num, int mod) {
     // string div;
-    int remainder = 0, sz = num.size();
+    int rm = 0, sz = num.size();
     for (int i = 0; i < sz; ++i) {
-        remainder = (remainder * 10) + (num[i] - '0');
-        // if (remainder >= mod) div += (remainder / mod) + '0';
+        rm = (rm * 10) + (num[i] - '0');
+        // if (rm >= mod) div += (rm / mod) + '0';
         // else if (!div.empty()) div += '0';
-        remainder %= mod;
+        rm %= mod;
     }
-    return remainder;
+    return rm;
 }
 
 // Binary Exponentiation: O(|ans| * log(pow))

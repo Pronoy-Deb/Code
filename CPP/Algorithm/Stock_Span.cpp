@@ -2,9 +2,9 @@
 // Application: Used to determine the number of consecutive smaller elements of a number before it.
 // Stack Approach:
 
-long long ans[N], price[N], n;
+int64_t ans[N], price[N], n;
 void ss() {
-	stack<long long> sk; sk.push(0); ans[0] = 1;
+	stack<int64_t> sk; sk.push(0); ans[0] = 1;
 	for (int i = 1; i < n; ++i) {
 		while (!sk.empty() && price[sk.top()] <= price[i]) sk.pop();
 		ans[i] = (sk.empty()) ? (i + 1) : (i - sk.top());
@@ -14,7 +14,7 @@ void ss() {
 
 // DP Approach:
 
-long long ans[N], ar[N], n;
+int64_t ans[N], ar[N], n;
 void ss() {
 	ans[0] = 1;
 	for (int i = 1; i < n; ++i) {

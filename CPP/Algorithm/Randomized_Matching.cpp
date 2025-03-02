@@ -99,11 +99,11 @@ const int N = 105;
 // 1-indexed
 struct RandomizedMatching
 {
-    long long G[N][N], dis[N];
+    int64_t G[N][N], dis[N];
     int match[N];
     int mat[N], stk[N], id[N], vis[N];
     int n, top;
-    const long long inf = 1e18;
+    const int64_t inf = 1e18;
     RandomizedMatching() {}
     RandomizedMatching(int _n)
     {
@@ -118,7 +118,7 @@ struct RandomizedMatching
             }
         }
     }
-    void add_edge(int u, int v, long long w)
+    void add_edge(int u, int v, int64_t w)
     {
         G[u][v] = max(G[u][v], w);
         G[v][u] = max(G[v][u], w);
@@ -146,7 +146,7 @@ struct RandomizedMatching
         vis[u] = false;
         return false;
     }
-    long long maximum_matching()
+    int64_t maximum_matching()
     {
         for (int i = 1; i <= n; ++i)
             id[i] = i;
@@ -180,7 +180,7 @@ struct RandomizedMatching
             if (!flag)
                 random_shuffle(id + 1, id + n + 1);
         }
-        long long ans = 0;
+        int64_t ans = 0;
         for (int i = 1; i <= n; ++i)
         {
             if (mat[i] <= n && i < mat[i])
@@ -192,9 +192,9 @@ struct RandomizedMatching
         return ans;
     }
 };
-long long w[N][N];
+int64_t w[N][N];
 int deg[N];
-const long long inf = 1e18;
+const int64_t inf = 1e18;
 // if the graph is not connected then answer is not possible
 int main()
 {
@@ -207,12 +207,12 @@ int main()
         for (int i = 1; i <= n; i++)
             for (int j = 1; j <= n; j++)
                 w[i][j] = inf;
-        long long ans = 0;
+        int64_t ans = 0;
         memset(deg, 0, sizeof deg);
         for (int i = 1; i <= m; i++)
         {
             int u, v;
-            long long we;
+            int64_t we;
             cin >> u >> v >> we;
             w[u][v] = min(w[u][v], we);
             w[v][u] = min(w[v][u], we);

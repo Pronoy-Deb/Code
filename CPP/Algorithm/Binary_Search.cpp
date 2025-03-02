@@ -3,7 +3,7 @@
 // Built-in: binary_search(v.begin(), v.end(), n);
 // Element Finding:
 
-bool bs(auto &v, long long val) {
+bool bs(auto &v, int64_t val) {
 	int lo = 0, hi = v.size() - 1;
 	while (lo < hi) {
 		int mid = (hi + lo) >> 1;
@@ -16,7 +16,7 @@ bool bs(auto &v, long long val) {
 
 // OR,
 
-bool bs(auto &v, long long val) {
+bool bs(auto &v, int64_t val) {
 	int i = 0, n = v.size();
     for (int j = n; j; j >>= 1) {
         while (i + j < n && v[i + j] <= val) i += j;
@@ -26,7 +26,7 @@ bool bs(auto &v, long long val) {
 
 // Lower Bound:
 
-int lb(auto &v, long long val) {
+int lb(auto &v, int64_t val) {
     int lo = 0, hi = v.size() - 1, in = -1;
     while (lo <= hi) {
         int mid = (lo + hi) >> 1;
@@ -38,7 +38,7 @@ int lb(auto &v, long long val) {
 
 // OR,
 
-int lb(auto &v, long long val) {
+int lb(auto &v, int64_t val) {
 	int i = -1, n = v.size();
 	for (int j = n; j; j >>= 1) {
 		while (i + j < n && v[i + j] < val) i += j;
@@ -48,7 +48,7 @@ int lb(auto &v, long long val) {
 
 // Upper Bound:
 
-int ub(auto &v, long long val) {
+int ub(auto &v, int64_t val) {
     int lo = 0, hi = v.size() - 1, in = -1;
     while (lo <= hi) {
         int mid = (lo + hi) >> 1;
@@ -60,7 +60,7 @@ int ub(auto &v, long long val) {
 
 // OR,
 
-int ub(auto &v, long long val) {
+int ub(auto &v, int64_t val) {
 	int i = -1, n = v.size();
     for (int j = n; j; j >>= 1) {
         while (i + j < n && v[i + j] <= val) i += j;
@@ -71,7 +71,7 @@ int ub(auto &v, long long val) {
 // Equal Range (Lower Bound & Upper Bound):
 // Built-in: pair<int, int> er = equal_range(v.begin(), v.end(), val);
 
-pair<int, int> er(auto &v, long long val) {
+pair<int, int> er(auto &v, int64_t val) {
 	int lo = 0, hi = v.size() - 1;
 	while (hi - lo > 1) {
 		int mid = (lo + hi) >> 1;
@@ -97,13 +97,13 @@ Time: O(log(n))
 **/
 struct frac
 {
-	long long p, q;
+ int64_t p, q;
 };
 bool f(frac x)
 {
 	return 6 + 8 * x.p >= 17 * x.q + 12;
 }
-frac fracBS(long long n)
+frac fracBS int64_t n)
 {
 	bool dir = 1, A = 1, B = 1;
 	frac lo{0, 1}, hi{1, 0}; // Set hi to 1/0 to search within [0, n] and {1, 1} to search within [0, 1]
@@ -112,7 +112,7 @@ frac fracBS(long long n)
 	assert(f(hi)); // checking if any solution exists or not
 	while (A || B)
 	{
-		long long adv = 0, step = 1; // move hi if dir, else lo
+	 int64_t adv = 0, step = 1; // move hi if dir, else lo
 		for (int si = 0; step; (step *= 2) >>= si)
 		{
 			adv += step;
@@ -148,7 +148,7 @@ int32_t main()
 #include <bits/stdc++.h>
 using namespace std;
 
-#define ll long long
+#define ll int64_t
 namespace IO
 {
 #define in() ({ int a ; scanf("%d",&a); a; })

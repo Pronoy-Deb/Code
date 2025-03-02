@@ -6,15 +6,15 @@
  */
 
 struct wltre {
-    wltre *l, *r; long long lo, hi, *b, *c, bsz, csz;  // c holds the prefix sum of elements
+    wltre *l, *r; int64_t lo, hi, *b, *c, bsz, csz;  // c holds the prefix sum of elements
     wltre() { lo = 1, hi = bsz = csz = 0, l = r = NULL; }
-    void init(long long *from, long long *to, long long x, long long y) {
+    void init(int64_t *from, int64_t *to, int64_t x, int64_t y) {
         lo = x, hi = y; if (from >= to) return;
-        long long mid = (lo + hi) >> 1;
-        auto f = [mid](long long x) { return x <= mid; };
-        b = (long long *)malloc((to - from + 2) * sizeof(long long));
+        int64_t mid = (lo + hi) >> 1;
+        auto f = [mid](int64_t x) { return x <= mid; };
+        b = (int64_t *)malloc((to - from + 2) * sizeof(int64_t));
         bsz = 0, b[bsz++] = 0;
-        c = (long long *)malloc((to - from + 2) * sizeof(long long));
+        c = (int64_t *)malloc((to - from + 2) * sizeof(int64_t));
         csz = 0, c[csz++] = 0;
         for (auto it = from; it != to; ++it) {
             b[bsz] = (b[bsz - 1] + f(*it));
@@ -28,32 +28,32 @@ struct wltre {
     }
     // k-th smallest element in [l, r]
     // for array [1,2,1,3,5] 2nd smallest is 1 and 3rd smallest is 2
-    long long kth(int l, int r, int k) {
+    int64_t kth(int l, int r, int k) {
         if (l > r) return 0; if (lo == hi) return lo;
-        long long inLeft = b[r] - b[l - 1], lb = b[l - 1], rb = b[r];
+        int64_t inLeft = b[r] - b[l - 1], lb = b[l - 1], rb = b[r];
         if (k <= inLeft) return this->l->kth(lb + 1, rb, k);
         return this->r->kth(l - lb, r - rb, k - inLeft);
     }
     // count of numbers in [l, r] Less than or equal to k
-    int lte(int l, int r, long long k) {
+    int lte(int l, int r, int64_t k) {
         if (l > r || k < lo) return 0;
         if (hi <= k) return r - l + 1;
-        long long lb = b[l - 1], rb = b[r];
+        int64_t lb = b[l - 1], rb = b[r];
         return this->l->lte(lb + 1, rb, k) + this->r->lte(l - lb, r - rb, k);
     }
     // count of numbers in [l, r] equal to k
-    int count(int l, int r, long long k) {
+    int count(int l, int r, int64_t k) {
         if (l > r || k < lo || k > hi) return 0;
         if (lo == hi) return r - l + 1;
-        long long lb = b[l - 1], rb = b[r], mid = (lo + hi) >> 1;
+        int64_t lb = b[l - 1], rb = b[r], mid = (lo + hi) >> 1;
         if (k <= mid) return this->l->count(lb + 1, rb, k);
         return this->r->count(l - lb, r - rb, k);
     }
     // sum of numbers in [l ,r] less than or equal to k
-    long long sum(int l, int r, long long k) {
+    int64_t sum(int l, int r, int64_t k) {
         if (l > r or k < lo) return 0;
         if (hi <= k) return c[r] - c[l - 1];
-        long long lb = b[l - 1], rb = b[r];
+        int64_t lb = b[l - 1], rb = b[r];
         return this->l->sum(lb + 1, rb, k) + this->r->sum(l - lb, r - rb, k);
     }
     ~wltre() { delete l, delete r; }
@@ -62,7 +62,7 @@ struct wltre {
 
 // Operation:
 	cin >> n >> q;
-    long long ar[N]; for (i = 1; i <= n; ++i) cin >> ar[i];
+    int64_t ar[N]; for (i = 1; i <= n; ++i) cin >> ar[i];
 	t.init(ar + 1, ar + n + 1, -M, M);
 	while (q--) {
 		int l, r, k; cin >> l >> r >> k;

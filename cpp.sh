@@ -74,11 +74,13 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
         echo -e "${red}Timed out!${nc}\n"
         all_passed=false
         failed_tests+=("$test_num")
+        test_num=$((test_num + 1))
         continue
     elif [ $exit_status -ne 0 ]; then
         echo -e "${red}Runtime error!\nExit status: $exit_status${nc}\n"
         all_passed=false
         failed_tests+=("$test_num")
+        test_num=$((test_num + 1))
         continue
     fi
 
@@ -105,6 +107,7 @@ while [ $i -lt "${#inputs[@]}" ] && [ $exp_i -lt "${#expected_outputs[@]}" ]; do
         done
         all_passed=false
         failed_tests+=("$test_num")
+        test_num=$((test_num + 1))
         continue
     fi
 

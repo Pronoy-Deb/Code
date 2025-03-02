@@ -5,7 +5,7 @@ using namespace std;
 
 const int N = 3e5 + 9, mod = 1e9 + 7;
 
-int POW(long long n, long long k)
+int POW(int64_t n, int64_t k)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -14,8 +14,8 @@ int POW(long long n, long long k)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;
@@ -80,7 +80,7 @@ struct FWHT
         iwt(P1, n, flag);
         return vector<int>(P1, P1 + n);
     }
-    vector<int> pow(int n, vector<int> A, long long k, int flag = XOR)
+    vector<int> pow(int n, vector<int> A, int64_t k, int flag = XOR)
     {
         assert(__builtin_popcount(n) == 1);
         A.resize(n);
@@ -121,7 +121,7 @@ using namespace std;
 
 const int N = 1e5 + 9, mod = 330301441;
 
-int POW(long long n, long long k)
+int POW(int64_t n, int64_t k)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -130,8 +130,8 @@ int POW(long long n, long long k)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;
@@ -150,7 +150,7 @@ namespace FWHT
         for (int i = 0; i < p.n; i++)
             for (int j = 0; j < q.m; j++)
             {
-                long long val = 0;
+                int64_t val = 0;
                 for (int k = 0; k < p.m; k++)
                     val += 1LL * p.a[i][k] * q.a[k][j];
                 result.a[i][j] = val % mod;
@@ -207,7 +207,7 @@ namespace FWHT
                 }
         if (invert)
         {
-            long long d = POW(n, mod - 2);
+            int64_t d = POW(n, mod - 2);
             for (int i = 0; i < n; i++)
                 a[i] = a[i] * d % mod;
         }
@@ -228,7 +228,7 @@ namespace FWHT
         transform(a, n, k, true);
         return a;
     }
-    vector<int> pow(vector<int> a, long long p, int k)
+    vector<int> pow(vector<int> a, int64_t p, int k)
     {
         int n = 1;
         int nw = (int)a.size() - 1;
@@ -251,7 +251,7 @@ int main()
     {
         memset(cnt, 0, sizeof cnt);
         int n, k;
-        long long x;
+        int64_t x;
         cin >> n >> k >> x;
         for (int i = 0; i < n; i++)
         {
@@ -275,7 +275,7 @@ int main()
             sum = (sum + x) % mod;
         for (int y = 0; y < res.size(); y++)
         {
-            long long p = 1LL * res[y] * POW(sum, mod - 2) % mod;
+            int64_t p = 1LL * res[y] * POW(sum, mod - 2) % mod;
             p = 1LL * POW(p, 3) * POW(y, 2) % mod;
             ans = (ans + POW(p, y)) % mod;
         }
@@ -415,7 +415,7 @@ struct FWHT
                 vals[i] = vals[i] * inv;
         return;
     }
-    cmplx power(cmplx x, long long n)
+    cmplx power(cmplx x, int64_t n)
     {
         cmplx ret(1);
         while (n)
@@ -465,7 +465,7 @@ struct FWHT
             ans.push_back(p[i].a.value);
         return ans;
     }
-    vector<int> pow(int n, vector<int> &a, long long k)
+    vector<int> pow(int n, vector<int> &a, int64_t k)
     {
         poly p = convert(n, a);
         fwht(p, p);

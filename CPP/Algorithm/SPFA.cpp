@@ -4,8 +4,8 @@ using namespace std;
 const int N = 5050;
 
 vector<pair<int, int>> g[N];
-bool vis[N];
-long long d[N];
+bitset<N> vis;
+int64_t d[N];
 bool spfa(int u)
 {
     vis[u] = 1;
@@ -61,7 +61,7 @@ int32_t main()
             cout << "-inf\n"; // negative cycle
         else
         {
-            long long ans = d[1];
+            int64_t ans = d[1];
             for (int i = 1; i <= n; i++)
                 ans = min(ans, d[i]);
             cout << ans << '\n';

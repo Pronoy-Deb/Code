@@ -1,11 +1,11 @@
 // Merge Sort: O(n * log(n))
 
-long long n, ar[N];
+int64_t n, aa[N];
 void merge(int l, int m, int r) {
-    long long tmp[r - l + 1], i = l, j = m + 1, k = 0;
-    while (i <= m && j <= r) tmp[k++] = ar[(ar[i] < ar[j]) ? i++ : j++];
-    while (i <= m) tmp[k++] = ar[i++]; while (j <= r) tmp[k++] = ar[j++];
-    for (i = l; i <= r; ++i) ar[i] = tmp[i - l];
+    int64_t tmp[r - l + 1], i = l, j = m + 1, k = 0;
+    while (i <= m && j <= r) tmp[k++] = aa[(aa[i] < aa[j]) ? i++ : j++];
+    while (i <= m) tmp[k++] = aa[i++]; while (j <= r) tmp[k++] = aa[j++];
+    for (i = l; i <= r; ++i) aa[i] = tmp[i - l];
 }
 void msrt(int l = 0, int r = n - 1) {
 	if (l >= r) return; int m = (l + r) >> 1;
@@ -16,9 +16,9 @@ void msrt(int l = 0, int r = n - 1) {
 // Complexity: make: O(n * logn), Finding number of elements in a range <= val: O(log^2(n)), Finding the k-th value in a range: O(log ^ 3n)
 // Number of elements in the range that is <= val:
 
-long long ar[N], n; vector<long long> tre[N << 2];
+int64_t aa[N], n; vector<int64_t> tre[N << 2];
 auto merge(auto &a, auto &b) {
-    int i, j, k = a.size(), l = b.size(); vector<long long> res;
+    int i, j, k = a.size(), l = b.size(); vector<int64_t> res;
     for (i = 0, j = 0; i < k && j < l;) {
         if (a[i] < b[j]) res.push_back(a[i++]);
         else res.push_back(b[j++]);
@@ -28,19 +28,19 @@ auto merge(auto &a, auto &b) {
     return res;
 }
 void make(int nd = 0, int s = 0, int e = n - 1) {
-    if (s == e) { tre[nd].push_back(ar[e]); return; }
+    if (s == e) { tre[nd].push_back(aa[e]); return; }
     int m = (s + e) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     make(lc, s, m); make(rc, m + 1, e);
     tre[nd] = merge(tre[lc], tre[rc]);
 }
-void up(int in, long long val, int nd = 0, int s = 0, int e = n - 1) {
+void up(int in, int64_t val, int nd = 0, int s = 0, int e = n - 1) {
     if (s == e) { tre[nd][0] = val; return; }
     int m = (s + e) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     if (in <= m) up(in, val, lc, s, m);
     else up(in, val, rc, m + 1, e);
     tre[nd] = merge(tre[lc], tre[rc]);
 }
-int get(int l, int r, long long val, int nd = 0, int s = 0, int e = n - 1) {
+int get(int l, int r, int64_t val, int nd = 0, int s = 0, int e = n - 1) {
     if (l > e || r < s) return 0;
     if (l <= s && e <= r)
         return lower_bound(tre[nd].begin(), tre[nd].end(), val + 1) - tre[nd].begin();
@@ -51,7 +51,7 @@ void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // Operation:
     cin >> n >> q;
-    for (i = 0; i < n; ++i) cin >> ar[i];
+    for (i = 0; i < n; ++i) cin >> aa[i];
     make();
     while (q--) {
         int l, r, k, lo = -M, hi = M, ans = 0;
@@ -67,10 +67,10 @@ void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // OR,
 
-long long n, ar[N]; vector<long long> tre[N << 2];
+int64_t n, aa[N]; vector<int64_t> tre[N << 2];
 void make(int nd = 0, int s = 0, int e = n - 1) {
     if (s == e) {
-        tre[nd].push_back(ar[s]); return;
+        tre[nd].push_back(aa[s]); return;
     }
     int m = (s + e) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     make(lc, s, m); make(rc, m + 1, e);
@@ -98,21 +98,21 @@ void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 using namespace __gnu_pbds;
 template<class T> using oset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-int n, ar[N]; oset<int> tre[N << 2];
+int n, aa[N]; oset<int> tre[N << 2];
 void make(int nd = 0, int l = 0, int r = n - 1) {
-    if (l == r) { tre[nd].insert(ar[l]); return; }
+    if (l == r) { tre[nd].insert(aa[l]); return; }
     int m = (l + r) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     make(lc, l, m); make(rc, m + 1, r);
-    for (int i = l; i <= r; ++i) tre[nd].insert(ar[i]);
+    for (int i = l; i <= r; ++i) tre[nd].insert(aa[i]);
 }
 void up(int in, int val, int nd = 0, int l = 0, int r = n - 1) {
     if (l == r) {
-        tre[nd].erase(tre[nd].upper_bound(ar[in])); tre[nd].insert(val); return;
+        tre[nd].erase(tre[nd].upper_bound(aa[in])); tre[nd].insert(val); return;
     }
     int m = (l + r) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     if (in <= m) up(in, val, lc, l, m);
     else up(in, val, rc, m + 1, r);
-    tre[nd].erase(tre[nd].upper_bound(ar[in])); tre[nd].insert(val);
+    tre[nd].erase(tre[nd].upper_bound(aa[in])); tre[nd].insert(val);
 }
 int get(int lx, int rx, int x, int nd = 0, int l = 0, int r = n - 1) {
     if (l > rx || r < lx) return 0;
@@ -124,23 +124,23 @@ void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // Dynamic Lower Bound Problem:
 
-long long n, ar[N]; multiset<long long> tre[N << 2];
+int64_t n, aa[N]; multiset<int64_t> tre[N << 2];
 void make(int nd = 0, int l = 0, int r = n - 1) {
-    if (l == r) { tre[nd].insert(ar[l]); return; }
+    if (l == r) { tre[nd].insert(aa[l]); return; }
     int m = (l + r) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     make(lc, l, m); make(rc, m + 1, r);
-    for (int i = l; i <= r; ++i) tre[nd].insert(ar[i]);
+    for (int i = l; i <= r; ++i) tre[nd].insert(aa[i]);
 }
-void up(int in, long long val, int nd = 0, int l = 0, int r = n - 1) {
+void up(int in, int64_t val, int nd = 0, int l = 0, int r = n - 1) {
     if (l == r) {
-        tre[nd].erase(ar[in]); tre[nd].insert(val); return;
+        tre[nd].erase(aa[in]); tre[nd].insert(val); return;
     }
     int m = (l + r) >> 1, lc = (nd << 1) + 1, rc = lc + 1;
     if (in <= m) up(in, val, lc, l, m);
     else up(in, val, rc, m + 1, r);
-    tre[nd].erase(ar[in]); tre[nd].insert(val);
+    tre[nd].erase(aa[in]); tre[nd].insert(val);
 }
-long long get(int lx, int rx, long long x, int nd = 0, int l = 0, int r = n - 1) {
+int64_t get(int lx, int rx, int64_t x, int nd = 0, int l = 0, int r = n - 1) {
     if (l > rx || r < lx) return LLONG_MAX;
     if (l >= lx && r <= rx) {
         auto it = tre[nd].lower_bound(x);
@@ -153,17 +153,17 @@ void reset() { for (int i = 0; i < (n << 2); ++i) tre[i].clear(); }
 
 // Operation:
     cin >> n >> q;
-    for (i = 0; i < n; ++i) cin >> ar[i];
+    for (i = 0; i < n; ++i) cin >> aa[i];
     make();
     while (q--) {
         int t; cin >> t;
         if (t == 1) {
-            long long in, val; cin >> in >> val;
-            up(--in, val); ar[in] = val;
+            int64_t in, val; cin >> in >> val;
+            up(--in, val); aa[in] = val;
         }
         else {
-            long long l, r, x; cin >> l >> r >> x;
-            long long res = get(--l, --r, x);
+            int64_t l, r, x; cin >> l >> r >> x;
+            int64_t res = get(--l, --r, x);
             cout << (res == LLONG_MAX ? -1 : res) << '\n';
         }
     }

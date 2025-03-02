@@ -12,9 +12,9 @@ void dfs(int u) {
     while (m--) {
         int u, v; cin >> u >> v; gp[u].push_back(v);
     }
-    for (i = 1; i <= n; ++i) { if (!vis[i]) dfs(i); }
+    for (int i = 1; i <= n; ++i) { if (!vis[i]) dfs(i); }
     reverse(ord.begin(), ord.end()); int pos[n + 5];
-    for (i = 0, d = ord.size(); i < d; ++i) pos[ord[i]] = i;
+    for (int i = 0, d = ord.size(); i < d; ++i) pos[ord[i]] = i;
     for (int u = 1; u <= n; ++u) {
         for (auto v : gp[u]) {
             if (pos[u] >= pos[v]) {

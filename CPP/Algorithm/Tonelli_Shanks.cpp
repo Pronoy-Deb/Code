@@ -3,7 +3,7 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-int power(long long n, long long k, const int mod)
+int power(int64_t n, int64_t k, const int mod)
 {
     int ans = 1 % mod;
     n %= mod;
@@ -12,8 +12,8 @@ int power(long long n, long long k, const int mod)
     while (k)
     {
         if (k & 1)
-            ans = (long long)ans * n % mod;
-        n = (long long)n * n % mod;
+            ans = (int64_t)ans * n % mod;
+        n = (int64_t)n * n % mod;
         k >>= 1;
     }
     return ans;
@@ -29,7 +29,7 @@ int SQRT(int a, int p)
         a += p;
     if (a == 0)
         return 0;
-    if (power(a, (p - 1) / 2, p) != 1)
+    if (power(a, (p - 1) >> 1, p) != 1)
         return -1; // solution does not exist
     if (p % 4 == 3)
         return power(a, (p + 1) / 4, p);
@@ -38,9 +38,9 @@ int SQRT(int a, int p)
     while (s % 2 == 0)
         ++r, s /= 2;
     // find a non-square mod p
-    while (power(n, (p - 1) / 2, p) != p - 1)
+    while (power(n, (p - 1) >> 1, p) != p - 1)
         ++n;
-    int x = power(a, (s + 1) / 2, p);
+    int x = power(a, (s + 1) >> 1, p);
     int b = power(a, s, p), g = power(n, s, p);
     for (;; r = m)
     {

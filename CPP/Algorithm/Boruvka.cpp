@@ -90,7 +90,7 @@ int32_t main()
     n = unique(a + 1, a + n + 1) - a - 1;
     dsu d(n);
     int cnt = n;
-    long long ans = 0;
+    int64_t ans = 0;
     while (cnt > 1)
     {
         for (int i = 1; i <= n; i++)

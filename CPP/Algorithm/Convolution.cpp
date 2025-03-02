@@ -51,7 +51,7 @@ void fft(vector<base> &p, bool inv = 0)
         for (int i = 0; i < n; ++i)
             p[i].a /= n, p[i].b /= n;
 }
-vector<long long> multiply(vector<int> &a, vector<int> &b)
+vector<int64_t> multiply(vector<int> &a, vector<int> &b)
 {
     int n = a.size(), m = b.size(), t = n + m - 1, sz = 1;
     while (sz < t)
@@ -66,15 +66,15 @@ vector<long long> multiply(vector<int> &a, vector<int> &b)
     for (int i = 0; i < sz; ++i)
         z[i] = x[i] * y[i];
     fft(z, 1);
-    vector<long long> ret(sz);
+    vector<int64_t> ret(sz);
     for (int i = 0; i < sz; ++i)
-        ret[i] = (long long)round(z[i].a);
+        ret[i] = (int64_t)round(z[i].a);
     while ((int)ret.size() > 1 && ret.back() == 0)
         ret.pop_back();
     return ret;
 }
 // ans[k] = sum(a[i] * b[j]) over 0 <= i < n and j - i = k
-vector<long long> cyclic_convolution(vector<int> a, vector<int> b)
+vector<int64_t> cyclic_convolution(vector<int> a, vector<int> b)
 {
     assert(a.size() == b.size());
     int n = a.size();
@@ -86,7 +86,7 @@ vector<long long> cyclic_convolution(vector<int> a, vector<int> b)
         a[i + n] = a[i + 2 * n] = a[i];
     }
     auto c = multiply(a, b);
-    vector<long long> ans(n, 0);
+    vector<int64_t> ans(n, 0);
     for (int i = 0; i < n; i++)
     {
         int j = i + n - 1;
@@ -317,8 +317,8 @@ namespace Dirichlet
 {
     // solution for f(x) = phi(x)
     const int T = 1e7 + 9;
-    long long phi[T];
-    gp_hash_table<long long, mint> mp;
+    int64_t phi[T];
+    gp_hash_table<int64_t, mint> mp;
     mint dp[T], inv;
     int sz, spf[T], prime[T];
     void init()
@@ -344,24 +344,24 @@ namespace Dirichlet
             dp[i] = dp[i - 1] + phi[i] % mod;
         inv = 1; // g(1)
     }
-    mint p_c(long long n)
+    mint p_c(int64_t n)
     {
         if (n % 2 == 0)
             return n / 2 % mod * ((n + 1) % mod) % mod;
         return (n + 1) / 2 % mod * (n % mod) % mod;
     }
-    mint p_g(long long n)
+    mint p_g(int64_t n)
     {
         return n % mod;
     }
-    mint solve(long long x)
+    mint solve(int64_t x)
     {
         if (x < T)
             return dp[x];
         if (mp.find(x) != mp.end())
             return mp[x];
         mint ans = 0;
-        for (long long i = 2, last; i <= x; i = last + 1)
+        for (int64_t i = 2, last; i <= x; i = last + 1)
         {
             last = x / (x / i);
             ans += solve(x / i) * (p_g(last) - p_g(i - 1));
@@ -375,7 +375,7 @@ int32_t main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    long long n;
+    int64_t n;
     cin >> n;
     Dirichlet::init();
     cout << Dirichlet::solve(n) << '\n';

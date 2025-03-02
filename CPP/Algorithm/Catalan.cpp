@@ -1,7 +1,7 @@
 // Complexity: O(n)
 // For n catalan numbers using pre-calculation:
 
-long long cat[N];
+int64_t cat[N];
 void pre() {
 	cat[0] = 1;
 	for (int i = 1; i < N; ++i)
@@ -10,8 +10,8 @@ void pre() {
 
 // For n-th catalan number:
 
-long long cat(long long n) {
-	long long res = 1;
+int64_t cat(int64_t n) {
+	int64_t res = 1;
 	for (int i = 0; i < n; ++i) {
 		res *= ((n << 1) - i); res /= (i + 1);
 	}

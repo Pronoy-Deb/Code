@@ -8,7 +8,7 @@
 using namespace std;
 
 const int N = 1e5 + 9;
-inline double area( double a, double b, double c ) {
+inline double area(double a, double b, double c) {
   double p = (a + b + c) / 2;
   return p * (p - a) * (p - b) * (p - c);
 }

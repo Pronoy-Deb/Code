@@ -3,21 +3,21 @@
 // Use: Used to determine the cost for building an MST and the connected vertices
 // Note: 1-based index
 
-vector<pair<long long, long long>> cv; // To store the connected vertices
-vector<pair<long long, pair<long long, long long>>> gp;
-long long par[N], vr;
+vector<pair<int64_t, int64_t>> cv; // To store the connected vertices
+vector<pair<int64_t, pair<int64_t, int64_t>>> gp;
+int64_t par[N], vr;
 auto get(int i) {
     return par[i] == i ? i : par[i] = get(par[i]);
 }
-long long mst() {
+int64_t mst() {
     sort(gp.begin(), gp.end());
-    long long sz[vr + 5];
+    int64_t sz[vr + 5];
     for (int i = 1; i <= vr; ++i) {
         par[i] = i; sz[i] = 1;
     }
-    long long cost = 0;
+    int64_t cost = 0;
     for (auto &[f, s] : gp) {
-        long long a = get(s.first), b = get(s.second);
+        int64_t a = get(s.first), b = get(s.second);
         if (a == b) continue; // Checking whether making cycle
         cv.emplace_back(s.first, s.second);
         if (sz[a] < sz[b]) swap(a, b); // Union by size
@@ -83,7 +83,7 @@ int32_t main() {
         ed.push_back({w, u, v});
     }
     sort(ed.begin(), ed.end());
-    long long ans = 0;
+    int64_t ans = 0;
     dsu d(n);
     for (auto e : ed) {
         int u = e[1], v = e[2], w = e[0];
@@ -100,19 +100,19 @@ int32_t main() {
 // Complexity: O(E * log(V))
 // Use: Used to determine the cost for building an MST and the connected vertices
 // Note: 1-based index
-// const long long N = 1e5 + 5;
+// const int64_t N = 1e5 + 5;
 
-vector<pair<long long, long long>> gp[N];
-long long par[N], vr;
-long long mst() {
-    priority_queue<pair<long long, long long>, vector<pair<long long, long long>>, greater<>> pq;
-    long long src = 1, key[vr + 5], cost = 0;
+vector<pair<int64_t, int64_t>> gp[N];
+int64_t par[N], vr;
+int64_t mst() {
+    priority_queue<pair<int64_t, int64_t>, vector<pair<int64_t, int64_t>>, greater<>> pq;
+    int64_t src = 1, key[vr + 5], cost = 0;
     bool vis[vr + 5]{}; pq.emplace(0, src);
     memset(par, -1, sizeof par);
     fill(key, key + vr + 5, LLONG_MAX);
     key[src] = 0;
     while (!pq.empty()) {
-        long long u = pq.top().second; pq.pop();
+        int64_t u = pq.top().second; pq.pop();
         if (vis[u]) continue;
         vis[u] = true;
         for (auto &[f, s] : gp[u]) {
@@ -144,8 +144,8 @@ using namespace std;
 
 const int N = 2020;
 int g[N][N], w[N], to[N], selected[N];
-long long Prims(int n, vector<pair<int, int>> &edges) {
-    long long ans = 0;
+int64_t Prims(int n, vector<pair<int, int>> &edges) {
+    int64_t ans = 0;
     for (int i = 1; i <= n; i++)
         w[i] = 1e9, selected[i] = 0, to[i] = -1;
     w[1] = 0;
@@ -188,7 +188,7 @@ int main() {
         }
     }
     vector<pair<int, int>> ed;
-    long long ans = Prims(n, ed);
+    int64_t ans = Prims(n, ed);
     int res = 0;
     for (auto e : ed)
         res = max(res, g[e.first][e.second]);
@@ -206,11 +206,11 @@ using namespace std;
 
 const int N = 3e5 + 9;
 
-const long long inf = 1e18;
+const int64_t inf = 1e18;
 
 template <typename T>
 struct PQ {
-    long long sum = 0;
+    int64_t sum = 0;
     priority_queue<T, vector<T>, greater<T>> Q;
     void push(T x) {
         x.w -= sum;
@@ -223,7 +223,7 @@ struct PQ {
         return ans;
     }
     int size() { return Q.size(); }
-    void add(long long x) { sum += x; }
+    void add(int64_t x) { sum += x; }
     void merge(PQ &&x) {
         if (size() < x.size())
             swap(sum, x.sum), swap(Q, x.Q);
@@ -236,7 +236,7 @@ struct PQ {
 };
 struct edge {
     int u, v;
-    long long w;
+    int64_t w;
     bool operator>(const edge &rhs) const { return w > rhs.w; }
 };
 struct DSU {
@@ -323,7 +323,7 @@ int32_t main() {
     for (auto u : edges)
         W[u.v][u.u] = u.w;
 
-    long long ans = 0;
+    int64_t ans = 0;
     for (int i = 0; i < n; i++)
         if (i != root)
             ans += W[i][res[i]];
@@ -403,7 +403,7 @@ void contract(int s, int e, vector<int> v, vector<int> &must_mst, vector<int> &m
     disj.revert(snapshot);
 }
 
-void solve(int s, int e, vector<int> v, long long int cv) {
+void solve(int s, int e, vector<int> v, int64_t int cv) {
     if (s == e) {
         cost[qr[s].first] = qr[s].second;
         if (st[qr[s].first] == ed[qr[s].first]) {
@@ -426,7 +426,7 @@ void solve(int s, int e, vector<int> v, long long int cv) {
     }
     vector<pair<int, int>> snapshot;
     contract(s, m, lv, must_mst, maybe_mst);
-    long long int lcv = cv;
+    int64_t int lcv = cv;
     for (auto &i : must_mst)
         lcv += cost[i], disj.uni(st[i], ed[i], snapshot);
     solve(s, m, maybe_mst, lcv);
@@ -440,7 +440,7 @@ void solve(int s, int e, vector<int> v, long long int cv) {
         if (chk[qr[i].first] == 0)
             rv.push_back(qr[i].first);
     }
-    long long int rcv = cv;
+    int64_t int rcv = cv;
     contract(m + 1, e, rv, must_mst, maybe_mst);
     for (auto &i : must_mst)
         rcv += cost[i], disj.uni(st[i], ed[i], snapshot);
@@ -520,10 +520,10 @@ int dist(PT &a, PT &b) {
 void add(int u, int v, int w) {
     edges.push_back({u, v, w});
 }
-long long Kruskal() {
+int64_t Kruskal() {
     dsu.init(n);
     sort(edges.begin(), edges.end());
-    long long ans = 0;
+    int64_t ans = 0;
     for (edge e : edges) {
         int u = e.u, v = e.v, w = e.w;
         if (dsu.get(u) != dsu.get(v)) {

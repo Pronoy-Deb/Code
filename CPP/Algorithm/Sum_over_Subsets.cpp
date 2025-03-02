@@ -4,29 +4,29 @@ const int B = 20; int ar[1 << B], f[1 << B], g[1 << B];
 
 // Operation:
 	cin >> n;
-	for (i = 0; i < n; ++i) {
+	for (int i = 0; i < n; ++i) {
 		cin >> ar[i];
 		++f[ar[i]];
 		++g[ar[i]];
 	}
 	// sum over subsets
-	for (i = 0; i < B; ++i) {
+	for (int i = 0; i < B; ++i) {
 		for (int mask = 0; mask < (1 << B); ++mask) {
 			if ((mask & (1 << i))) f[mask] += f[mask ^ (1 << i)];
 		}
 	}
 	// sum over supersets
-	for (i = 0; i < B; ++i) {
+	for (int i = 0; i < B; ++i) {
 		for (int mask = (1 << B) - 1; mask >= 0; --mask) {
 			if (!(mask & (1 << i))) g[mask] += g[mask ^ (1 << i)];
 		}
 	}
-	for (i = 0; i < n; ++i)
+	for (int i = 0; i < n; ++i)
 		cout << f[ar[i]] << ' ' << g[ar[i]] << ' ' << n - f[(1 << B) - 1 - ar[i]] << '\n';
 
     // https://cses.fi/problemset/task/1654
 
-    // SOS Convolutions:
+// SOS Convolutions:
 
 #include <bits/stdc++.h>
 using namespace std;
